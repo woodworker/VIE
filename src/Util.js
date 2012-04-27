@@ -766,9 +766,9 @@ VIE.Util = {
      			'left' : [ '?subject a dbpedia:' + key, '?subject rdfs:label ?label' ],
      			'right' : function(ns) {
      				return function() {
-     					return [ jQuery.rdf.triple(this.subject.toString(), 'a', '<' + ns.base() + value + '>', {
+     					return [ service.vie.jQuery.rdf.triple(this.subject.toString(), 'a', '<' + ns.base() + value + '>', {
      						namespaces : ns.toObj()
-     					}), jQuery.rdf.triple(this.subject.toString(), '<' + ns.base() + 'name>', this.label.toString(), {
+     					}), service.vie.jQuery.rdf.triple(this.subject.toString(), '<' + ns.base() + 'name>', this.label.toString(), {
      						namespaces : ns.toObj()
      					}) ];
      				};
