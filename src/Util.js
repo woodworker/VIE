@@ -284,8 +284,7 @@ VIE.Util = {
     a score. It returns the value with the best score.
     */
     getPreferredLangForPreferredProperty: function(entity, preferredFields, preferredLanguages) {
-      var l, labelArr, lang, p, property, resArr, valueArr, _len, _len2,
-        _this = this;
+      var l, labelArr, lang, p, property, valueArr, _len, _len2,
       resArr = [];
       /* Try to find a label in the preferred language
       */
@@ -452,7 +451,7 @@ VIE.Util = {
             
             for (var i = 0; i < ancestors.length; i++) {
                 var supertype = (vie.types.get(ancestors[i]))? vie.types.get(ancestors[i]) :
-                    dataTypeHelper.call(vie, SchemaOrg["datatypes"][ancestors[i]].supertypes, ancestors[i]);
+                    dataTypeHelper(vie, SchemaOrg["datatypes"][ancestors[i]].supertypes, ancestors[i]);
                 type.inherit(supertype);
             }
             return type;
@@ -484,7 +483,7 @@ VIE.Util = {
            
             for (var i = 0; i < ancestors.length; i++) {
                 var supertype = (vie.types.get(ancestors[i]))? vie.types.get(ancestors[i]) :
-                    typeHelper.call(vie, SchemaOrg["types"][ancestors[i]].supertypes, ancestors[i], typeProps.call(vie, ancestors[i]));
+                    typeHelper(vie, SchemaOrg["types"][ancestors[i]].supertypes, ancestors[i], typeProps.call(vie, ancestors[i]));
                 type.inherit(supertype);
             }
             if (id === "Thing" && !type.isof("owl:Thing")) {
@@ -558,7 +557,7 @@ VIE.Util = {
                         	if (n.isEntity) {
                         		n = VIE.Util.extractLanguageString(n, attrs, lang);
                         	} else if (typeof n === "string") {
-                        		n = n;
+                        		// n = n;
                         	} else {
                         		n = "";
                         	}
