@@ -752,7 +752,7 @@ VIE.Util = {
      	return additionalRules;
      },
 
-// ### VIE.Util.createSimpleRule(service)
+// ### VIE.Util.createSimpleRule(key, value, service)
 // Returns a simple rule that only transforms the rdfs:label from dbpedia into VIE entity type.  
 // **Parameters**:
 // *{string}* **key** The dbpedia ontology name (left side)
@@ -776,5 +776,29 @@ VIE.Util = {
      			}(service.vie.namespaces)
      		};
      	return rule;
-     }
+     },
+
+// ### VIE.Util.getDepiction(entity, picWidth)
+// Returns the URL of the "foaf:depiction" or the "schema:thumbnail" of an entity.
+// **Parameters**:
+// *{object}* **entity** The entity to get the picture for
+// *{int}* **picWidth** The prefered width in px for the found image
+// **Throws**:
+// *nothing*..
+// **Returns**:
+// *{string}* the image url
+    getDepiction : function (entity, picWidth) {
+    	var depictionUrl, field, fieldValue, preferredFields;
+    	preferredFields = [ "foaf:depiction", "schema:thumbnail" ];
+    	field = _(preferredFields).detect(function(field) {
+    		if (entity.get(field)) return true;
+    	});
+    	if (field && (fieldValue = _([entity.get(field)]).flatten())) {
+    		depictionUrl = _(fieldValue).detect(function(uri) {
+    			uri = (typeof uri.getSubject === "function" ? uri.getSubject() : void 0) || uri;
+    			if (uri.indexOf("thumb") !== -1) return true;
+    		}).replace(/[0-9]{2..3}px/, "" + picWidth + "px");
+    		return depictionUrl.replace(/^<|>$/g, '');
+    	}
+    }
 };
