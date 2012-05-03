@@ -710,74 +710,70 @@ VIE.Util = {
         return res;
     },
     
-// ### VIE.Util.getAdditionalRules(service)
+// ### VIE.Util.getAdditionalRules(vie)
 // This returns a extended set of rdfQuery rules that transform semantic data into the
 // VIE entity types.  
 // **Parameters**:  
-// *{object}* **service** An instance of a vie.service.  
+// *{object}* **vie** An instance of a vie
 // **Throws**: 
 // *nothing*..  
 // **Returns**: 
 // *{array}* An array of rules with 'left' and 'right' side.
-     getAdditionalRules : function (service) {
-     	mapping = {
-         		'Work'              : 'CreativeWork',
-         		'Film'              : 'Movie',
-         		'TelevisionEpisode' : 'TVEpisode',
-         		'TelevisionShow'    : 'TVSeries',// not listed as equivalent class on dbpedia.org
-         		'Website'           : 'WebPage',
-         		'Painting'          : 'Painting',
-         		'Sculpture'         : 'Sculpture',
-         		'Event'             : 'Event',
-         		'SportsEvent'       : 'SportsEvent',
-         		'MusicFestival'     : 'Festival',
-         		'FilmFestival'      : 'Festival',
-         		'Place'             : 'Place',
-         		'Continent'         : 'Continent',
-         		'Country'           : 'Country',
-         		'City'              : 'City',
-         		'Airport'           : 'Airport',
-         		'Station'           : 'TrainStation',// not listed as equivalent class on dbpedia.org
-         		'Hospital'          : 'GovernmentBuilding',
-         		'Mountain'          : 'Mountain',
-         		'BodyOfWater'       : 'BodyOfWater',
-         		'Company'           : 'Organization',
-         		'Person'            : 'Person'
-              };
-
-     	var additionalRules = new Array();
-     	for (var key in mapping) {
-     		additionalRules.push(this.createSimpleRule(key, mapping[key], service));
-     	}
-     	return additionalRules;
-     },
-
-// ### VIE.Util.createSimpleRule(key, value, service)
+    getAdditionalRules : function (vie) {
+        mapping = {
+                'Work'              : 'CreativeWork',
+                'Film'              : 'Movie',
+                'TelevisionEpisode' : 'TVEpisode',
+                'TelevisionShow'    : 'TVSeries',// not listed as equivalent class on dbpedia.org
+                'Website'           : 'WebPage',
+                'Painting'          : 'Painting',
+                'Sculpture'         : 'Sculpture',
+                'Event'             : 'Event',
+                'SportsEvent'       : 'SportsEvent',
+                'MusicFestival'     : 'Festival',
+                'FilmFestival'      : 'Festival',
+                'Place'             : 'Place',
+                'Continent'         : 'Continent',
+                'Country'           : 'Country',
+                'City'              : 'City',
+                'Airport'           : 'Airport',
+                'Station'           : 'TrainStation',// not listed as equivalent class on dbpedia.org
+                'Hospital'          : 'GovernmentBuilding',
+                'Mountain'          : 'Mountain',
+                'BodyOfWater'       : 'BodyOfWater',
+                'Company'           : 'Organization',
+                'Person'            : 'Person' };
+        var additionalRules = new Array();
+        for (var key in mapping) {
+            additionalRules.push(this.createSimpleRule(key, mapping[key], vie));
+        }
+        return additionalRules;
+    },
+// ### VIE.Util.createSimpleRule(key, value, vie)
 // Returns a simple rule that only transforms the rdfs:label from dbpedia into VIE entity type.  
 // **Parameters**:
 // *{string}* **key** The dbpedia ontology name (left side)
 // *{string}* **value** The target ontology name (right side)
-// *{object}* **service** An instance of a vie.service.
+// *{object}* **vie** An instance of a vie.
 // **Throws**:
 // *nothing*..
 // **Returns**:
 // *{array}* A single rule with 'left' and 'right' side.
-     createSimpleRule : function (key, value, service) {
-     	var rule = {
-     			'left' : [ '?subject a dbpedia:' + key, '?subject rdfs:label ?label' ],
-     			'right' : function(ns) {
-     				return function() {
-     					return [ service.vie.jQuery.rdf.triple(this.subject.toString(), 'a', '<' + ns.base() + value + '>', {
-     						namespaces : ns.toObj()
-     					}), service.vie.jQuery.rdf.triple(this.subject.toString(), '<' + ns.base() + 'name>', this.label.toString(), {
-     						namespaces : ns.toObj()
-     					}) ];
-     				};
-     			}(service.vie.namespaces)
-     		};
-     	return rule;
-     },
-
+    createSimpleRule : function (key, value, vie) {
+        var rule = {
+                'left' : [ '?subject a dbpedia:' + key, '?subject rdfs:label ?label' ],
+                'right' : function(ns) {
+                    return function() {
+                        return [ vie.jQuery.rdf.triple(this.subject.toString(), 'a', '<' + ns.base() + value + '>', {
+                            namespaces : ns.toObj()
+                        }), vie.jQuery.rdf.triple(this.subject.toString(), '<' + ns.base() + 'name>', this.label.toString(), {
+                            namespaces : ns.toObj()
+                        }) ];
+                    };
+                }(vie.namespaces)
+            };
+        return rule;
+    },
 // ### VIE.Util.getDepiction(entity, picWidth)
 // Returns the URL of the "foaf:depiction" or the "schema:thumbnail" of an entity.
 // **Parameters**:
@@ -788,17 +784,17 @@ VIE.Util = {
 // **Returns**:
 // *{string}* the image url
     getDepiction : function (entity, picWidth) {
-    	var depictionUrl, field, fieldValue, preferredFields;
-    	preferredFields = [ "foaf:depiction", "schema:thumbnail" ];
-    	field = _(preferredFields).detect(function(field) {
-    		if (entity.get(field)) return true;
-    	});
-    	if (field && (fieldValue = _([entity.get(field)]).flatten())) {
-    		depictionUrl = _(fieldValue).detect(function(uri) {
-    			uri = (typeof uri.getSubject === "function" ? uri.getSubject() : void 0) || uri;
-    			if (uri.indexOf("thumb") !== -1) return true;
-    		}).replace(/[0-9]{2..3}px/, "" + picWidth + "px");
-    		return depictionUrl.replace(/^<|>$/g, '');
-    	}
+        var depictionUrl, field, fieldValue, preferredFields;
+        preferredFields = [ "foaf:depiction", "schema:thumbnail" ];
+        field = _(preferredFields).detect(function(field) {
+            if (entity.get(field)) return true;
+        });
+        if (field && (fieldValue = _([entity.get(field)]).flatten())) {
+            depictionUrl = _(fieldValue).detect(function(uri) {
+                uri = (typeof uri.getSubject === "function" ? uri.getSubject() : void 0) || uri;
+                if (uri.indexOf("thumb") !== -1) return true;
+            }).replace(/[0-9]{2..3}px/, "" + picWidth + "px");
+            return depictionUrl.replace(/^<|>$/g, '');
+        }
     }
 };
