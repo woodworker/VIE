@@ -10,6 +10,7 @@ var root = this,
     Backbone = root.Backbone,
     _ = root._;
 
+
 // ## VIE constructor
 //
 // The VIE constructor is the way to initialize VIE for your
@@ -138,7 +139,7 @@ var VIE = root.VIE = function(config) {
 //
 //     var vie = new VIE({classic: true});
 //     vie.RDFaEntities.getInstances();
-    if (this.config.classic !== false) {
+    if (this.config.classic === true) {
         /* Load Classic API as well */
         this.RDFa = new this.ClassicRDFa(this);
         this.RDFaEntities = new this.ClassicRDFaEntities(this);
@@ -343,9 +344,9 @@ VIE.prototype.find = function(options) {
 //     var vie = new VIE();
 //     vie.loadSchema("http://schema.rdfs.org/all.json", 
 //        {
-//          baseNS  : "http://schema.org/",
+//          baseNS : "http://schema.org/",
 //          success : function () {console.log("success");},
-//          error   : function (msg) {console.warn(msg);}
+//          error  : function (msg) {console.warn(msg);}
 //        });
 VIE.prototype.loadSchema = function(url, options) {
     options = (!options)? {} : options;
@@ -373,6 +374,17 @@ VIE.prototype.loadSchema = function(url, options) {
     return this;
 };
 
+// IE per default doesn't have a console API. For making sure this doesn't break
+// anything we define it here to not do anything.
+console = console || {
+    info: function(){},
+    log: function(){}
+};
+// IE in debug mode does have a console object but no console.warn
+if(!console.warn){
+    console.warn = console.info;
+}
+
 // ## Running VIE on Node.js
 //
 // When VIE is running under Node.js we can use the CommonJS
@@ -385,7 +397,7 @@ VIE.prototype.loadSchema = function(url, options) {
 //
 // In browser environments the dependencies have to be included
 // before including VIE itself.
-if(typeof exports === 'object') {
+if (typeof exports === 'object') {
     exports.VIE = VIE;
 
     if (!jQuery) {
@@ -393,6 +405,7 @@ if(typeof exports === 'object') {
     }
     if (!Backbone) {
         Backbone = require('backbone');
+        Backbone.setDomLibrary(jQuery);
     }
     if (!_) {
         _ = require('underscore')._;
