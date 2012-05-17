@@ -32,10 +32,59 @@ VIE.prototype.OpenCalaisService = function(options) {
         namespaces : {
         	opencalaisc:  "http://s.opencalais.com/1/pred/",
         	opencalaiscr: "http://s.opencalais.com/1/type/er/",
-        	opencalaiscm: "http://s.opencalais.com/1/type/em/e/"
+        	opencalaiscm: "http://s.opencalais.com/1/type/em/e/",
+			opencalaiscs: "http://s.opencalais.com/1/type/sys/"
         },
         /* default rules that are shipped with this service */
-        rules : []
+        rules : [
+			{
+                'left' : [
+                    '?instance a opencalaiscs:InstanceInfo',
+                    '?instance opencalaisc:subject ?object',
+					'?entity opencalaisc:subject ?object',
+					'?entity opencalaisc:name ?name'
+                ],
+                'right' : [
+                    '?entity opencalaisc:hasTextAnnotation ?instance',
+					'?entity rdfs:label ?name'
+                ]
+            },
+			{
+                'left' : [
+                    '?subject a opencalaiscm:Person',
+                 ],
+                 'right':[
+					'?subject a dbpedia:Person'
+				 ]
+             },
+			 
+			 {
+                'left' : [
+                    '?subject a opencalaiscm:Organization',
+                 ],
+                 'right': [
+					'?subject a dbpedia:Organisation'
+				 ]
+             },
+			 
+			 {
+                'left' : [
+                    '?subject a opencalaiscr:Geo/City',
+                 ],
+                 'right': [
+					'?subject a dbpedia:City'
+				 ]
+             },
+
+			 {
+                'left' : [
+                    '?subject a opencalaiscr:Geo/Country',
+                 ],
+                 'right': [
+					'?subject a dbpedia:Country'
+				 ]
+             }
+		]
     };
     /* the options are merged with the default options */
     this.options = jQuery.extend(true, defaults, options ? options : {});
@@ -268,7 +317,8 @@ VIE.prototype.OpenCalaisConnector.prototype = {
             calculareRelevanceScore: "true",
             enableMetadataType: "GenericRelations,SocialTags",
             contentType: "text/html",
-            content: text
+            content: text,
+			docRDFaccessible: "true"
             // for more options check http://developer.opencalais.com/docs/suggest/
         };
     }
