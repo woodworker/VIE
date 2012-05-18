@@ -1,6 +1,9 @@
 module("vie.js - OpenCalais Service");
 
-	window.OPENCALAIS_API_KEY = undefined;
+if (!window.OPENCALAIS_API_KEY) {
+	// overwrite this if needed but be careful not to commit your own key!
+	window.OPENCALAIS_API_KEY = undefined; 
+}
 
 test("VIE.js OpenCalais - Registration", function() {
     var o = new VIE();
@@ -45,6 +48,7 @@ test("VIE.js OpenCalaisService - Analyze", function () {
     o.use(new o.OpenCalaisService({"api_key" : window.OPENCALAIS_API_KEY}));
     stop();
     o.analyze({element: elem}).using('opencalais').execute().done(function(entities) {
+    	debugger;
         ok(entities);
         ok(entities.length > 0, "At least one entity returned");
         ok(entities instanceof Array);

@@ -1,7 +1,9 @@
 module("vie.js - Zemanta Service");
 
-	window.ZEMANTA_API_KEY = undefined;
-
+if (!window.ZEMANTA_API_KEY) {
+	// overwrite this if needed but be careful not to commit your own key!
+	window.ZEMANTA_API_KEY = undefined; 
+}
 test("VIE.js ZemantaService - Registration", function() {
     var z = new VIE();
     ok(z.ZemantaService, "Checking if the Zemanta Service exists.'");
@@ -38,8 +40,8 @@ test("VIE.js ZemantaService - Analyze", function () {
        return;
     } 
     if (window.ZEMANTA_API_KEY === undefined) {
-    	console.warn("Please provide an API key for Zemanta.");
-    	ok(true, "Skipped tests, as no API key is available!");
+    	console.warn("Please provide an API key for Zemanta. At best, put the key in an extra file that is ignored by git.");
+    	ok(true, "Skipped tests, as no API key is available! At best, put the key in an extra file that is ignored by git.");
     	return;
     }
     // Sending a an example with double quotation marks.
