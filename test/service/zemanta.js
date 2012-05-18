@@ -1,6 +1,6 @@
 module("vie.js - Zemanta Service");
 
-// set-up: window.ZEMANTA_API_KEY = "your-api-key-here";
+	window.ZEMANTA_API_KEY = undefined;
 
 test("VIE.js ZemantaService - Registration", function() {
     var z = new VIE();
@@ -13,8 +13,24 @@ test("VIE.js ZemantaService - API", function() {
     var z = new VIE();
     z.use(new z.ZemantaService);    
     //API
+	ok(z.service('zemanta').init);
+    equals(typeof z.service('zemanta').init, "function");
     ok(z.service('zemanta').analyze);
     equals(typeof z.service('zemanta').analyze, "function");
+    ok(z.service('zemanta').connector);
+    ok(z.service('zemanta').connector instanceof z.ZemantaConnector);
+    ok(z.service('zemanta').rules);
+    equals(typeof z.service('zemanta').rules, "object");
+});
+
+test("VIE.js ZemantaConnector - API", function() {
+	var z = new VIE();
+    var zemanta = new z.ZemantaService;
+    z.use(zemanta);
+    
+    //API
+    ok(zemanta.connector.analyze);
+    equals(typeof zemanta.connector.analyze, "function");
 });
 
 test("VIE.js ZemantaService - Analyze", function () {
