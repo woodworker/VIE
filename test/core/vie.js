@@ -14,6 +14,8 @@ test("vie.js API", function () {
     equal(typeof v.service, 'function');
     ok(v.load);
     equal(typeof v.load, 'function');
+    ok(v.query);
+    equal(typeof v.query, 'function');
     ok(v.save);
     equal(typeof v.save, 'function');
     ok(v.remove);
@@ -281,7 +283,8 @@ test("vie.js Entity API - addTo", function () {
 VIE.prototype.MockService = function () {
     this.vie = null;
     this.name = 'mock';
-}
+};
+
 VIE.prototype.MockService.prototype.load = function(loadable) {
     var correct = loadable instanceof this.vie.Loadable;
     if (!correct) {
@@ -294,6 +297,20 @@ VIE.prototype.MockService.prototype.load = function(loadable) {
         loadable.reject(result);
     }
 };
+
+VIE.prototype.MockService.prototype.query = function(queryable) {
+    var correct = queryable instanceof this.vie.Queryable;
+    if (!correct) {
+        throw "Invalid Queryable passed";
+    }
+    var result = queryable.options.mockresult;
+    if (result === "success") {
+        queryable.resolve(result);
+    } else {
+        queryable.reject(result);
+    }
+};
+
 VIE.prototype.MockService.prototype.save = function(savable) {
     var correct = savable instanceof this.vie.Savable;
     if (!correct) {

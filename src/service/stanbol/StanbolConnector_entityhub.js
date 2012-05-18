@@ -358,86 +358,158 @@
 			r.end();
 		},
 
-		// ### ldpath(query, success, error, options)
-		// TODO.  
-		// **Parameters**:  
-		// TODO
-		// *{function}* **success** The success callback.  
-		// *{function}* **error** The error callback.  
-		// *{object}* **options** Options, unused here.   
-		// **Throws**:  
-		// *nothing*  
-		// **Returns**:  
-		// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
-		ldpath: function(ldpath, context, success, error, options) {
-			options = (options)? options :  {};
-			var connector = this;
+        // ### ldpath(query, success, error, options)
+        // TODO.  
+        // **Parameters**:  
+        // TODO
+        // *{function}* **success** The success callback.  
+        // *{function}* **error** The error callback.  
+        // *{object}* **options** Options, unused here.   
+        // **Throws**:  
+        // *nothing*  
+        // **Returns**:  
+        // *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+        ldpath: function(ldpath, context, success, error, options) {
+            options = (options)? options :  {};
+            var connector = this;
 
-			context = (_.isArray(context))? context : [ context ];
+            context = (_.isArray(context))? context : [ context ];
 
-			var contextStr = "";
-			for (var c = 0; c < context.length; c++) {
-				contextStr += "&context=" + context[c];
-			}
+            var contextStr = "";
+            for (var c = 0; c < context.length; c++) {
+                contextStr += "&context=" + context[c];
+            }
 
-			connector._iterate({
-				method : connector._ldpath,
-				methodNode : connector._ldpathNode,
-				success : success,
-				error : error,
-				url : function (idx, opts) {
-					var site = (opts.site)? opts.site : this.options.entityhub.site;
-					site = (site)? "/" + site : "s";
+            connector._iterate({
+                method : connector._ldpath,
+                methodNode : connector._ldpathNode,
+                success : success,
+                error : error,
+                url : function (idx, opts) {
+                    var site = (opts.site)? opts.site : this.options.entityhub.site;
+                    site = (site)? "/" + site : "s";
 
-					var isLocal = opts.local;
+                    var isLocal = opts.local;
 
-					var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
-					if (!isLocal)
-						u += "/site" + site;
-					u += "/ldpath";
+                    var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+                    if (!isLocal)
+                        u += "/site" + site;
+                    u += "/ldpath";
 
-					return u;
-				},
-				args : {
-					ldpath : ldpath,
-					context : contextStr,
-					format : options.format || "application/rdf+json",
-					options : options
-				},
-				urlIndex : 0
-			});
-		},
+                    return u;
+                },
+                args : {
+                    ldpath : ldpath,
+                    context : contextStr,
+                    format : options.format || "application/rdf+json",
+                    options : options
+                },
+                urlIndex : 0
+            });
+        },
 
-		_ldpath : function (url, args, success, error) {
-			jQuery.ajax({
-				success: success,
-				error: error,
-				url: url,
-				type: "POST",
-				data : "ldpath=" + args.ldpath + args.context,
-				contentType : "application/x-www-form-urlencoded",
-				dataType: args.format,
-				accepts: {"application/rdf+json": "application/rdf+json"}
-			});
-		},
+        _ldpath : function (url, args, success, error) {
+            jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "POST",
+                data : "ldpath=" + args.ldpath + args.context,
+                contentType : "application/x-www-form-urlencoded",
+                dataType: args.format,
+                accepts: {"application/rdf+json": "application/rdf+json"}
+            });
+        },
 
-		_ldpathNode: function(url, args, success, error) {
-			var request = require('request');
-			var r = request({
-				method: "POST",
-				uri: url,
-				body : "ldpath=" + args.ldpath + context,
-				headers: {
-					Accept: args.format
-				}
-			}, function(err, response, body) {
-				try {
-					success({results: JSON.parse(body)});
-				} catch (e) {
-					error(e);
-				}
-			});
-			r.end();
-		}
+        _ldpathNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "POST",
+                uri: url,
+                body : "ldpath=" + args.ldpath + context,
+                headers: {
+                    Accept: args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        },
+
+        // ### query(query, success, error, options)
+        // TODO: add description
+        // **Parameters**:  
+        // TODO
+        // *{function}* **success** The success callback.  
+        // *{function}* **error** The error callback.  
+        // *{object}* **options** Options, unused here.   
+        // **Throws**:  
+        // *nothing*  
+        // **Returns**:  
+        // *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+        query: function(query, success, error, options) {
+            options = (options)? options :  {};
+            var connector = this;
+
+            connector._iterate({
+                method : connector._query,
+                methodNode : connector._queryNode,
+                success : success,
+                error : error,
+                url : function (idx, opts) {
+                    var site = (opts.site)? opts.site : this.options.entityhub.site;
+                    site = (site)? "/" + site : "s";
+
+                    var isLocal = opts.local;
+
+                    var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+                    if (!isLocal)
+                        u += "/site" + site;
+                    u += "/query";
+                    
+                    return u;
+                },
+                args : {
+                    query : JSON.stringify(query),
+                    format : "application/rdf+json",
+                    options : options
+                },
+                urlIndex : 0
+            });
+        },
+
+        _query : function (url, args, success, error) {
+            jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "POST",
+                data : args.query,
+                contentType : "application/json"
+            });
+        },
+
+        _queryNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "POST",
+                uri: url,
+                body : "ldpath=" + args.ldpath + context,
+                headers: {
+                    Accept: args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        }
 	});
 })();

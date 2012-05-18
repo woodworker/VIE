@@ -71,6 +71,8 @@ test("VIE.js StanbolService - API", function() {
     equals(typeof z.service('stanbol').find, "function");
     ok(z.service('stanbol').load);
     equals(typeof z.service('stanbol').load, "function");
+    ok(z.service('stanbol').query);
+    equals(typeof z.service('stanbol').query, "function");
     ok(z.service('stanbol').connector);
     ok(z.service('stanbol').connector instanceof z.StanbolConnector);
     ok(z.service('stanbol').rules);
@@ -89,6 +91,8 @@ test("VIE.js StanbolConnector - API", function() {
     equals(typeof stanbol.connector.load, "function");
     ok(stanbol.connector.find);
     equals(typeof stanbol.connector.find, "function");
+    ok(stanbol.connector.query);
+    equals(typeof stanbol.connector.query, "function");
     ok(stanbol.connector.lookup);
     equals(typeof stanbol.connector.lookup, "function");
     ok(stanbol.connector.referenced);
@@ -420,6 +424,49 @@ test("VIE.js StanbolService - Load", function () {
         ok(false, f.statusText);
         start();
     });
+});
+
+test("VIE.js StanbolService - Query", function () {
+    if (navigator.userAgent === 'Zombie') {
+        return;
+     }
+     var query = {
+             "selected": [
+                          "http://www.w3.org/2000/01/rdf-schema#label",
+                          "http://dbpedia.org/ontology/birthDate",
+                          "http://dbpedia.org/ontology/deathDate"],
+                      "offset": "0",
+                      "limit": "3",
+                      "constraints": [{ 
+                          "type": "range", 
+                          "field": "http://dbpedia.org/ontology/birthDate", 
+                          "lowerBound": "1946-01-01T00:00:00.000Z",
+                          "upperBound": "1946-12-31T23:59:59.999Z",
+                          "inclusive": true,
+                          "datatype": "xsd:dateTime"
+                      },{ 
+                          "type": "reference", 
+                          "field": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
+                          "value": "http://dbpedia.org/ontology/Person", 
+                      }]
+                  };
+     
+     var z = new VIE();
+     ok (z.StanbolService);
+     equal(typeof z.StanbolService, "function");
+     z.use(new z.StanbolService({url : stanbolRootUrl}));
+     stop();
+     z.query({query : query, local : true})
+     .using('stanbol').execute().done(function(entities) {
+         ok(entities);
+         ok(entities.length > 0);
+         ok(entities instanceof Array);
+         start();
+     })
+     .fail(function(f){
+         ok(false, f.statusText);
+         start();
+     });
 });
 
 test("VIE.js StanbolService - ContentHub: Upload of content / Retrieval of enhancements", function () {
