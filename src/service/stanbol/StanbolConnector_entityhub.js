@@ -615,7 +615,7 @@
 //    	                 function (err) { ... }, id);	to update the entity referenced by the specified ID
         updateEntity: function(entity, success, error, options, id) {
         	// TODO access problem for method PUT
-    			id = (id)? ("id=" + id + "&") :  "";
+    			id = (id)? (id) :  "";
     		
     			var connector = this;
     	

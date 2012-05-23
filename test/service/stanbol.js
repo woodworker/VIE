@@ -51,7 +51,7 @@ module("vie.js - Apache Stanbol Service");
 //   /cmsadapter/contenthubfeed
 
 
-var stanbolRootUrl = [/*"http://134.96.189.108:1025", */"http://dev.iks-project.eu:8081", "http://dev.iks-project.eu/stanbolfull"];
+var stanbolRootUrl = [/*"http://134.96.189.108:1025", */"http://lnv-89012.dfki.uni-sb.de:9000"]//, "http://dev.iks-project.eu:8081", "http://dev.iks-project.eu/stanbolfull"];
 test("VIE.js StanbolService - Registration", function() {
     var z = new VIE();
     ok(z.StanbolService, "Checking if the Stanbol Service exists.'");
@@ -743,7 +743,7 @@ test("VIE.js StanbolService - Query for Facts of a Certain Type", function () {
     	start();
     });
 });
-
+*/
 //### test for the entityhub/entity, the service to get/create/update and
 // 	delete Entities managed in the Entityhub.
 //@author mere01
@@ -815,6 +815,7 @@ test( "VIE.js StanbolService - CRUD on local entities", function() {
 					
 					// update the entity that's just been created (modify the label)
 					stop();
+					console.log("sending id to updateEntity: " + id);
 					stanbol.connector.updateEntity(
 								modifEntity,
 								function(response) {
@@ -827,6 +828,7 @@ test( "VIE.js StanbolService - CRUD on local entities", function() {
 									console.log(err);
 									start();
 								},
+								{},
 								id);
 					
 					// delete our entity
@@ -882,6 +884,7 @@ test( "VIE.js StanbolService - CRUD on local entities", function() {
 	// we should be unable to update a non-existing entity
 	var modifId= 'http://developer.yahoo.com/javascript/howto-proxy-falseaddress.html';
 	stop();
+	console.log("sending id to updateEntity: " + modifId);
 	stanbol.connector.updateEntity(
 				modifEntity,
 				function(response) {
@@ -894,6 +897,7 @@ test( "VIE.js StanbolService - CRUD on local entities", function() {
 					console.log(err);
 					start();
 				},
+				{},
 				modifId);
 	
 	// create should fail due to invalid syntax (forgot quotation marks for xmlns:rdf entry)
@@ -916,4 +920,4 @@ test( "VIE.js StanbolService - CRUD on local entities", function() {
 		
 }); // end of test for entityhub/entity
 
-*/
+
