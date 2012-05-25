@@ -510,6 +510,251 @@
                 }
             });
             r.end();
-        }
+        },
+        
+                
+        // ### createEntity(entity, success, error, option)
+    	// @author mere01
+    	// This method creates a new local entity on the Apache Stanbol entityhub endpoint.
+        // If options.update is not set to true, the method fails if the entity is already existing in the entityhub.
+    	// **Parameters**:  
+    	// *{string}* **entity** the rdf xml formatted entity to be sent to the entityhub/entity/
+        // *{function}* **success** The success callback.  
+    	// *{function}* **error** The error callback.  
+        // *{object}* **options** the options to append to the URL request, e.g. "update: true" will 
+        // 						 enable updating an already existing entity.
+    	// **Example usage**:  
+    	//
+        //    	     var stnblConn = new vie.StanbolConnector(opts);
+        //    	     stnblConn.createEntity(<entity>,
+        //    	                 function (res) { ... },
+        //    	                 function (err) { ... },);	to create a new entity in the entityhub
+        createEntity: function(entity, success, error, options) {
+    			options = (options)? options :  {};
+
+    			var connector = this;
+    	
+    	    	connector._iterate({
+    	        	method : connector._createEntity,
+    	        	methodNode : connector._createEntityNode,
+    	        
+    	        	url : function (idx, opts) {
+    	        		
+    	                var update = options.update;
+    	                
+    	                var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+    	                
+    	                u += "/entity";
+    	                
+    	                if (update) {
+    	                	u += "?update=true";
+    	                }
+    	        		return u;
+    	        	},
+    	        	
+    	        	args : {
+    	        		entity : entity,
+    	        		format : "application/rdf+xml"
+    	        	},
+    	        	success : success,
+    	        	error : error,
+    	        	urlIndex : 0
+    	        });
+    	    }, // end of createEntity
+
+        _createEntity : function (url, args, success, error) {
+        	jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "POST",
+                data: args.entity,
+                contentType: args.format//,
+            });
+        }, // end of _createEntity
+
+        _createEntityNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "POST",
+                uri: url,
+                body: args.entity,
+                headers: {
+                    Accept: args.format,
+                    'Content-Type': args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        }, // end of _createEntityNode 
+
+        // ### udpateEntity(id, success, error, option)
+    	// @author mere01
+    	// This method updates a local entity on the Apache Stanbol entityhub/entity endpoint.
+    	// **Parameters**:  
+    	// *{string}* **entity** the rdf xml formatted entity to be sent to the entityhub/entity/
+        // *{function}* **success** The success callback.  
+    	// *{function}* **error** The error callback.  
+        // *{object}* **options** Options: if e.g. "create: 'true'" is specified, then the method will create
+        //		the entity on the entityhub, if it does not already exist.        		
+        // *{string}* **id** the ID of the entity which is to be updated (optional argument)
+    	// **Throws**:  
+    	// *nothing*  
+    	// **Returns**:  
+    	// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+    	// **Example usage**:  
+    	//
+//    	     var stnblConn = new vie.StanbolConnector(opts);
+//    	     stnblConn.updateEntity(<entity>,
+//    	                 function (res) { ... },
+//    	                 function (err) { ... }, id);	to update the entity referenced by the specified ID
+        updateEntity: function(entity, success, error, options, id) {
+        	// TODO access problem for method PUT
+    			id = (id)? (id) :  "";
+    		
+    			var connector = this;
+    	
+    	    	connector._iterate({
+    	        	method : connector._updateEntity,
+    	        	methodNode : connector._updateEntityNode,
+
+    	        	url : function (idx, opts) {
+    	        		
+    	                var isCreate = opts.create;
+    	                
+    	                var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+    	                
+    	                u += "/entity?id=" + escape(id);
+    	                
+    	                if (!isCreate) {
+    	                	u += "&create=false";
+    	                }
+    	        		return u;
+    	        	},
+    	        	args : {
+    	        		entity : entity,
+    	        		format : "application/rdf+xml",
+    	        		options: options
+    	        	},
+    	        	success : success,
+    	        	error : error,
+    	        	urlIndex : 0
+    	        });
+    	    }, // end of updateEntity
+
+        _updateEntity : function (url, args, success, error) {
+        	jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "PUT",
+                data: args.entity,
+                contentType: args.format,
+                accepts: "application/json"
+                
+            });
+        }, // end of _updateEntity
+
+        _updateEntityNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "PUT",
+                uri: url,
+                body: args.entity,
+                headers: {
+                    Accept: "application/json",
+                    'Content-Type': args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        }, // end of _updateEntityNode 
+
+        // ### deleteEntity(id, success, error)
+    	// @author mere01
+    	// This method deletes a local entity from the Apache Stanbol entityhub/entity endpoint.
+    	// **Parameters**:  
+        // *{string}* **id** the ID of the entity which is to be deleted from the entityhub.
+        // *{function}* **success** The success callback.  
+    	// *{function}* **error** The error callback.  
+        // *{object}* **options** Options. 
+    	// **Throws**:  
+    	// *nothing*  
+    	// **Returns**:  
+    	// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+    	// **Example usage**:  
+    	//
+        //    	     var stnblConn = new vie.StanbolConnector(opts);
+        //    	     stnblConn.deleteEntity(
+        //    					 id,
+        //    	                 function (res) { ... },
+        //    	                 function (err) { ... }, 
+        //        				 );						to delete the entity referenced by the specified ID
+        deleteEntity: function(id, success, error, options) {
+        	// TODO access problem for method DELETE
+
+    			var connector = this;
+    	
+    	    	connector._iterate({
+    	        	method : connector._deleteEntity,
+    	        	methodNode : connector._deleteEntityNode,
+
+    	        	url : function (idx, opts) {
+    	        		
+    	                var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+    	                
+    	                u += "/entity?id=" + escape(id);
+    	                
+    	        		return u;
+    	        	},
+    	        	args : {
+    	        		format : "application/rdf+xml",
+    	        		options: options
+    	        	},
+    	        	success : success,
+    	        	error : error,
+    	        	urlIndex : 0
+    	        });
+    	    }, // end of deleteEntity
+
+        _deleteEntity : function (url, args, success, error) {
+        	jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "DELETE",
+                contentType: args.format             
+            });
+        }, // end of _deleteEntity
+
+        _deleteEntityNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "DELETE",
+                uri: url,
+                headers: {
+                    Accept: "application/json",
+                    'Content-Type': args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        } // end of _deleteEntityNode
+        
 	});
 })();
