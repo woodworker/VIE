@@ -17,7 +17,7 @@ module("vie.js - Apache Stanbol Service");
 // !!!  /entityhub/site/<siteId>/find
 //   /entityhub/site/<siteId>/query
 // !!!  /entityhub/site/<siteId>/ldpath
-//   /entityhub/entity (GET, PUT, POST, DELETE)
+//  /entityhub/entity (GET, PUT, POST, DELETE)
 //   /entityhub/mapping
 // !!!  /entityhub/find
 //   /entityhub/query
@@ -51,7 +51,7 @@ module("vie.js - Apache Stanbol Service");
 //   /cmsadapter/contenthubfeed
 
 
-var stanbolRootUrl = [/*"http://134.96.189.108:1025", */"http://dev.iks-project.eu:8081", "http://dev.iks-project.eu/stanbolfull"];
+var stanbolRootUrl = [/*"http://134.96.189.108:1025", */"http://lnv-89012.dfki.uni-sb.de:9000"]//, "http://dev.iks-project.eu:8081", "http://dev.iks-project.eu/stanbolfull"];
 test("VIE.js StanbolService - Registration", function() {
     var z = new VIE();
     ok(z.StanbolService, "Checking if the Stanbol Service exists.'");
@@ -71,6 +71,8 @@ test("VIE.js StanbolService - API", function() {
     equals(typeof z.service('stanbol').find, "function");
     ok(z.service('stanbol').load);
     equals(typeof z.service('stanbol').load, "function");
+    ok(z.service('stanbol').query);
+    equals(typeof z.service('stanbol').query, "function");
     ok(z.service('stanbol').connector);
     ok(z.service('stanbol').connector instanceof z.StanbolConnector);
     ok(z.service('stanbol').rules);
@@ -89,6 +91,8 @@ test("VIE.js StanbolConnector - API", function() {
     equals(typeof stanbol.connector.load, "function");
     ok(stanbol.connector.find);
     equals(typeof stanbol.connector.find, "function");
+    ok(stanbol.connector.query);
+    equals(typeof stanbol.connector.query, "function");
     ok(stanbol.connector.lookup);
     equals(typeof stanbol.connector.lookup, "function");
     ok(stanbol.connector.referenced);
@@ -422,6 +426,49 @@ test("VIE.js StanbolService - Load", function () {
     });
 });
 
+test("VIE.js StanbolService - Query", function () {
+    if (navigator.userAgent === 'Zombie') {
+        return;
+     }
+     var query = {
+             "selected": [
+                          "http://www.w3.org/2000/01/rdf-schema#label",
+                          "http://dbpedia.org/ontology/birthDate",
+                          "http://dbpedia.org/ontology/deathDate"],
+                      "offset": "0",
+                      "limit": "3",
+                      "constraints": [{ 
+                          "type": "range", 
+                          "field": "http://dbpedia.org/ontology/birthDate", 
+                          "lowerBound": "1946-01-01T00:00:00.000Z",
+                          "upperBound": "1946-12-31T23:59:59.999Z",
+                          "inclusive": true,
+                          "datatype": "xsd:dateTime"
+                      },{ 
+                          "type": "reference", 
+                          "field": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
+                          "value": "http://dbpedia.org/ontology/Person", 
+                      }]
+                  };
+     
+     var z = new VIE();
+     ok (z.StanbolService);
+     equal(typeof z.StanbolService, "function");
+     z.use(new z.StanbolService({url : stanbolRootUrl}));
+     stop();
+     z.query({query : query, local : true})
+     .using('stanbol').execute().done(function(entities) {
+         ok(entities);
+         ok(entities.length > 0);
+         ok(entities instanceof Array);
+         start();
+     })
+     .fail(function(f){
+         ok(false, f.statusText);
+         start();
+     });
+});
+
 test("VIE.js StanbolService - ContentHub: Upload of content / Retrieval of enhancements", function () {
     if (navigator.userAgent === 'Zombie') {
        return;
@@ -696,15 +743,181 @@ test("VIE.js StanbolService - Query for Facts of a Certain Type", function () {
     	start();
     });
 });
-
-test("VIE.js StanbolService - CRUD on local entities", function () {
-    if (navigator.userAgent === 'Zombie') {
-       return;
-    }
-    var z = new VIE();
-    ok (z.StanbolService);
-    equal(typeof z.StanbolService, "function");
-    z.use(new z.StanbolService({url : stanbolRootUrl}));
-    //TODO
-});
 */
+//### test for the entityhub/entity, the service to get/create/update and
+// 	delete Entities managed in the Entityhub.
+//@author mere01
+test( "VIE.js StanbolService - CRUD on local entities", function() {
+	if (navigator.userAgent === 'Zombie') {
+	       return;
+	    }
+	var z = new VIE();
+	ok(z.StanbolService, "Stanbol Service exists.");
+	equal(typeof z.StanbolService, "function");
+
+	var stanbol = new z.StanbolService( {
+		url : stanbolRootUrl
+	});
+	z.use(stanbol);
+
+	// create a new entity
+	var entity = '<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"><rdf:Description rdf:about="http://developer.yahoo.com/javascript/howto-proxy.html"><rdfs:label>Howto-Proxy</rdfs:label></rdf:Description></rdf:RDF>'; 
+	var modifEntity = '<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"><rdf:Description rdf:about="http://developer.yahoo.com/javascript/howto-proxy.html"><rdfs:label>Modified Label of Howto-Proxy</rdfs:label></rdf:Description></rdf:RDF>';
+	
+	var id = 'http://developer.yahoo.com/javascript/howto-proxy.html';
+	
+	stop();
+	stanbol.connector.createEntity(
+				entity,
+				function(response) {
+					ok(true, "E1: new entity " + id +  "created in entityhub/entity/ (using option update)");
+					// if an Entities already exists within the Entityhub, the request should fail with BAD REQUEST
+					stop();
+					stanbol.connector.createEntity(
+								entity,
+								function(response) {
+									ok(false, "E2: entityhub/entity: created already existing entity " + id + ". (using no option)");
+									console.log(response);
+									start();
+								},
+								function(err) {
+									ok(true, "E2: already-existing entity could not be created in the entityhub! (using no option) Received error message: " + err);
+									start();
+								}); // do NOT allow updating of already existing entities
+					
+					// retrieve the entity that's just been created
+					stop();
+					stanbol.connector.load(
+								id,
+								function(response) {
+									var first = null;
+									for (var key in response) 
+									// grab just the first key of the returned object
+									{
+										first = response[key];
+										if(typeof(first)!== 'function') {
+											console.log(key);
+											first = key;
+											break;
+										}
+										}
+									ok(true, "E3: got entity from entityhub/entity: " + first);
+									console.log("E3: got entity:");
+									console.log(first);
+									start();
+								},
+								function(err) {
+									ok(false, "E3: could not get entity from the entityhub!");
+									console.log(err);
+									start();
+								},
+								{local: 'true'}); // to denote that this is a local entity
+					
+					// update the entity that's just been created (modify the label)
+					stop();
+					console.log("sending id to updateEntity: " + id);
+					stanbol.connector.updateEntity(
+								modifEntity,
+								function(response) {
+									ok(true, "E4: entity  " + response.id + " was updated successfully in the entityhub.");
+									start();
+								},
+								function(err) {
+									ok(false, "E4: could not update entity " + id + " in the entityhub! Received error message: " + err);
+									console.log("E4: could not update entity " + id);
+									console.log(err);
+									start();
+								},
+								{},
+								id);
+					
+					// delete our entity
+					stop();
+					stanbol.connector.deleteEntity(
+								id,
+								function(response) {
+									ok(true, "E6: entity  " + response.id + " was deleted successfully from the entityhub.");
+									start();
+								},
+								function(err) {
+									ok(false, "E6: could not delete entity " + id + " from the entityhub! Received error message: " + err);
+									console.log("E6: could not delete entity " + id);
+									console.log(err);
+									start();
+								}); 
+					
+					// the deleted entity cannot be retrieved anymore
+					stop();
+					stanbol.connector.load(
+								id,
+								function(response) {
+									console.log("E7: got entity:");
+									var first = null;
+									for (var key in response) 
+									// grab just the first key of the returned object
+									{
+										first = response[key]
+										if(typeof(first)!== 'function') {
+											console.log(key);
+											first = key;
+											break;
+										}
+										}
+									ok(false, "E7: got non-existing entity from entityhub/entity: " + first);
+									start();
+								},
+								function(err) {
+									ok(true, "E7: could not get non-existing entity from the entityhub!");
+									console.log("E7:");
+									console.log(err);
+									start();
+								});
+					start();
+				},
+				function(err) {
+					ok(false, "E1: entity could not be created in the entityhub! (using options local, update)");
+					start();
+				}, 
+				{update: 'true' // option to allow repeated testing with same entity
+				}); 
+	
+	// we should be unable to update a non-existing entity
+	var modifId= 'http://developer.yahoo.com/javascript/howto-proxy-falseaddress.html';
+	stop();
+	console.log("sending id to updateEntity: " + modifId);
+	stanbol.connector.updateEntity(
+				modifEntity,
+				function(response) {
+					ok(false, "E5: non-existing entity  " + response.id + " was updated successfully in the entityhub.");
+					start();
+				},
+				function(err) {
+					ok(true, "E5: could not update non-existing entity " + modifId + " in the entityhub! Received error message: " + err);
+					console.log("E5: could not update non-existing entity " + modifId);
+					console.log(err);
+					start();
+				},
+				{},
+				modifId);
+	
+	// create should fail due to invalid syntax (forgot quotation marks for xmlns:rdf entry)
+	var entity = '<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf=http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"><rdf:Description rdf:about="http://developer.yahoo.com/javascript/howto-proxy.html"><rdfs:label>Howto-Proxy</rdfs:label></rdf:Description></rdf:RDF>'; 
+	stop();
+	stanbol.connector.createEntity(
+		entity,
+		function(response) {
+			ok(false, "E8: created entity on entityhub in spite of faulty syntax. " + response)
+			console.log("E8 got response:");
+			console.log(response);
+			start();
+		},
+		function(err) {
+			ok(true, "E8: entity creation failed due to erroneous syntax. Received error message: " + err);
+			console.log("E8:");
+			console.log(err);
+			start();
+		});
+		
+}); // end of test for entityhub/entity
+
+

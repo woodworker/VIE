@@ -223,24 +223,44 @@ VIE.prototype.getServicesArray = function() {
   return _.map(this.services, function (v) {return v;});
 };
 
-// ### load(options)
-// This method instantiates a new VIE.Loadable in order to
-// perform queries on the services.  
-// **Parameters**:  
-// *{object}* **options** Options to be set.  
-// **Throws**:  
-// *nothing*  
-// **Returns**:  
-// *{VIE.Loadable}* : A new instance of VIE.Loadable.  
-// **Example usage**:  
+//### load(options)
+//This method instantiates a new VIE.Loadable in order to
+//perform queries on the services.  
+//**Parameters**:  
+//*{object}* **options** Options to be set.  
+//**Throws**:  
+//*nothing*  
+//**Returns**:  
+//*{VIE.Loadable}* : A new instance of VIE.Loadable.  
+//**Example usage**:  
 //
-//     var vie = new VIE();
-//     vie.use(new vie.StanbolService(), "stanbol");
-//     var loader = vie.load({...});
+//  var vie = new VIE();
+//  vie.use(new vie.StanbolService(), "stanbol");
+//  var loader = vie.load({...});
 VIE.prototype.load = function(options) {
-  if (!options) { options = {}; }
-  options.vie = this;
-  return new this.Loadable(options);
+if (!options) { options = {}; }
+options.vie = this;
+return new this.Loadable(options);
+};
+
+//### query(options)
+//This method instantiates a new VIE.Queryable in order to
+//perform queries on the services.  
+//**Parameters**:  
+//*{object}* **options** Options to be set.  
+//**Throws**:  
+//*nothing*  
+//**Returns**:  
+//*{VIE.Queryable}* : A new instance of VIE.Queryable.  
+//**Example usage**:  
+//
+//  var vie = new VIE();
+//  vie.use(new vie.StanbolService(), "stanbol");
+//  var querier = vie.query({...});
+VIE.prototype.query = function(options) {
+if (!options) { options = {}; }
+options.vie = this;
+return new this.Queryable(options);
 };
 
 // ### save(options)

@@ -13,7 +13,7 @@
     <property name="TEST_DIR" value="./test"/>
     <property name="TMP_DIR" value="./tmp"/>
     <property name="TOOLS_DIR" value="./utils"/>
-    <property name="YUI" value="${TOOLS_DIR}/yui-compressor/yuicompressor-2.4.2.jar" />
+    <property name="YUI" value="${TOOLS_DIR}/yui-compressor/yuicompressor-2.4.7.jar" />
 	
 	<target name="timestamp">
 		<tstamp>
@@ -199,6 +199,13 @@
             <!-- VIE 1.0 API compat -->
             <fileset dir="${SRC_DIR}" includes="Classic.js"/>
             <fileset dir="${SRC_DIR}/service" includes="*.js"/>
+            <fileset dir="${SRC_DIR}/service/stanbol">
+                <include name="StanbolConnector.js"/>
+            </fileset>
+            <fileset dir="${SRC_DIR}/service/stanbol">
+                <include name="*.js"/>
+                <exclude name="StanbolConnector.js"/>
+            </fileset>
             <fileset dir="${SRC_DIR}/view" includes="*.js"/>
             <!-- Internet Explorer specific jQuery Ajax transport handler -->
             <fileset dir="${SRC_DIR}" includes="xdr.js"/>
