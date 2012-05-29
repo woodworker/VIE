@@ -11,27 +11,30 @@ module("vie.js - Apache Stanbol Service");
 // !!!  /entityhub/sites/referenced
 // !!!  /entityhub/sites/entity
 // !!!  /entityhub/sites/find
-//   /entityhub/sites/query
+//	 	/entityhub/query
+//   	/entityhub/sites/query
+//   	/entityhub/site/<siteId>/query
 // !!!  /entityhub/sites/ldpath
 // !!!  /entityhub/site/<siteId>/entity 
 // !!!  /entityhub/site/<siteId>/find
-//   /entityhub/site/<siteId>/query
 // !!!  /entityhub/site/<siteId>/ldpath
-//  /entityhub/entity (GET, PUT, POST, DELETE)
-//   /entityhub/mapping
+// ??? 	/entityhub/entity (GET, PUT, POST, DELETE) - still need to solve allow-methods problem
+//   	/entityhub/mapping
 // !!!  /entityhub/find
-//   /entityhub/query
 // !!!  /entityhub/lookup
 // !!!  /entityhub/ldpath
+
 // ???  /sparql
-//   /contenthub/contenthub/ldpath
-// !!!  /contenthub/contenthub/store
-//   /contenthub/contenthub/store/raw/<contentId>
-//   /contenthub/contenthub/store/metadata/<contentId>
-// !!!  /contenthub/<coreId>/store
-//   /contenthub/<coreId>/store/raw/<contentId>
-//   /contenthub/<coreId>/store/metadata/<contentId>
+
+// !!! /contenthub/contenthub/ldpath						- createIndex()
+// !!!  /contenthub/contenthub/store						- uploadContent()
+// !!!  /contenthub/contenthub/store/raw/<contentId>		- getTextContentByID()
+// !!!  /contenthub/contenthub/store/metadata/<contentId> 	- getMetadataByID()
+// !!!  /contenthub/<coreId>/store							- uploadContent()
+// !!!  /contenthub/<coreId>/store/raw/<contentId> 			- getTextContentByID()
+// !!!  /contenthub/<coreId>/store/metadata/<contentId> 	- getMetadataByID()
 // ???  /contenthub/content/<contentId>
+
 // !!!  /factstore/facts
 // !!!  /factstore/query
 //   /ontonet/ontology
@@ -51,7 +54,10 @@ module("vie.js - Apache Stanbol Service");
 //   /cmsadapter/contenthubfeed
 
 
-var stanbolRootUrl = [/*"http://134.96.189.108:1025", */"http://lnv-89012.dfki.uni-sb.de:9000"]//, "http://dev.iks-project.eu:8081", "http://dev.iks-project.eu/stanbolfull"];
+var stanbolRootUrl = [/*"http://134.96.189.108:1025", */ 
+                      //"http://lnv-89012.dfki.uni-sb.de:9000"//, 
+                      "http://dev.iks-project.eu:8081", "http://dev.iks-project.eu/stanbolfull"
+                      ];
 test("VIE.js StanbolService - Registration", function() {
     var z = new VIE();
     ok(z.StanbolService, "Checking if the Stanbol Service exists.'");
@@ -426,49 +432,138 @@ test("VIE.js StanbolService - Load", function () {
     });
 });
 
-test("VIE.js StanbolService - Query", function () {
-    if (navigator.userAgent === 'Zombie') {
-        return;
-     }
-     var query = {
-             "selected": [
-                          "http://www.w3.org/2000/01/rdf-schema#label",
-                          "http://dbpedia.org/ontology/birthDate",
-                          "http://dbpedia.org/ontology/deathDate"],
-                      "offset": "0",
-                      "limit": "3",
-                      "constraints": [{ 
-                          "type": "range", 
-                          "field": "http://dbpedia.org/ontology/birthDate", 
-                          "lowerBound": "1946-01-01T00:00:00.000Z",
-                          "upperBound": "1946-12-31T23:59:59.999Z",
-                          "inclusive": true,
-                          "datatype": "xsd:dateTime"
-                      },{ 
-                          "type": "reference", 
-                          "field": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
-                          "value": "http://dbpedia.org/ontology/Person", 
-                      }]
-                  };
-     
-     var z = new VIE();
-     ok (z.StanbolService);
-     equal(typeof z.StanbolService, "function");
-     z.use(new z.StanbolService({url : stanbolRootUrl}));
-     stop();
-     z.query({query : query, local : true})
-     .using('stanbol').execute().done(function(entities) {
-         ok(entities);
-         ok(entities.length > 0);
-         ok(entities instanceof Array);
-         start();
-     })
-     .fail(function(f){
-         ok(false, f.statusText);
-         start();
-     });
-});
 
+/*
+//### test for the /entityhub/sites/query
+//@author mere01
+//tests json field queries with constraints on value, text and range
+test(
+		"VIE.js StanbolService - FieldQuery.json",
+		function() {
+			// ask for the first three entities with an altitude of 34 meters
+			var queryVC = '{ "selected": ["http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"], "offset": "0", "limit": "3", "constraints": [{ "type": "value", "value": "34", "field": "http:\/\/www.w3.org\/2003\/01\/geo\/wgs84_pos#alt", "datatype": "xsd:int" }] }';
+			// ask for the first three entities with a German rdfs:label
+			// starting with "Frankf"
+			var queryTC = '{ "selected": ["http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"], "offset": "0", "limit": "3", "constraints": [{"type": "text", "xml:lang": "de", "patternType": "wildcard", "field": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label", "text": "Frankf*" }] }';
+			// ask for the first three cities that are > 1K meters above sear
+			// level AND have > 1 mio inhabitants
+			var queryRC = '{ "selected": ["http:\/\/www.w3.org\/2000\/01\/rdf-schema#label", "http:\/\/dbpedia.org\/ontology\/populationTotal", "http:\/\/www.w3.org\/2003\/01\/geo\/wgs84_pos#alt"], "offset": "0", "limit": "3", "constraints": [{ "type": "range", "field": "http:\/\/dbpedia.org\/ontology\/populationTotal", "lowerBound": 1000000, "inclusive": true, "datatype": "xsd:long" },{ "type": "range", "field": "http:\/\/www.w3.org\/2003\/01\/geo\/wgs84_pos#alt", "lowerBound": 1000, "inclusive": true, },{ "type": "reference", "field": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#type", "value": "http:\/\/dbpedia.org\/ontology\/City", }] }';
+
+			var z = new VIE();
+			ok(z.StanbolService, "Stanbol Service exists.");
+			equal(typeof z.StanbolService, "function");
+	
+			var stanbol = new z.StanbolService( {
+				url : stanbolRootUrl
+			});
+			// console.log(stanbol.options);
+			z.use(stanbol);
+
+			// hold it until we get results form our test query
+//			stop();
+//			// expecting as results "Baghdad", "Berlin" among others
+//			stanbol.connector
+//					.queryEntities(
+//							queryVC,
+//							function(response) {
+//								ok(true,
+//										"entityhub/query returned a response. (see log)");
+//								console
+//										.log("value test of entityhub/query returned:");
+//								// response is an Object with 2 fields: query and results.
+//								// results is an Array containing the 3 resulting Objects
+//								console.log(response.results);
+//								start();
+//							},
+//							function(err) {
+//								ok(false,
+//										"value test of entityhub/query endpoint returned no response!");
+//								console.log(err)
+//								start();
+//							});
+
+			stop();
+			// expecting as results "Frankfurt am Main", "Eintracht Frankfurt", among others
+			stanbol.connector
+					.queryEntities(
+							queryTC,
+							function(response) {
+								ok(true,
+										"entityhub/query returned a response. (see log)");
+								console
+										.log("text test of entityhub/query returned:");
+								console.log(response.results);
+								start();
+							},
+							function(err) {
+								ok(false,
+										"text test of entityhub/query endpoint returned no response!");
+								start();
+							});
+//
+//			stop();
+//			// expecting as results "Mexico City", "Bogotá" and "Quito"
+//			stanbol.connector
+//					.queryEntities(
+//							queryRC,
+//							function(response) {
+//								ok(true,
+//										"entityhub/query returned a response. (see log)");
+//								console
+//										.log("range test of entityhub/query returned:");
+//								console.log(response.results);
+//								start();
+//							},
+//							function(err) {
+//								ok(false,
+//										"range test of entityhub/query endpoint returned no response!");
+//								start();
+//							});
+
+		}); // end of test for entityhub/sites/query
+
+//### test for the /entityhub/site/<siteID>
+//@author mere01
+//tests the single site service of the entityhub's Referenced Site Manager
+//since per default, only dbpedia is referenced, this tests for dbpedia only
+//test("VIE.js StanbolService - QueryDBpedia", function() {
+//
+//		// ask for the first three entities with a German rdfs:label, starting with "Frankf"
+//		var query = '{ "selected": ["http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"], "offset": "0", "limit": "3", "constraints": [{"type": "text", "xml:lang": "de", "patternType": "wildcard", "field": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label", "text": "Frankf*" }] }';
+//
+//		var z = new VIE();
+//		ok(z.StanbolService, "Stanbol Service exists.");
+//		equal(typeof z.StanbolService, "function");
+//		
+//		var stanbol = new z.StanbolService( {
+//			url : stanbolRootUrl
+//		});
+//		z.use(stanbol);
+//
+//		// hold it until we get results form our test query
+//		stop();
+//		// expecting as result entity "Paris" (France) of dbpedia
+//		stanbol.connector
+//				.queryDBpedia(
+//						query,
+//						function(response) {
+//							ok(true,
+//									"entityhub/dbpedia returned a response. (see log)");
+//							console
+//									.log("entity returned from entityhub/dbpedia is:");
+//
+//							console.log(response.results);
+//							start();
+//						},
+//						function(err) {
+//							ok(false,
+//									"entityhub/dbpedia endpoint returned no response!");
+//							start();
+//						});
+//
+//	}); // end of test for entityhub/site/<siteID>
+*/
+		
 test("VIE.js StanbolService - ContentHub: Upload of content / Retrieval of enhancements", function () {
     if (navigator.userAgent === 'Zombie') {
        return;
@@ -484,6 +579,8 @@ test("VIE.js StanbolService - ContentHub: Upload of content / Retrieval of enhan
     stop();
     stanbol.connector.uploadContent(content, function(xml,status,xhr){
         var location = xhr.getResponseHeader('Location');
+        console.log("this is the location:")
+        console.log(location);
         //TODO: This does not work in jQuery :(
         start();
     }, function (err) {
@@ -921,3 +1018,267 @@ test( "VIE.js StanbolService - CRUD on local entities", function() {
 }); // end of test for entityhub/entity
 
 
+//### test for the /contenthub/contenthub/store/raw/<contentId>, the service to retrieve raw text
+// content from content items via the item's id
+//@author mere01
+test("Vie.js StanbolService - Contenthub/store/raw/<id>", function() {
+
+	var z = new VIE();
+	ok(z.StanbolService, "Stanbol Service exists.");
+	equal(typeof z.StanbolService, "function");
+
+	var stanbol = new z.StanbolService( {
+		url : stanbolRootUrl
+	});
+	z.use(stanbol);
+	
+	var content = "This is some raw text content to be stored for id 'urn:melaniesitem'.";
+	var id = "urn:melaniesitem"; // for iks demo server
+	
+	// first we have to store that item to the contenthub -> to the default index
+	var url = stanbolRootUrl + "contenthub/contenthub/store/" + id;
+	jQuery.ajax({
+		url: url,
+		success: function(response) {console.log("Stored entity " + id + " to contenthub"); console.log(response)},
+		error: function(err) {console.log(err);},
+		type: "POST",
+        data: content,
+        contentType: "text/plain",
+    	dataType: "application/rdf+xml"
+		    });
+	
+	// hold it until we get our results
+	stop();
+			stanbol.connector
+				.getTextContentByID(id,
+						function(response) {
+							ok(true, "contenthub/contenthub/store/raw returned a response. (see log)");
+							console.log("text content returned from contenthub/contenthub/store/raw is:");
+							console.log(response);
+							start();
+						},
+						function(err) {
+							ok(false, "contenthub/contenthub/store/raw endpoint returned no response!");
+							console.log(err);
+							start();
+						});
+			
+}); // end of test for /contenthub/contenthub/store/raw/<contentId>
+
+
+//### test for the /contenthub/contenthub/store/metadata/<contentId>, the service to retrieve the
+//metadata (=enhancements) from content items via the item's id
+//@author mere01
+test("Vie.js StanbolService - Contenthub/store/metadata/<id>", function() {
+
+	var z = new VIE();
+	ok(z.StanbolService, "Stanbol Service exists.");
+	equal(typeof z.StanbolService, "function");
+
+	var stanbol = new z.StanbolService( {
+		url : stanbolRootUrl
+	});
+	z.use(stanbol);
+	
+	var content = "This is a small example content item with an occurrence of entity Steve Jobs in it.";
+	var id = "urn:melanie2ndsitem";
+	
+	// first we have to store that item to the contenthub -> to the default index
+	var url = stanbolRootUrl + "contenthub/contenthub/store/" + id;
+	jQuery.ajax({
+		url: url,
+		success: function(response) {console.log("Stored entity " + id + " to contenthub"); console.log(response)},
+		error: function(err) {console.log(err);},
+		type: "POST",
+      data: content,
+      contentType: "text/plain",
+  	dataType: "application/rdf+xml"
+		    });
+	
+	// hold it until we get our results
+	stop();
+			stanbol.connector
+				.getMetadataByID(id,
+						function(response) {
+							ok(true, "contenthub/contenthub/store/metadata returned a response. (see log)");
+							console.log("text content returned from contenthub/contenthub/store/metadata is:");
+							console.log(response);
+							start();
+						},
+						function(err) {
+							ok(false, "contenthub/contenthub/store/metadata endpoint returned no response!");
+							console.log(err);
+							start();
+						});
+			
+}); // end of test for /contenthub/contenthub/store/metadata/<contentId>
+
+
+//### test for the /contenthub endpoint, checking the ldpath functionality and options in working with 
+//		own indices on the contenthub
+//@author mere01
+test("VIE.js StanbolService - create and read contenthub indices", function() {
+	
+	if (navigator.userAgent === 'Zombie') {
+        return;
+     }
+	
+	// we first want to create ourselves a new index, using an ldpath program
+	var ldpath = "name=melaniesIndex&program=@prefix rdf : <http://www.w3.org/1999/02/22-rdf-syntax-ns#>; @prefix rdfs : <http://www.w3.org/2000/01/rdf-schema#>; @prefix db-ont : <http://dbpedia.org/ontology/>; title = rdfs:label :: xsd:string; dbpediatype = rdf:type :: xsd:anyURI; population = db-ont:populationTotal :: xsd:int;";
+	var index = 'melaniesIndex';
+	
+	var z = new VIE();
+    ok (z.StanbolService);
+    equal(typeof z.StanbolService, "function");
+    var stanbol = new z.StanbolService({url : stanbolRootUrl});
+    z.use(stanbol);
+    stop();
+    stanbol.connector.createIndex(ldpath, function(success) {
+    	ok(true, "created new index on contenthub.");
+    	console.log(success);
+    	start();
+    	
+    	// we can now store new items unto our own index
+    	var item = "We are talking about huge cities such as Paris or New York, where life is an expensive experience.";
+    	var id = 'myOwnIdToUseHere';
+    	
+    	
+    	var z = new VIE();
+        ok (z.StanbolService);
+        equal(typeof z.StanbolService, "function");
+        var stanbol = new z.StanbolService({url : stanbolRootUrl});
+        z.use(stanbol);
+        stop();
+        stanbol.connector.uploadContent(item,
+        	function(success){
+        		ok(true, "stored item to " + index); start();
+        		
+        		// we can then get back this newly created item by its id:
+        		var idToRetrieve = "urn:content-item-" + id;
+        		var z = new VIE();
+                ok (z.StanbolService);
+                equal(typeof z.StanbolService, "function");
+                var stanbol = new z.StanbolService({url : stanbolRootUrl});
+                z.use(stanbol);
+                stop();
+                // ... we can either retrieve its text content
+                stanbol.connector.getTextContentByID(idToRetrieve, 
+                	function(success){
+                		ok(true, "retrieved item's raw text content.");
+                		console.log("retrieved content item: " + success);
+                		start();
+                	},
+                	function(err) {
+                		ok(false, "could not retrieve item's raw text content.");
+                		console.log(err);
+                		start();
+                	},
+                	{index: index}
+                	);
+                stop();
+                // ... or its enhancements
+                stanbol.connector.getMetadataByID(idToRetrieve,
+                	function(success){
+	            		ok(true, "retrieved content item's metadata.");
+	            		console.log("retrieved content item's metadata: " + success);
+	            		start();
+            		},
+            		function(err) {
+	            		ok(false, "could not retrieve content item's metadata.");
+	            		console.log(err);
+	            		start();
+            		},
+            		{index: index}
+            		);
+        		
+        		
+        	},
+        		function(err){
+        			ok(false, "couldn't store item to " + id); 
+        			console.log(err); 
+        			start();
+        		},
+        		{
+        			index: index,
+        			id: id
+        		});
+        
+        
+        // and we can delete the new index again: TODO
+        
+        // we can also view the list of indices that are currently being managed by the contenthub
+        var z = new VIE();
+        ok (z.StanbolService);
+        equal(typeof z.StanbolService, "function");
+        var stanbol = new z.StanbolService({url : stanbolRootUrl});
+        z.use(stanbol);
+        stop();
+        stanbol.connector.contenthubIndices(function (indices) {
+        	ok(_.isArray(indices), "returned an array of indices");
+        	ok(indices.length > 0, "returned at least one index");
+        	
+        	ok(true, "indices currently managed by the contenthub: \n" + indices);
+        	
+        	console.log("the following indices are currently managed by the contenthub:");
+        	console.log(indices);
+        	start();
+        }, function (err) {
+        	ok(false, "No contenthub indices have been returned!");
+        	start();
+        });
+        
+    	
+    }, function(err){
+    	ok(false, "could not create index '" + index + "' on contenthub.");
+    	console.log(err);
+    	start();
+    });
+	
+
+    
+	}
+);
+
+test("VIE.js StanbolService - Query", function () {
+    if (navigator.userAgent === 'Zombie') {
+        return;
+     }
+     var query = {
+             "selected": [
+                          "http://www.w3.org/2000/01/rdf-schema#label",
+                          "http://dbpedia.org/ontology/birthDate",
+                          "http://dbpedia.org/ontology/deathDate"],
+                      "offset": "0",
+                      "limit": "3",
+                      "constraints": [{ 
+                          "type": "range", 
+                          "field": "http://dbpedia.org/ontology/birthDate", 
+                          "lowerBound": "1946-01-01T00:00:00.000Z",
+                          "upperBound": "1946-12-31T23:59:59.999Z",
+                          "inclusive": true,
+                          "datatype": "xsd:dateTime"
+                      },{ 
+                          "type": "reference", 
+                          "field": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
+                          "value": "http://dbpedia.org/ontology/Person"
+                      }]
+                  };
+     
+     var z = new VIE();
+     ok (z.StanbolService);
+     equal(typeof z.StanbolService, "function");
+     z.use(new z.StanbolService({url : stanbolRootUrl}));
+     stop();
+     z.query({query : query, local : true})
+     .using('stanbol').execute().done(function(entities) {
+         ok(entities);
+         ok(entities.length > 0);
+         ok(entities instanceof Array);
+         console.log(entities)
+         start();
+     })
+     .fail(function(f){
+         ok(false, f.statusText);
+         start();
+     });
+});
