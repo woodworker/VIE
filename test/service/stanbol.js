@@ -51,7 +51,7 @@ module("vie.js - Apache Stanbol Service");
 //   /cmsadapter/contenthubfeed
 
 
-var stanbolRootUrl = [/*"http://134.96.189.108:1025", */"http://lnv-89012.dfki.uni-sb.de:9000"]//, "http://dev.iks-project.eu:8081", "http://dev.iks-project.eu/stanbolfull"];
+var stanbolRootUrl = ["http://134.96.189.12:9000","http://dev.iks-project.eu:8081", "http://dev.iks-project.eu/stanbolfull"];
 test("VIE.js StanbolService - Registration", function() {
     var z = new VIE();
     ok(z.StanbolService, "Checking if the Stanbol Service exists.'");
@@ -159,10 +159,13 @@ test("VIE.js StanbolService - Analyze with wrong URL of Stanbol", function () {
     var z = new VIE();
     ok (z.StanbolService);
     equal(typeof z.StanbolService, "function");
-    var wrongUrls = ["http://www.this-is-wrong.url/", "http://dev.iks-project.eu/stanbolfull"];
-    z.use(new z.StanbolService({url : wrongUrls}));
+    var wrongUrls = ["http://www.this-is-wrong.url/"];
+    z.use(new z.StanbolService({url : wrongUrls.concat(stanbolRootUrl)}));
     stop();
-    z.analyze({element: elem}).using('stanbol').execute().done(function(entities) {
+    z.analyze({element: elem})
+    .using('stanbol')
+    .execute()
+    .done(function(entities) {
 
         ok(entities);
         ok(entities.length > 0, "At least one entity returned");
@@ -181,6 +184,27 @@ test("VIE.js StanbolService - Analyze with wrong URL of Stanbol", function () {
     })
     .fail(function(f){
         ok(false, f.statusText);
+        start();
+    });
+});
+
+test("VIE.js StanbolService - Analyze with wrong URL of Stanbol (2)", function () {
+    if (navigator.userAgent === 'Zombie') {
+       return;
+    } 
+
+ // Sending a an example with double quotation marks.
+    var elem = $('<p>This is a small test, where Steve Jobs sings the song \"We want to live forever!\" song.</p>');
+    var x = new VIE();
+    var wrongUrls = ["http://www.this-is-wrong.url/"];
+    x.use(new x.StanbolService({url : wrongUrls}));
+    stop();
+    x.analyze({element: elem}).using('stanbol').execute().done(function(entities) {
+        ok(false, "This should not return with any value!");
+        start();
+    })
+    .fail(function(f){
+        ok(true, f.statusText);
         start();
     });
 });
