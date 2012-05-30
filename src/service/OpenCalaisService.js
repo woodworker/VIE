@@ -291,11 +291,11 @@ VIE.prototype.OpenCalaisConnector.prototype = {
     },
 	
 	//loads opencalais linked data document by it's URL in order to get links to other ontologies like dbpedia and freebase
-	_loadDocument : function(url, service) {
+	_loadDocument : function(url, service, callback) {
 		url.replace(/<|>/g, '');
 		url = (url.match('.html'))? url.replace('.html','.rdf'): (url.match('.rdf')? url: url+'.rdf');
 		var success = function(responseData){
-			var entities = 	VIE.Util.rdf2Entities(service, responseData);
+			var entities = 	VIE.Util.rdf2Entities(service, responseData, {dontAddToVIE: true});
 			for(var e in entities){
 				var entity = entities[e];
 				if(entity.has('owl:sameAs')){
@@ -303,9 +303,8 @@ VIE.prototype.OpenCalaisConnector.prototype = {
 					linkedEntities = jQuery.isArray(linkedEntities)? linkedEntities: [linkedEntities];
 					for(var i = 0; i < linkedEntities.length; i++){
 						var uri = linkedEntities[i];
-						if(uri.match('dbpedia')){
-							console.log(uri);
-						}
+						uri = uri.isEntity? uri.getSubjectUri(): uri;
+						callback(uri);
 					}
 				}
 			}

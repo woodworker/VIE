@@ -185,7 +185,7 @@ VIE.Util = {
 // *nothing*  
 // **Returns**:  
 // *{[VIE.Entity]}* : An array, containing VIE.Entity instances which have been transformed from the given data.
-    rdf2Entities: function (service, results) {
+    rdf2Entities: function (service, results, options) {
         if (typeof jQuery.rdf !== 'function') {
             /* fallback if no rdfQuery has been loaded */
             return VIE.Util._rdf2EntitiesNoRdfQuery(service, results);
@@ -268,7 +268,9 @@ VIE.Util = {
 	        var vieEntities = [];
 	        jQuery.each(entities, function() {
 	            var entityInstance = new service.vie.Entity(this);
-	            entityInstance = service.vie.entities.addOrUpdate(entityInstance);
+				if (!(options && options.dontAddToVIE)){
+	                entityInstance = service.vie.entities.addOrUpdate(entityInstance);
+				}
 	            vieEntities.push(entityInstance);
 	        });
 	        return vieEntities;
