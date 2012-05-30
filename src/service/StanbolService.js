@@ -177,7 +177,7 @@ VIE.prototype.StanbolService.prototype = {
 
             } else {
                 console.warn("No text found in element.");
-                analyzable.resolve([]);
+                analyzable.reject([]);
             }
 
         },
