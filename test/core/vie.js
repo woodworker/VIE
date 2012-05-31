@@ -150,7 +150,8 @@ test("vie.js Entity API - setOrAdd", function () {
 
     clapton.setOrAdd('plays', 'vocals');
     ok(z.entities.get('http://example.org/EricClapton').get('plays') instanceof Array, "Multiple values are stored as Arrays");
-
+	equal(z.entities.get('http://example.org/EricClapton').get('plays').length, 2);
+	
     clapton.unset('plays');
     ok(!clapton.get('plays'), "Property unset");
 
