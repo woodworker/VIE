@@ -796,5 +796,20 @@ VIE.Util = {
             }).replace(/[0-9]{2..3}px/, "" + picWidth + "px");
             return depictionUrl.replace(/^<|>$/g, '');
         }
+    },
+    
+ // ### VIE.Util.UUIDGenerator()
+ // Returns a UUID. The original code is from [stackoverflow](http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript).
+ // **Parameters**:
+ // *nothing*
+ // **Throws**:
+ // *nothing*.
+ // **Returns**:
+ // *{string}* The generated UUID.    
+    UUIDGenerator: function () {
+        var S4 = function() {
+           return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        };
+        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
     }
 };

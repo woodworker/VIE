@@ -283,6 +283,7 @@ VIE.prototype.OpenCalaisConnector.prototype = {
             calculateRelevanceScore: "true",
             enableMetadataType: "GenericRelations,SocialTags",
             contentType: "text/html",
+            outputFormat : "Application/JSON",
             content: text,
 			docRDFaccessible: "true"
             // for more options check http://developer.opencalais.com/docs/suggest/
