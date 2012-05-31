@@ -54,7 +54,8 @@ module("vie.js - Apache Stanbol Service");
 //   /cmsadapter/contenthubfeed
 
 
-var stanbolRootUrl = ["http://134.96.189.12:9000","http://dev.iks-project.eu:8081", "http://dev.iks-project.eu/stanbolfull"];
+var stanbolRootUrl = (window.STANBOL_URLS)? window.STANBOL_URLS : ["http://dev.iks-project.eu:8081", "http://dev.iks-project.eu/stanbolfull"];
+
 test("VIE.js StanbolService - Registration", function() {
     var z = new VIE();
     ok(z.StanbolService, "Checking if the Stanbol Service exists.'");
@@ -67,19 +68,19 @@ test("VIE.js StanbolService - API", function() {
     z.use(new z.StanbolService);
 
     ok(z.service('stanbol').init);
-    equals(typeof z.service('stanbol').init, "function");
+    equal(typeof z.service('stanbol').init, "function");
     ok(z.service('stanbol').analyze);
-    equals(typeof z.service('stanbol').analyze, "function");
+    equal(typeof z.service('stanbol').analyze, "function");
     ok(z.service('stanbol').find);
-    equals(typeof z.service('stanbol').find, "function");
+    equal(typeof z.service('stanbol').find, "function");
     ok(z.service('stanbol').load);
-    equals(typeof z.service('stanbol').load, "function");
+    equal(typeof z.service('stanbol').load, "function");
     ok(z.service('stanbol').query);
-    equals(typeof z.service('stanbol').query, "function");
+    equal(typeof z.service('stanbol').query, "function");
     ok(z.service('stanbol').connector);
     ok(z.service('stanbol').connector instanceof z.StanbolConnector);
     ok(z.service('stanbol').rules);
-    equals(typeof z.service('stanbol').rules, "object");
+    equal(typeof z.service('stanbol').rules, "object");
 });
 
 test("VIE.js StanbolConnector - API", function() {
@@ -89,29 +90,29 @@ test("VIE.js StanbolConnector - API", function() {
     
     //API
     ok(stanbol.connector.analyze);
-    equals(typeof stanbol.connector.analyze, "function");
+    equal(typeof stanbol.connector.analyze, "function");
     ok(stanbol.connector.load);
-    equals(typeof stanbol.connector.load, "function");
+    equal(typeof stanbol.connector.load, "function");
     ok(stanbol.connector.find);
-    equals(typeof stanbol.connector.find, "function");
+    equal(typeof stanbol.connector.find, "function");
     ok(stanbol.connector.query);
-    equals(typeof stanbol.connector.query, "function");
+    equal(typeof stanbol.connector.query, "function");
     ok(stanbol.connector.lookup);
-    equals(typeof stanbol.connector.lookup, "function");
+    equal(typeof stanbol.connector.lookup, "function");
     ok(stanbol.connector.referenced);
-    equals(typeof stanbol.connector.referenced, "function");
+    equal(typeof stanbol.connector.referenced, "function");
     ok(stanbol.connector.sparql);
-    equals(typeof stanbol.connector.sparql, "function");
+    equal(typeof stanbol.connector.sparql, "function");
     ok(stanbol.connector.ldpath);
-    equals(typeof stanbol.connector.ldpath, "function");
+    equal(typeof stanbol.connector.ldpath, "function");
     ok(stanbol.connector.uploadContent);
-    equals(typeof stanbol.connector.uploadContent, "function");
+    equal(typeof stanbol.connector.uploadContent, "function");
     ok(stanbol.connector.createFactSchema);
-    equals(typeof stanbol.connector.createFactSchema, "function");
+    equal(typeof stanbol.connector.createFactSchema, "function");
     ok(stanbol.connector.createFact);
-    equals(typeof stanbol.connector.createFact, "function");
+    equal(typeof stanbol.connector.createFact, "function");
     ok(stanbol.connector.queryFact);
-    equals(typeof stanbol.connector.queryFact, "function");
+    equal(typeof stanbol.connector.queryFact, "function");
 });
 
 test("VIE.js StanbolService - Analyze", function () {
@@ -202,8 +203,6 @@ test("VIE.js StanbolService - Analyze with wrong URL of Stanbol (2)", function (
     x.use(new x.StanbolService({url : ["http://www.this-is-wrong.url/"]}));
     stop();
     x.analyze({element: elem}).using('stanbol').execute().done(function(entities) {
-    	var xxxx = x.equals(this.services[0].vie);
-    	debugger;
         ok(false, "This should not return with any value!");
         start();
     })
@@ -863,181 +862,182 @@ test("VIE.js StanbolService - Query for Facts of a Certain Type", function () {
     });
 });
 */
+
 //### test for the entityhub/entity, the service to get/create/update and
 // 	delete Entities managed in the Entityhub.
 //@author mere01
-//test( "VIE.js StanbolService - CRUD on local entities", function() {
-//	if (navigator.userAgent === 'Zombie') {
-//	       return;
-//	    }
-//	var z = new VIE();
-//	ok(z.StanbolService, "Stanbol Service exists.");
-//	equal(typeof z.StanbolService, "function");
-//
-//	var stanbol = new z.StanbolService( {
-//		url : stanbolRootUrl
-//	});
-//	z.use(stanbol);
-//
-//	// create a new entity
-//	var entity = '<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"><rdf:Description rdf:about="http://developer.yahoo.com/javascript/howto-proxy.html"><rdfs:label>Howto-Proxy</rdfs:label></rdf:Description></rdf:RDF>'; 
-//	var modifEntity = '<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"><rdf:Description rdf:about="http://developer.yahoo.com/javascript/howto-proxy.html"><rdfs:label>Modified Label of Howto-Proxy</rdfs:label></rdf:Description></rdf:RDF>';
-//	
-//	var id = 'http://developer.yahoo.com/javascript/howto-proxy.html';
-//	
-//	stop();
-//	stanbol.connector.createEntity(
-//				entity,
-//				function(response) {
-//					ok(true, "E1: new entity " + id +  "created in entityhub/entity/ (using option update)");
-//					// if an Entities already exists within the Entityhub, the request should fail with BAD REQUEST
-//					stop();
-//					stanbol.connector.createEntity(
-//								entity,
-//								function(response) {
-//									ok(false, "E2: entityhub/entity: created already existing entity " + id + ". (using no option)");
-//									console.log(response);
-//									start();
-//								},
-//								function(err) {
-//									ok(true, "E2: already-existing entity could not be created in the entityhub! (using no option) Received error message: " + err);
-//									start();
-//								}); // do NOT allow updating of already existing entities
-//					
-//					// retrieve the entity that's just been created
-//					stop();
-//					stanbol.connector.load(
-//								id,
-//								function(response) {
-//									var first = null;
-//									for (var key in response) 
-//									// grab just the first key of the returned object
-//									{
-//										first = response[key];
-//										if(typeof(first)!== 'function') {
-//											console.log(key);
-//											first = key;
-//											break;
-//										}
-//										}
-//									ok(true, "E3: got entity from entityhub/entity: " + first);
-//									console.log("E3: got entity:");
-//									console.log(first);
-//									start();
-//								},
-//								function(err) {
-//									ok(false, "E3: could not get entity from the entityhub!");
-//									console.log(err);
-//									start();
-//								},
-//								{local: 'true'}); // to denote that this is a local entity
-//					
-//					// update the entity that's just been created (modify the label)
-//					stop();
-//					console.log("sending id to updateEntity: " + id);
-//					stanbol.connector.updateEntity(
-//								modifEntity,
-//								function(response) {
-//									ok(true, "E4: entity  " + response.id + " was updated successfully in the entityhub.");
-//									start();
-//								},
-//								function(err) {
-//									ok(false, "E4: could not update entity " + id + " in the entityhub! Received error message: " + err);
-//									console.log("E4: could not update entity " + id);
-//									console.log(err);
-//									start();
-//								},
-//								{},
-//								id);
-//					
-//					// delete our entity
-//					stop();
-//					stanbol.connector.deleteEntity(
-//								id,
-//								function(response) {
-//									ok(true, "E6: entity  " + response.id + " was deleted successfully from the entityhub.");
-//									start();
-//								},
-//								function(err) {
-//									ok(false, "E6: could not delete entity " + id + " from the entityhub! Received error message: " + err);
-//									console.log("E6: could not delete entity " + id);
-//									console.log(err);
-//									start();
-//								}); 
-//					
-//					// the deleted entity cannot be retrieved anymore
-//					stop();
-//					stanbol.connector.load(
-//								id,
-//								function(response) {
-//									console.log("E7: got entity:");
-//									var first = null;
-//									for (var key in response) 
-//									// grab just the first key of the returned object
-//									{
-//										first = response[key]
-//										if(typeof(first)!== 'function') {
-//											console.log(key);
-//											first = key;
-//											break;
-//										}
-//										}
-//									ok(false, "E7: got non-existing entity from entityhub/entity: " + first);
-//									start();
-//								},
-//								function(err) {
-//									ok(true, "E7: could not get non-existing entity from the entityhub!");
-//									console.log("E7:");
-//									console.log(err);
-//									start();
-//								});
-//					start();
-//				},
-//				function(err) {
-//					ok(false, "E1: entity could not be created in the entityhub! (using options local, update)");
-//					start();
-//				}, 
-//				{update: 'true' // option to allow repeated testing with same entity
-//				}); 
-//	
-//	// we should be unable to update a non-existing entity
-//	var modifId= 'http://developer.yahoo.com/javascript/howto-proxy-falseaddress.html';
-//	stop();
-//	console.log("sending id to updateEntity: " + modifId);
-//	stanbol.connector.updateEntity(
-//				modifEntity,
-//				function(response) {
-//					ok(false, "E5: non-existing entity  " + response.id + " was updated successfully in the entityhub.");
-//					start();
-//				},
-//				function(err) {
-//					ok(true, "E5: could not update non-existing entity " + modifId + " in the entityhub! Received error message: " + err);
-//					console.log("E5: could not update non-existing entity " + modifId);
-//					console.log(err);
-//					start();
-//				},
-//				{},
-//				modifId);
-//	
-//	// create should fail due to invalid syntax (forgot quotation marks for xmlns:rdf entry)
-//	var entity = '<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf=http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"><rdf:Description rdf:about="http://developer.yahoo.com/javascript/howto-proxy.html"><rdfs:label>Howto-Proxy</rdfs:label></rdf:Description></rdf:RDF>'; 
-//	stop();
-//	stanbol.connector.createEntity(
-//		entity,
-//		function(response) {
-//			ok(false, "E8: created entity on entityhub in spite of faulty syntax. " + response)
-//			console.log("E8 got response:");
-//			console.log(response);
-//			start();
-//		},
-//		function(err) {
-//			ok(true, "E8: entity creation failed due to erroneous syntax. Received error message: " + err);
-//			console.log("E8:");
-//			console.log(err);
-//			start();
-//		});
-//		
-//}); // end of test for entityhub/entity
+test( "VIE.js StanbolService - CRUD on local entities", function() {
+	if (navigator.userAgent === 'Zombie') {
+	       return;
+	    }
+	var z = new VIE();
+	ok(z.StanbolService, "Stanbol Service exists.");
+	equal(typeof z.StanbolService, "function");
+
+	var stanbol = new z.StanbolService( {
+		url : stanbolRootUrl
+	});
+	z.use(stanbol);
+
+	// create a new entity
+	var entity = '<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"><rdf:Description rdf:about="http://developer.yahoo.com/javascript/howto-proxy.html"><rdfs:label>Howto-Proxy</rdfs:label></rdf:Description></rdf:RDF>'; 
+	var modifEntity = '<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"><rdf:Description rdf:about="http://developer.yahoo.com/javascript/howto-proxy.html"><rdfs:label>Modified Label of Howto-Proxy</rdfs:label></rdf:Description></rdf:RDF>';
+	
+	var id = 'http://developer.yahoo.com/javascript/howto-proxy.html';
+	
+	stop();
+	stanbol.connector.createEntity(
+				entity,
+				function(response) {
+					ok(true, "E1: new entity " + id +  "created in entityhub/entity/ (using option update)");
+					// if an Entities already exists within the Entityhub, the request should fail with BAD REQUEST
+					stop();
+					stanbol.connector.createEntity(
+								entity,
+								function(response) {
+									ok(false, "E2: entityhub/entity: created already existing entity " + id + ". (using no option)");
+									console.log(response);
+									start();
+								},
+								function(err) {
+									ok(true, "E2: already-existing entity could not be created in the entityhub! (using no option) Received error message: " + err);
+									start();
+								}); // do NOT allow updating of already existing entities
+					
+					// retrieve the entity that's just been created
+					stop();
+					stanbol.connector.load(
+								id,
+								function(response) {
+									var first = null;
+									for (var key in response) 
+									// grab just the first key of the returned object
+									{
+										first = response[key];
+										if(typeof(first)!== 'function') {
+											console.log(key);
+											first = key;
+											break;
+										}
+										}
+									ok(true, "E3: got entity from entityhub/entity: " + first);
+									console.log("E3: got entity:");
+									console.log(first);
+									start();
+								},
+								function(err) {
+									ok(false, "E3: could not get entity from the entityhub!");
+									console.log(err);
+									start();
+								},
+								{local: 'true'}); // to denote that this is a local entity
+					
+					// update the entity that's just been created (modify the label)
+					stop();
+					console.log("sending id to updateEntity: " + id);
+					stanbol.connector.updateEntity(
+								modifEntity,
+								function(response) {
+									ok(true, "E4: entity  " + response.id + " was updated successfully in the entityhub.");
+									start();
+								},
+								function(err) {
+									ok(false, "E4: could not update entity " + id + " in the entityhub! Received error message: " + err);
+									console.log("E4: could not update entity " + id);
+									console.log(err);
+									start();
+								},
+								{},
+								id);
+					
+					// delete our entity
+					stop();
+					stanbol.connector.deleteEntity(
+								id,
+								function(response) {
+									ok(true, "E6: entity  " + response.id + " was deleted successfully from the entityhub.");
+									start();
+								},
+								function(err) {
+									ok(false, "E6: could not delete entity " + id + " from the entityhub! Received error message: " + err);
+									console.log("E6: could not delete entity " + id);
+									console.log(err);
+									start();
+								}); 
+					
+					// the deleted entity cannot be retrieved anymore
+					stop();
+					stanbol.connector.load(
+								id,
+								function(response) {
+									console.log("E7: got entity:");
+									var first = null;
+									for (var key in response) 
+									// grab just the first key of the returned object
+									{
+										first = response[key]
+										if(typeof(first)!== 'function') {
+											console.log(key);
+											first = key;
+											break;
+										}
+										}
+									ok(false, "E7: got non-existing entity from entityhub/entity: " + first);
+									start();
+								},
+								function(err) {
+									ok(true, "E7: could not get non-existing entity from the entityhub!");
+									console.log("E7:");
+									console.log(err);
+									start();
+								});
+					start();
+				},
+				function(err) {
+					ok(false, "E1: entity could not be created in the entityhub! (using options local, update)");
+					start();
+				}, 
+				{update: 'true' // option to allow repeated testing with same entity
+				}); 
+	
+	// we should be unable to update a non-existing entity
+	var modifId= 'http://developer.yahoo.com/javascript/howto-proxy-falseaddress.html';
+	stop();
+	console.log("sending id to updateEntity: " + modifId);
+	stanbol.connector.updateEntity(
+				modifEntity,
+				function(response) {
+					ok(false, "E5: non-existing entity  " + response.id + " was updated successfully in the entityhub.");
+					start();
+				},
+				function(err) {
+					ok(true, "E5: could not update non-existing entity " + modifId + " in the entityhub! Received error message: " + err);
+					console.log("E5: could not update non-existing entity " + modifId);
+					console.log(err);
+					start();
+				},
+				{},
+				modifId);
+	
+	// create should fail due to invalid syntax (forgot quotation marks for xmlns:rdf entry)
+	var entity = '<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf=http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"><rdf:Description rdf:about="http://developer.yahoo.com/javascript/howto-proxy.html"><rdfs:label>Howto-Proxy</rdfs:label></rdf:Description></rdf:RDF>'; 
+	stop();
+	stanbol.connector.createEntity(
+		entity,
+		function(response) {
+			ok(false, "E8: created entity on entityhub in spite of faulty syntax. " + response)
+			console.log("E8 got response:");
+			console.log(response);
+			start();
+		},
+		function(err) {
+			ok(true, "E8: entity creation failed due to erroneous syntax. Received error message: " + err);
+			console.log("E8:");
+			console.log(err);
+			start();
+		});
+		
+}); // end of test for entityhub/entity
 
 
 //### test for the /contenthub/contenthub/store/raw/<contentId>, the service to retrieve raw text
@@ -1139,127 +1139,127 @@ test("Vie.js StanbolService - Contenthub/store/metadata/<id>", function() {
 //### test for the /contenthub endpoint, checking the ldpath functionality and options in working with 
 //		own indices on the contenthub
 //@author mere01
-//test("VIE.js StanbolService - create and read contenthub indices", function() {
-//	
-//	if (navigator.userAgent === 'Zombie') {
-//        return;
-//     }
-//	
-//	// we first want to create ourselves a new index, using an ldpath program
-//	var ldpath = "name=melaniesIndex&program=@prefix rdf : <http://www.w3.org/1999/02/22-rdf-syntax-ns#>; @prefix rdfs : <http://www.w3.org/2000/01/rdf-schema#>; @prefix db-ont : <http://dbpedia.org/ontology/>; title = rdfs:label :: xsd:string; dbpediatype = rdf:type :: xsd:anyURI; population = db-ont:populationTotal :: xsd:int;";
-//	var index = 'melaniesIndex';
-//	
-//	var z = new VIE();
-//    ok (z.StanbolService);
-//    equal(typeof z.StanbolService, "function");
-//    var stanbol = new z.StanbolService({url : stanbolRootUrl});
-//    z.use(stanbol);
-//    stop();
-//    stanbol.connector.createIndex(ldpath, function(success) {
-//    	ok(true, "created new index on contenthub.");
-//    	console.log(success);
-//    	start();
-//    	
-//    	// we can now store new items unto our own index
-//    	var item = "We are talking about huge cities such as Paris or New York, where life is an expensive experience.";
-//    	var id = 'myOwnIdToUseHere';
-//    	
-//    	
-//    	var z = new VIE();
-//        ok (z.StanbolService);
-//        equal(typeof z.StanbolService, "function");
-//        var stanbol = new z.StanbolService({url : stanbolRootUrl});
-//        z.use(stanbol);
-//        stop();
-//        stanbol.connector.uploadContent(item,
-//        	function(success){
-//        		ok(true, "stored item to " + index); start();
-//        		
-//        		// we can then get back this newly created item by its id:
-//        		var idToRetrieve = "urn:content-item-" + id;
-//        		var z = new VIE();
-//                ok (z.StanbolService);
-//                equal(typeof z.StanbolService, "function");
-//                var stanbol = new z.StanbolService({url : stanbolRootUrl});
-//                z.use(stanbol);
-//                stop();
-//                // ... we can either retrieve its text content
-//                stanbol.connector.getTextContentByID(idToRetrieve, 
-//                	function(success){
-//                		ok(true, "retrieved item's raw text content.");
-//                		console.log("retrieved content item: " + success);
-//                		start();
-//                	},
-//                	function(err) {
-//                		ok(false, "could not retrieve item's raw text content.");
-//                		console.log(err);
-//                		start();
-//                	},
-//                	{index: index}
-//                	);
-//                stop();
-//                // ... or its enhancements
-//                stanbol.connector.getMetadataByID(idToRetrieve,
-//                	function(success){
-//	            		ok(true, "retrieved content item's metadata.");
-//	            		console.log("retrieved content item's metadata: " + success);
-//	            		start();
-//            		},
-//            		function(err) {
-//	            		ok(false, "could not retrieve content item's metadata.");
-//	            		console.log(err);
-//	            		start();
-//            		},
-//            		{index: index}
-//            		);
-//        		
-//        		
-//        	},
-//        		function(err){
-//        			ok(false, "couldn't store item to " + id); 
-//        			console.log(err); 
-//        			start();
-//        		},
-//        		{
-//        			index: index,
-//        			id: id
-//        		});
-//        
-//        
-//        // and we can delete the new index again: TODO
-//        
-//        // we can also view the list of indices that are currently being managed by the contenthub
-//        var z = new VIE();
-//        ok (z.StanbolService);
-//        equal(typeof z.StanbolService, "function");
-//        var stanbol = new z.StanbolService({url : stanbolRootUrl});
-//        z.use(stanbol);
-//        stop();
-//        stanbol.connector.contenthubIndices(function (indices) {
-//        	ok(_.isArray(indices), "returned an array of indices");
-//        	ok(indices.length > 0, "returned at least one index");
-//        	
-//        	ok(true, "indices currently managed by the contenthub: \n" + indices);
-//        	
-//        	console.log("the following indices are currently managed by the contenthub:");
-//        	console.log(indices);
-//        	start();
-//        }, function (err) {
-//        	ok(false, "No contenthub indices have been returned!");
-//        	start();
-//        });
-//        
-//    	
-//    }, function(err){
-//    	ok(false, "could not create index '" + index + "' on contenthub.");
-//    	console.log(err);
-//    	start();
-//    });
-//	
-//
-//    
-//	}
-//);
+test("VIE.js StanbolService - create and read contenthub indices", function() {
+	
+	if (navigator.userAgent === 'Zombie') {
+        return;
+     }
+	
+	// we first want to create ourselves a new index, using an ldpath program
+	var ldpath = "name=melaniesIndex&program=@prefix rdf : <http://www.w3.org/1999/02/22-rdf-syntax-ns#>; @prefix rdfs : <http://www.w3.org/2000/01/rdf-schema#>; @prefix db-ont : <http://dbpedia.org/ontology/>; title = rdfs:label :: xsd:string; dbpediatype = rdf:type :: xsd:anyURI; population = db-ont:populationTotal :: xsd:int;";
+	var index = 'melaniesIndex';
+	
+	var z = new VIE();
+    ok (z.StanbolService);
+    equal(typeof z.StanbolService, "function");
+    var stanbol = new z.StanbolService({url : stanbolRootUrl});
+    z.use(stanbol);
+    stop();
+    stanbol.connector.createIndex(ldpath, function(success) {
+    	ok(true, "created new index on contenthub.");
+    	console.log(success);
+    	start();
+    	
+    	// we can now store new items unto our own index
+    	var item = "We are talking about huge cities such as Paris or New York, where life is an expensive experience.";
+    	var id = 'myOwnIdToUseHere';
+    	
+    	
+    	var z = new VIE();
+        ok (z.StanbolService);
+        equal(typeof z.StanbolService, "function");
+        var stanbol = new z.StanbolService({url : stanbolRootUrl});
+        z.use(stanbol);
+        stop();
+        stanbol.connector.uploadContent(item,
+        	function(success){
+        		ok(true, "stored item to " + index); start();
+        		
+        		// we can then get back this newly created item by its id:
+        		var idToRetrieve = "urn:content-item-" + id;
+        		var z = new VIE();
+                ok (z.StanbolService);
+                equal(typeof z.StanbolService, "function");
+                var stanbol = new z.StanbolService({url : stanbolRootUrl});
+                z.use(stanbol);
+                stop();
+                // ... we can either retrieve its text content
+                stanbol.connector.getTextContentByID(idToRetrieve, 
+                	function(success){
+                		ok(true, "retrieved item's raw text content.");
+                		console.log("retrieved content item: " + success);
+                		start();
+                	},
+                	function(err) {
+                		ok(false, "could not retrieve item's raw text content.");
+                		console.log(err);
+                		start();
+                	},
+                	{index: index}
+                	);
+                stop();
+                // ... or its enhancements
+                stanbol.connector.getMetadataByID(idToRetrieve,
+                	function(success){
+	            		ok(true, "retrieved content item's metadata.");
+	            		console.log("retrieved content item's metadata: " + success);
+	            		start();
+            		},
+            		function(err) {
+	            		ok(false, "could not retrieve content item's metadata.");
+	            		console.log(err);
+	            		start();
+            		},
+            		{index: index}
+            		);
+        		
+        		
+        	},
+        		function(err){
+        			ok(false, "couldn't store item to " + id); 
+        			console.log(err); 
+        			start();
+        		},
+        		{
+        			index: index,
+        			id: id
+        		});
+        
+        
+        // and we can delete the new index again: TODO
+        
+        // we can also view the list of indices that are currently being managed by the contenthub
+        var z = new VIE();
+        ok (z.StanbolService);
+        equal(typeof z.StanbolService, "function");
+        var stanbol = new z.StanbolService({url : stanbolRootUrl});
+        z.use(stanbol);
+        stop();
+        stanbol.connector.contenthubIndices(function (indices) {
+        	ok(_.isArray(indices), "returned an array of indices");
+        	ok(indices.length > 0, "returned at least one index");
+        	
+        	ok(true, "indices currently managed by the contenthub: \n" + indices);
+        	
+        	console.log("the following indices are currently managed by the contenthub:");
+        	console.log(indices);
+        	start();
+        }, function (err) {
+        	ok(false, "No contenthub indices have been returned!");
+        	start();
+        });
+        
+    	
+    }, function(err){
+    	ok(false, "could not create index '" + index + "' on contenthub.");
+    	console.log(err);
+    	start();
+    });
+	
+
+    
+	}
+);
 
 test("VIE.js StanbolService - Query (non-local)", function () {
     if (navigator.userAgent === 'Zombie') {
