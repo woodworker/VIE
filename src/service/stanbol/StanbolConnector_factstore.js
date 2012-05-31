@@ -14,12 +14,6 @@
 
     jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
         
-        defaults: {
-            factstore : {
-                urlPostfix : "/factstore"
-            }
-        },
-        
 		//### createFactSchema(url, schema, success, error, options)
 		//TODO.  
 		//**Parameters**:  

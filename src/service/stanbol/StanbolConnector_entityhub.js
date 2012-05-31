@@ -13,16 +13,6 @@
 (function(){
 		
     jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
-	    
-        defaults: {
-            entityhub : {
-                /* if set to undefined, the Referenced Site Manager @ /entityhub/sites is used. */
-                /* if set to, e.g., dbpedia, referenced Site @ /entityhub/site/dbpedia is used. */
-                site : undefined,
-                urlPostfix : "/entityhub",
-                local : false
-            }
-        },
         
 		// ### find(term, limit, offset, success, error, options)
 		// This method finds entities given the term from the entity hub and returns the result by the success callback.  

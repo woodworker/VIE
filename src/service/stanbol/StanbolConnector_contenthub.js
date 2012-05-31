@@ -13,13 +13,6 @@
 (function(){
 
     jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
-            
-        defaults: {
-            contenthub : {
-                urlPostfix : "/contenthub",
-                index : "contenthub"
-            }
-        },
         
 		// ### uploadContent(content, success, error, options)
 		// TODO.  
