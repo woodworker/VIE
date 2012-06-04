@@ -429,12 +429,13 @@ VIE.Util = {
     loadSchemaOrg : function (vie, SchemaOrg, baseNS) {
     
         if (!SchemaOrg) {
-            throw new Error("Please load the schema.json file.");
+            throw new Error("Please load the schema.rdfs.org-json file.");
         }
         vie.types.remove("<http://schema.org/Thing>");
         
         var baseNSBefore = (baseNS)? baseNS : vie.namespaces.base();
-        vie.namespaces.base(baseNS);
+        /* temporarily set the schema.org namespace as the default one */
+        vie.namespaces.base("http://schema.org/");
         
         var datatypeMapping = {
             'DataType': 'xsd:anyType',
@@ -499,8 +500,10 @@ VIE.Util = {
                 typeHelper.call(vie, ancestors, t, typeProps.call(vie, t));
             }
         }
-        /* set the namespace to either the old value or the provided baseNS value */
+        /* set the namespace(s) back to what they were before */
         vie.namespaces.base(baseNSBefore);
+        if (baseNS !== "http://schema.org/")
+            vie.namespaces.add("schema", "http://schema.org/");
     },
 
 // ### VIE.Util.xsdDateTime(date)
