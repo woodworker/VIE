@@ -491,6 +491,7 @@ VIE.Util = {
             if (id === "Thing" && !type.isof("owl:Thing")) {
                 type.inherit("owl:Thing");
             }
+            type.locked = true;
             return type;
         };
         
