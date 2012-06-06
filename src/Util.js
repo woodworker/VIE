@@ -289,6 +289,8 @@ VIE.Util = {
       resArr = [];
       /* Try to find a label in the preferred language
       */
+      preferredFields = (_.isArray(preferredFields))? preferredFields : [ preferredFields ];
+      preferredLanguages = (_.isArray(preferredLanguages))? preferredLanguages : [ preferredLanguages ];
       for (l = 0, _len = preferredLanguages.length; l < _len; l++) {
         lang = preferredLanguages[l];
         for (p = 0, _len2 = preferredFields.length; p < _len2; p++) {
