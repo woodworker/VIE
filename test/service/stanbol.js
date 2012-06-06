@@ -1261,6 +1261,75 @@ test("VIE.js StanbolService - create and read contenthub indices", function() {
 	}
 );
 
+//### test for the /entityhub/mapping endpoint, checking the retrieval of entity mappings
+// (the entityhub/mapping looks up mappings from local Entities to Entities managed by a Referenced Site.
+//@author mere01
+test("VIE.js StanbolService - entityhub/mapping", function() {
+
+	if (navigator.userAgent === 'Zombie') {
+		return;
+	}
+
+	// we can look for an entity's mapping 
+	var entity = "http://dbpedia.org/resource/Paris";
+	// or for the mapping itself by its ID
+	var mapping = "urn:org.apache.stanbol:entityhub:mapping.996b1d77-674d-bf3d-f426-f496c87b5ea7";
+	// or by using the entity's symbol
+	var symbol = "urn:org.apache.stanbol:entityhub:entity.3e388b57-0a27-c49f-3e0a-2d547a3e1985";
+	
+	var z = new VIE();
+	ok (z.StanbolService);
+	equal(typeof z.StanbolService, "function");
+	var stanbol = new z.StanbolService({url : stanbolRootUrl});
+	z.use(stanbol);
+	stop();
+	stanbol.connector.getMapping(entity, function(success) {
+		ok(true, "retrieved Mapping for entity " + entity);
+		console.log(success);
+		start();
+
+		},
+		function(err){
+			ok(false, "couldn't retrieve mapping for entity" + entity); 
+			console.log(err); 
+			start();
+		},
+		{
+			entity: true
+		});
+	
+	stanbol.connector.getMapping(mapping, function(success) {
+		ok(true, "retrieved mapping by ID.");
+		console.log(success);
+		start();
+
+		},
+		function(err){
+			ok(false, "couldn't retrieve mapping by ID"); 
+			console.log(err); 
+			start();
+		},
+		{});
+	
+	// TODO what to pass as first argument for the request by symbol?
+	stanbol.connector.getMapping(symbol, function(success) {
+		ok(true, "retrieved mapping for symbol " + symbol);
+		console.log(success);
+		start();
+
+		},
+		function(err){
+			ok(false, "couldn't retrieve mapping for symbol " + symbol); 
+			console.log(err); 
+			start();
+		},
+		{ 
+			symbol: true
+			});
+	}
+);
+
+
 test("VIE.js StanbolService - Query (non-local)", function () {
     if (navigator.userAgent === 'Zombie') {
         return;
