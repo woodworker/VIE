@@ -89,30 +89,57 @@ test("VIE.js StanbolConnector - API", function() {
     z.use(stanbol);
     
     //API
+    //enhancer
     ok(stanbol.connector.analyze);
     equal(typeof stanbol.connector.analyze, "function");
+    //sparql
+    ok(stanbol.connector.sparql);
+    equal(typeof stanbol.connector.sparql, "function");
+    //entityhub
+    ok(stanbol.connector.createEntity);
+    equal(typeof stanbol.connector.createEntity, "function");
+    ok(stanbol.connector.save);
+    equal(typeof stanbol.connector.save, "function");
+    ok(stanbol.connector.readEntity);
+    equal(typeof stanbol.connector.readEntity, "function");
     ok(stanbol.connector.load);
     equal(typeof stanbol.connector.load, "function");
+    ok(stanbol.connector.updateEntity);
+    equal(typeof stanbol.connector.updateEntity, "function");
+    ok(stanbol.connector.deleteEntity);
+    equal(typeof stanbol.connector.deleteEntity, "function");
     ok(stanbol.connector.find);
     equal(typeof stanbol.connector.find, "function");
-    ok(stanbol.connector.query);
-    equal(typeof stanbol.connector.query, "function");
     ok(stanbol.connector.lookup);
     equal(typeof stanbol.connector.lookup, "function");
     ok(stanbol.connector.referenced);
     equal(typeof stanbol.connector.referenced, "function");
-    ok(stanbol.connector.sparql);
-    equal(typeof stanbol.connector.sparql, "function");
     ok(stanbol.connector.ldpath);
     equal(typeof stanbol.connector.ldpath, "function");
+    ok(stanbol.connector.query);
+    equal(typeof stanbol.connector.query, "function");
+    //contenthub
     ok(stanbol.connector.uploadContent);
     equal(typeof stanbol.connector.uploadContent, "function");
+    ok(stanbol.connector.getTextContentByID);
+    equal(typeof stanbol.connector.getTextContentByID, "function");
+    ok(stanbol.connector.getMetadataByID);
+    equal(typeof stanbol.connector.getMetadataByID, "function");
+    ok(stanbol.connector.createIndex);
+    equal(typeof stanbol.connector.createIndex, "function");
+    ok(stanbol.connector.contenthubIndices);
+    equal(typeof stanbol.connector.contenthubIndices, "function");
+    //cmsadapter
+    //factstore
     ok(stanbol.connector.createFactSchema);
     equal(typeof stanbol.connector.createFactSchema, "function");
     ok(stanbol.connector.createFact);
     equal(typeof stanbol.connector.createFact, "function");
     ok(stanbol.connector.queryFact);
     equal(typeof stanbol.connector.queryFact, "function");
+    //ontonet
+    //rules
+
 });
 
 test("VIE.js StanbolService - Analyze", function () {

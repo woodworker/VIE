@@ -110,87 +110,7 @@
 			r.end();
 		},
 
-		// ### load(uri, success, error, options)
-		// This method loads all properties from an entity and returns the result by the success callback.  
-		// **Parameters**:  
-		// *{string}* **uri** The URI of the entity to be loaded.  
-		// *{function}* **success** The success callback.  
-		// *{function}* **error** The error callback.  
-		// *{object}* **options** Options, like the ```format```, the ```site```. If ```local``` is set, only the local entities are accessed.   
-		// **Throws**:  
-		// *nothing*  
-		// **Returns**:  
-		// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
-		// **Example usage**:  
-		//
-		//	     var stnblConn = new vie.StanbolConnector(opts);
-		//	     stnblConn.load("<http://dbpedia.org/resource/Barack_Obama>",
-		//	                 function (res) { ... },
-		//	                 function (err) { ... });
-
-		load: function (uri, success, error, options) {
-			var connector = this;
-			options = (options)? options :  {};
-
-			options.uri = uri.replace(/^</, '').replace(/>$/, '');
-
-			connector._iterate({
-				method : connector._load,
-				methodNode : connector._loadNode,
-				success : success,
-				error : error,
-				url : function (idx, opts) {
-					var site = (opts.site)? opts.site : this.options.entityhub.site;
-					site = (site)? "/" + site : "s";
-
-					var isLocal = opts.local;
-
-					var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
-					if (isLocal) {
-						u += "/entity?id=" + escape(opts.uri);
-					} else {
-						u += "/site" + site + "/entity?id=" + escape(opts.uri);
-					}
-					return u;
-				},
-				args : {
-					format : options.format || "application/rdf+json",
-					options : options
-				},
-				urlIndex : 0
-			});
-		},
-
-		_load : function (url, args, success, error) {
-			jQuery.ajax({
-				success: success,
-				error: error,
-				url: url,
-				type: "GET",
-				dataType: args.format,
-				contentType: "text/plain",
-				accepts: {"application/rdf+json": "application/rdf+json"}
-			});
-		},
-
-		_loadNode: function(url, args, success, error) {
-			var request = require('request');
-			var r = request({
-				method: "GET",
-				uri: url,
-				body: args.text,
-				headers: {
-					Accept: args.format
-				}
-			}, function(err, response, body) {
-				try {
-					success({results: JSON.parse(body)});
-				} catch (e) {
-					error(e);
-				}
-			});
-			r.end();
-		},
+		
 
 		// ### lookup(uri, success, error, options)
 		// TODO: add description  
@@ -550,7 +470,7 @@
     	        	error : error,
     	        	urlIndex : 0
     	        });
-    	    }, // end of createEntity
+    	    },
 
         _createEntity : function (url, args, success, error) {
         	jQuery.ajax({
@@ -561,7 +481,7 @@
                 data: args.entity,
                 contentType: args.format//,
             });
-        }, // end of _createEntity
+        }, 
 
         _createEntityNode: function(url, args, success, error) {
             var request = require('request');
@@ -581,8 +501,101 @@
                 }
             });
             r.end();
-        }, // end of _createEntityNode 
+        },
+        // ### save(id, success, error, option)
+        // This is an alias to createEntity
+        save: function () {
+            return this.createEntity(arguments);
+        },
 
+        // ### readEntity(uri, success, error, options)
+        // This method loads all properties from an entity and returns the result by the success callback.  
+        // **Parameters**:  
+        // *{string}* **uri** The URI of the entity to be loaded.  
+        // *{function}* **success** The success callback.  
+        // *{function}* **error** The error callback.  
+        // *{object}* **options** Options, like the ```format```, the ```site```. If ```local``` is set, only the local entities are accessed.   
+        // **Throws**:  
+        // *nothing*  
+        // **Returns**:  
+        // *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+        // **Example usage**:  
+        //
+        //       var stnblConn = new vie.StanbolConnector(opts);
+        //       stnblConn.load("<http://dbpedia.org/resource/Barack_Obama>",
+        //                   function (res) { ... },
+        //                   function (err) { ... });
+
+        readEntity: function (uri, success, error, options) {
+            var connector = this;
+            options = (options)? options :  {};
+
+            options.uri = uri.replace(/^</, '').replace(/>$/, '');
+
+            connector._iterate({
+                method : connector._readEntity,
+                methodNode : connector._readEntityNode,
+                success : success,
+                error : error,
+                url : function (idx, opts) {
+                    var site = (opts.site)? opts.site : this.options.entityhub.site;
+                    site = (site)? "/" + site : "s";
+
+                    var isLocal = opts.local;
+
+                    var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+                    if (isLocal) {
+                        u += "/entity?id=" + escape(opts.uri);
+                    } else {
+                        u += "/site" + site + "/entity?id=" + escape(opts.uri);
+                    }
+                    return u;
+                },
+                args : {
+                    format : options.format || "application/rdf+json",
+                    options : options
+                },
+                urlIndex : 0
+            });
+        },
+
+        _readEntity : function (url, args, success, error) {
+            jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "GET",
+                dataType: args.format,
+                contentType: "text/plain",
+                accepts: {"application/rdf+json": "application/rdf+json"}
+            });
+        },
+
+        _readEntityNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "GET",
+                uri: url,
+                body: args.text,
+                headers: {
+                    Accept: args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        },
+        // ### load(id, success, error, option)
+        // This is an alias to createEntity
+        load: function () {
+            return this.readEntity(arguments);
+        },
+        
+        
         // ### udpateEntity(id, success, error, option)
     	// @author mere01
     	// This method updates a local entity on the Apache Stanbol entityhub/entity endpoint.
