@@ -965,7 +965,9 @@ test( "VIE.js StanbolService - CRUD on local entities", function() {
 					stanbol.connector.updateEntity(
 								modifEntity,
 								function(response) {
-									ok(true, "E4: entity  " + response.id + " was updated successfully in the entityhub.");
+								    ok(response);
+								    if (response && response.id)
+								        ok(true, "E4: entity  " + response.id + " was updated successfully in the entityhub.");
 									start();
 								},
 								function(err) {
@@ -982,7 +984,9 @@ test( "VIE.js StanbolService - CRUD on local entities", function() {
 					stanbol.connector.deleteEntity(
 								id,
 								function(response) {
-									ok(true, "E6: entity  " + response.id + " was deleted successfully from the entityhub.");
+                                    ok(response);
+                                    if (response && response.id)
+                                        ok(true, "E6: entity  " + response.id + " was deleted successfully from the entityhub.");
 									start();
 								},
 								function(err) {
@@ -1034,7 +1038,9 @@ test( "VIE.js StanbolService - CRUD on local entities", function() {
 	stanbol.connector.updateEntity(
 				modifEntity,
 				function(response) {
-					ok(false, "E5: non-existing entity  " + response.id + " was updated successfully in the entityhub.");
+                    ok(response);
+                    if (response && response.id)
+                        ok(false, "E5: non-existing entity  " + response.id + " was updated successfully in the entityhub.");
 					start();
 				},
 				function(err) {

@@ -504,8 +504,8 @@
         },
         // ### save(id, success, error, option)
         // This is an alias to createEntity
-        save: function () {
-            return this.createEntity(arguments);
+        save: function (entity, success, error, options) {
+            return this.createEntity.call(this, entity, success, error, options);
         },
 
         // ### readEntity(uri, success, error, options)
@@ -591,8 +591,8 @@
         },
         // ### load(id, success, error, option)
         // This is an alias to createEntity
-        load: function () {
-            return this.readEntity(arguments);
+        load: function (uri, success, error, options) {
+            return this.readEntity.call(this, uri, success, error, options);
         },
         
         
