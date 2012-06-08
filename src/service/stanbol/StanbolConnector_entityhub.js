@@ -440,6 +440,13 @@
         //    	                 function (res) { ... },
         //    	                 function (err) { ... },);	to create a new entity in the entityhub
         createEntity: function(entity, success, error, options) {
+        	
+        	console.log("createEntity receives arguments:")
+        	console.log(entity)
+        	console.log(success)
+        	console.log(error)
+        	console.log(options)
+        	
     			options = (options)? options :  {};
 
     			var connector = this;
@@ -505,7 +512,7 @@
         // ### save(id, success, error, option)
         // This is an alias to createEntity
         save: function () {
-            return this.createEntity(arguments);
+            return this.createEntity(arguments[0], arguments[1], arguments[2], arguments[3]);
         },
 
         // ### readEntity(uri, success, error, options)
@@ -530,6 +537,10 @@
             var connector = this;
             options = (options)? options :  {};
 
+            console.log("uri:")
+            console.log(uri)
+            console.log(" is of type: " + typeof(uri));
+            
             options.uri = uri.replace(/^</, '').replace(/>$/, '');
 
             connector._iterate({
@@ -590,8 +601,13 @@
             r.end();
         },
         // ### load(id, success, error, option)
-        // This is an alias to createEntity
+        // This is an alias to readEntity
         load: function () {
+
+        	console.log("these are the arguments passed to method readEntity via load alias");
+        	console.log(arguments)
+        	console.log(arguments[0])
+        	console.log(" is of type " + typeof(arguments[0]))
             return this.readEntity(arguments);
         },
         
