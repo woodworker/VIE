@@ -381,6 +381,7 @@
                         u += "/site" + site;
                     u += "/query";
                     
+                    console.log("querying " + u)
                     return u;
                 },
                 args : {
@@ -511,8 +512,13 @@
         },
         // ### save(id, success, error, option)
         // This is an alias to createEntity
-        save: function () {
-            return this.createEntity(arguments[0], arguments[1], arguments[2], arguments[3]);
+
+//        save: function () {
+//            return this.createEntity(arguments[0], arguments[1], arguments[2], arguments[3]);
+
+        save: function (entity, success, error, options) {
+            return this.createEntity.call(this, entity, success, error, options);
+
         },
 
         // ### readEntity(uri, success, error, options)
@@ -601,14 +607,11 @@
             r.end();
         },
         // ### load(id, success, error, option)
-        // This is an alias to readEntity
-        load: function () {
 
-        	console.log("these are the arguments passed to method readEntity via load alias");
-        	console.log(arguments)
-        	console.log(arguments[0])
-        	console.log(" is of type " + typeof(arguments[0]))
-            return this.readEntity(arguments);
+        // This is an alias to createEntity
+        load: function (uri, success, error, options) {
+            return this.readEntity.call(this, uri, success, error, options);
+
         },
         
         

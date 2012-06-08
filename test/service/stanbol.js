@@ -11,9 +11,9 @@ module("vie.js - Apache Stanbol Service");
 // !!!  /entityhub/sites/referenced
 // !!!  /entityhub/sites/entity
 // !!!  /entityhub/sites/find
-//	 	/entityhub/query
-//   	/entityhub/sites/query
-//   	/entityhub/site/<siteId>/query
+// !!!	/entityhub/query
+// ??? 	/entityhub/sites/query			- strange exception, see test "Query (non-local)"
+// !!! 	/entityhub/site/<siteId>/query
 // !!!  /entityhub/sites/ldpath
 // !!!  /entityhub/site/<siteId>/entity 
 // !!!  /entityhub/site/<siteId>/find
@@ -37,18 +37,21 @@ module("vie.js - Apache Stanbol Service");
 
 // !!!  /factstore/facts
 // !!!  /factstore/query
+
 //   /ontonet/ontology
 //   /ontonet/ontology/<scopeName>
 //   /ontonet/ontology/<scopeName>/<ontologyId>
 //   /ontonet/ontology/User
 //   /ontonet/session/
 //   /ontonet/session/<sessionId>
+
 //   /rules/rule/
 //   /rules/rule/<ruleId>
 //   /rules/recipe/
 //   /rules/recipe/<recipeId>
 //   /rules/refactor/
 //   /rules/refactor/apply
+
 //   /cmsadapter/map
 //   /cmsadapter/session
 //   /cmsadapter/contenthubfeed
@@ -1040,7 +1043,9 @@ test("VIE.js StanbolConnector - CRUD on local entities", function() {
 				stanbol.connector.updateEntity(
 								modifEntity,
 								function(response) {
-									ok(true, "E4: entity  " + response.id + " was updated successfully in the entityhub.");
+								    ok(response);
+								    if (response && response.id)
+								        ok(true, "E4: entity  " + response.id + " was updated successfully in the entityhub.");
 									start();
 								},
 								function(err) {
@@ -1057,7 +1062,9 @@ test("VIE.js StanbolConnector - CRUD on local entities", function() {
 					stanbol.connector.deleteEntity(
 								id,
 								function(response) {
-									ok(true, "E6: entity  " + response.id + " was deleted successfully from the entityhub.");
+                                    ok(response);
+                                    if (response && response.id)
+                                        ok(true, "E6: entity  " + response.id + " was deleted successfully from the entityhub.");
 									start();
 								},
 								function(err) {
@@ -1108,7 +1115,9 @@ test("VIE.js StanbolConnector - CRUD on local entities", function() {
 	stanbol.connector.updateEntity(
 				modifEntity,
 				function(response) {
-					ok(false, "E5: non-existing entity  " + response.id + " was updated successfully in the entityhub.");
+                    ok(response);
+                    if (response && response.id)
+                        ok(false, "E5: non-existing entity  " + response.id + " was updated successfully in the entityhub.");
 					start();
 				},
 				function(err) {
@@ -1470,21 +1479,69 @@ test("VIE.js StanbolService - Query (non-local)", function () {
                           "value": "http://dbpedia.org/ontology/Person"
                       }]
                   };
+
+     var query = { 
+    		 "selected": ["http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"], 
+    		 "offset": "0", 
+    		 "limit": "3", 
+    		 "constraints": [{
+    			 "type": "text", 
+    			 "xml:lang": "de", 
+    			 "patternType": "wildcard", 
+    			 "field": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label", 
+    			 "text": "Frankf*" }] 
+                };
+                                                                                                                              
      
      var z = new VIE();
      z.use(new z.StanbolService({url : stanbolRootUrl}));
      stop();
-     z.query({query : query, local : false})
+     // query all referenced sites (entityhub/sites/query)
+     z.query({query : query, local: false})
      .using('stanbol').execute().done(function(entities) {
          ok(entities);
-         ok(entities.length > 0);
+         if (!entities.length > 0) {
+        	 ok(false, "no entitites found on all referenced sites.");
+         } else {
+        	ok(true, "at least one entity was found on all referenced sites."); 
+         }
          ok(entities instanceof Array);
+         console.log("all referenced sites:")
+         console.log(entities)
+         start();
+     })
+     // TODO: at this place, some strange parse exception is thrown in spite of 
+     // valid query and valid URI.
+     // cf e.g.
+     // curl -X POST -H "Content-Type:application/json" --data "@fieldQuery2.json" http://lnv-89012.dfki.uni-sb.de:9001/entityhub/sites/query
+     // to
+     // curl "http://lnv-89012.dfki.uni-sb.de:9001/entityhub/sites/entity?id=http://dbpedia.org/resource/Frankfurt
+     .fail(function(f){
+         ok(false, f.statusText);
+         start();
+     });
+     
+     /** mere01 **/
+     stop();
+     // query only entities on referenced site dbpedia (entityhub/site/dbpedia/query) 
+     z.query({query : query, site: "dbpedia"})
+     .using('stanbol').execute().done(function(entities) {
+         ok(entities);
+         if (!entities.length > 0) {
+        	 ok(false, "no entitites found on dbpedia.");
+         } else {
+        	ok(true, "at least one entity was found on dbpedia."); 
+         }
+         ok(entities instanceof Array);
+         console.log("dbpedia:")
+         console.log(entities)
          start();
      })
      .fail(function(f){
          ok(false, f.statusText);
          start();
      });
+     /**/
 });
 
 
@@ -1506,4 +1563,42 @@ test("VIE.js StanbolService - Query (local)", function () {
          ok(true, msg);
          start();
      });
+     
+     /** mere01 **/
+     var query = { 
+    		 "selected": ["http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"], 
+    		 "offset": "0", 
+    		 "limit": "3", 
+    		 "constraints": [{
+    			 "type": "text", 
+    			 "xml:lang": "de", 
+    			 "patternType": "wildcard", 
+    			 "field": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label", 
+    			 "text": "Frankf*" }] 
+                };
+     
+     var z = new VIE();
+     ok (z.StanbolService);
+     equal(typeof z.StanbolService, "function");
+     z.use(new z.StanbolService({url : stanbolRootUrl}));
+     
+     stop();
+     // query only locally-managed entities (entityhub/query) 
+     z.query({query : query, local : true})
+     .using('stanbol').execute().done(function(entities) {
+         ok(entities);
+         if (!entities.length > 0) {
+        	 ok(false, "no entitites found.");
+         } else {
+        	ok(true, "at least one entity was found."); 
+         }
+         ok(entities instanceof Array);
+         console.log(entities)
+         start();
+     })
+     .fail(function(f){
+         ok(false, f.statusText);
+         start();
+     });
+     /**/
 });

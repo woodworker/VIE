@@ -148,6 +148,8 @@ VIE.prototype.StanbolService.prototype = {
 //      new vie.Analyzable({element : jQuery("#foo")})
 //      );
         analyze: function(analyzable) {
+        	console.log("analyzable passed to me:")
+        	console.log(analyzable)
             var service = this;
 
             var correct = analyzable instanceof this.vie.Analyzable;
@@ -347,11 +349,14 @@ VIE.prototype.StanbolService.prototype = {
         //      var stnblService = new vie.StanbolService({<some-configuration>});
         //      stnblService.save(new vie.Savable(entity));
         save: function(savable) {
+        	console.log("received Savable: " + typeof(savable))
+        	console.log(savable)
             var correct = savable instanceof this.vie.Savable;
             if (!correct) {throw "Invalid Savable passed";}
             var service = this;
 
             var entity = savable.options.entity;
+            console.log("entity to save is: " + entity)
             if(!entity){
                 console.warn("StanbolConnector: No entity to save!");
                 savable.reject("StanbolConnector: No entity to save!");
@@ -368,10 +373,11 @@ VIE.prototype.StanbolService.prototype = {
             };
 
             var options = {
-                    site : (loadable.options.site)? loadable.options.site : service.options.entityhub.site,
-                            local : loadable.options.local
+                    site : (savable.options.site)? savable.options.site : service.options.entityhub.site,
+                    local : savable.options.local,
+                    update : savable.options.update
             };
-
+            
             this.connector.save(entity, success, error, options);
         },
 
