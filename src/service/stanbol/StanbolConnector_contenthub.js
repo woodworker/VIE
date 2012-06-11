@@ -347,8 +347,79 @@
         r.end();
     }, // end of _createIndexNode 
     
+	// ### deleteIndex(index, success, error)
+    // TODO access problems for method DELETE
+	// @author mere01
+	// This method deletes the specified index from the contenthub, using contenthub/ldpath/program/<indexID>
+    // TAKE CARE: This will not only delete a specific index, but also all the content items that were
+    //		stored to this specific index!
+	// **Parameters**:  
+    // *{string}* **index** The name of the index to be deleted permanently from the contenthub.
+	// *{function}* **success** The success callback.  
+	// *{function}* **error** The error callback.  
+	// **Throws**:  
+	// *nothing*  
+	// **Returns**:  
+	// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+	// **Example usage**:  
+	//
+//	     var stnblConn = new vie.StanbolConnector(opts);
+//	     stnblConn.createIndex(<index>,
+//	                 function (res) { ... },
+//	                 function (err) { ... });    
+    deleteIndex: function(index, success, error) {
+    
+		var connector = this;
+		connector._iterate({
+			method : connector._deleteIndex,
+			methodNode : connector._deleteIndexNode,
+			success : success,
+			error : error,
+			url : function (idx, opts) {
+				var u = this.options.url[idx].replace(/\/$/, '');
+				u += this.options.contenthub.urlPostfix.replace(/\/$/, '');
+				u += "/ldpath/program/" + index;
+				
+				return u;
+			},
+			args : {
+
+			},
+			urlIndex : 0
+		});
+    }, // end of deleteIndex()
+    
+    _deleteIndex: function (url, args, success, error) {
+	    	
+    	jQuery.ajax({
+    		
+    		success: success,            
+    		error: error,
+            url: url,
+            type: "DELETE"
+        });
+    	
+    }, // end of _deleteIndex
+    
+    _deleteIndexNode: function(url, args, success, error) {
+        var request = require('request');
+        var r = request({
+            method: "DELETE",
+            uri: url
+
+        }, function(err, response, body) {
+            try {
+                success({results: JSON.parse(body)});
+            } catch (e) {
+                error(e);
+            }
+        });
+        r.end();
+    }, // end of _deleteIndexNode 
+    
     
 	// ### contenthubIndices(success, error, options)
+	// @author mere01
 	// This method returns a list of all indices that are currently being managed on the contenthub.  
 	// **Parameters**:  
 	// *{function}* **success** The success callback.  
