@@ -290,22 +290,18 @@ VIE.prototype.OpenCalaisConnector.prototype = {
         };
     },
 	
-	//loads opencalais linked data document by it's URL in order to get links to other ontologies like dbpedia and freebase
+	/*loads opencalais linked data document by it's URL in order to get links to other ontologies like dbpedia and freebase. The callback parameter - function(resultedURIs) - a fuction, which operates the array of the entities, liked to the URL-corresponding entity*/
 	_loadDocument : function(url, service, callback) {
 		url.replace(/<|>/g, '');
 		url = (url.match('.html'))? url.replace('.html','.rdf'): (url.match('.rdf')? url: url+'.rdf');
 		var success = function(responseData){
-			var entities = 	VIE.Util.rdf2Entities(service, responseData, {dontAddToVIE: true});
+			var entities = 	VIE.Util.rdf2Entities(service, responseData, {skipAdding: true});
 			for(var e in entities){
 				var entity = entities[e];
 				if(entity.has('owl:sameAs')){
 					var linkedEntities = entity.get('owl:sameAs');
 					linkedEntities = jQuery.isArray(linkedEntities)? linkedEntities: [linkedEntities];
-					for(var i = 0; i < linkedEntities.length; i++){
-						var uri = linkedEntities[i];
-						uri = uri.isEntity? uri.getSubjectUri(): uri;
-						callback(uri);
-					}
+					callback(linkedEntities);
 				}
 			}
 		}
