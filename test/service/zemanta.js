@@ -16,13 +16,13 @@ test("VIE.js ZemantaService - API", function() {
     z.use(new z.ZemantaService);    
     //API
 	ok(z.service('zemanta').init);
-    equals(typeof z.service('zemanta').init, "function");
+    equal(typeof z.service('zemanta').init, "function");
     ok(z.service('zemanta').analyze);
-    equals(typeof z.service('zemanta').analyze, "function");
+    equal(typeof z.service('zemanta').analyze, "function");
     ok(z.service('zemanta').connector);
     ok(z.service('zemanta').connector instanceof z.ZemantaConnector);
     ok(z.service('zemanta').rules);
-    equals(typeof z.service('zemanta').rules, "object");
+    equal(typeof z.service('zemanta').rules, "object");
 });
 
 test("VIE.js ZemantaConnector - API", function() {
@@ -32,7 +32,7 @@ test("VIE.js ZemantaConnector - API", function() {
     
     //API
     ok(zemanta.connector.analyze);
-    equals(typeof zemanta.connector.analyze, "function");
+    equal(typeof zemanta.connector.analyze, "function");
 });
 
 test("VIE.js ZemantaService - Analyze", function () {
@@ -69,7 +69,7 @@ test("VIE.js ZemantaService - Analyze", function () {
         var firstTextAnnotation = _(entities).filter(function(e){return e.isof("zemanta:Document") && e.get("zemanta:text");})[0];
         var s = firstTextAnnotation.get("zemanta:text").toString();
         
-    	equals(text, s, "This should return the same text that has been sent to Zemanta.");
+    	equal(text, s, "This should return the same text that has been sent to Zemanta.");
         ok(s.substring(s.length-4, s.length-2) != "\"@", "Selected text should be converted into a normal string.");
         start();
     })

@@ -14,11 +14,6 @@
 
     jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
         
-        defaults: {
-            ontonet : {
-                urlPostfix : "/ontonet"
-            }
-        }
 		
 	});
 	

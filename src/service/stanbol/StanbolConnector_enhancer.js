@@ -14,13 +14,6 @@
 	
 	jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
 	    
-	    defaults: {
-            enhancer : {
-                urlPostfix : "/enhancer",
-                chain : "default"
-            }
-    	},
-	
 		// ### analyze(text, success, error, options)
 		// This method sends the given text to Apache Stanbol returns the result by the success callback.  
 		// **Parameters**:  

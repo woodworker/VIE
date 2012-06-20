@@ -294,6 +294,8 @@ VIE.Util = {
       resArr = [];
       /* Try to find a label in the preferred language
       */
+      preferredFields = (_.isArray(preferredFields))? preferredFields : [ preferredFields ];
+      preferredLanguages = (_.isArray(preferredLanguages))? preferredLanguages : [ preferredLanguages ];
       for (l = 0, _len = preferredLanguages.length; l < _len; l++) {
         lang = preferredLanguages[l];
         for (p = 0, _len2 = preferredFields.length; p < _len2; p++) {
@@ -434,12 +436,13 @@ VIE.Util = {
     loadSchemaOrg : function (vie, SchemaOrg, baseNS) {
     
         if (!SchemaOrg) {
-            throw new Error("Please load the schema.json file.");
+            throw new Error("Please load the schema.rdfs.org-json file.");
         }
         vie.types.remove("<http://schema.org/Thing>");
         
         var baseNSBefore = (baseNS)? baseNS : vie.namespaces.base();
-        vie.namespaces.base(baseNS);
+        /* temporarily set the schema.org namespace as the default one */
+        vie.namespaces.base("http://schema.org/");
         
         var datatypeMapping = {
             'DataType': 'xsd:anyType',
@@ -495,6 +498,7 @@ VIE.Util = {
             if (id === "Thing" && !type.isof("owl:Thing")) {
                 type.inherit("owl:Thing");
             }
+            type.locked = true;
             return type;
         };
         
@@ -504,8 +508,10 @@ VIE.Util = {
                 typeHelper.call(vie, ancestors, t, typeProps.call(vie, t));
             }
         }
-        /* set the namespace to either the old value or the provided baseNS value */
+        /* set the namespace(s) back to what they were before */
         vie.namespaces.base(baseNSBefore);
+        if (baseNS !== "http://schema.org/")
+            vie.namespaces.add("schema", "http://schema.org/");
     },
 
 // ### VIE.Util.xsdDateTime(date)
@@ -801,5 +807,20 @@ VIE.Util = {
             }).replace(/[0-9]{2..3}px/, "" + picWidth + "px");
             return depictionUrl.replace(/^<|>$/g, '');
         }
+    },
+    
+ // ### VIE.Util.UUIDGenerator()
+ // Returns a UUID. The original code is from [stackoverflow](http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript).
+ // **Parameters**:
+ // *nothing*
+ // **Throws**:
+ // *nothing*.
+ // **Returns**:
+ // *{string}* The generated UUID.    
+    UUIDGenerator: function () {
+        var S4 = function() {
+           return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        };
+        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
     }
 };

@@ -57,6 +57,8 @@ var root = this,
 //     vie.RDFaEntities.getInstances();
 var VIE = root.VIE = function(config) {
     this.config = (config) ? config : {};
+    
+    this.id = VIE.Util.UUIDGenerator();
     this.services = {};
     this.jQuery = jQuery;
     this.entities = new this.Collection();
@@ -392,6 +394,29 @@ VIE.prototype.loadSchema = function(url, options) {
     }
     
     return this;
+};
+
+//### equals(vieInstance)
+//This method tests for equality of two VIE instances.  
+//**Parameters**:  
+//*{VIE}* **vieInstance** The other VIE instance.  
+//**Throws**:  
+//*nothing*.  
+//**Returns**:  
+//*{boolean}* : `true` if the current instance 
+// equals to the given instance, false otherwise.  
+//**Example usage**:  
+//
+//  var vie = new VIE();
+//  var vie2 = new VIE();
+//  console.log(vie.equals(vie2)); // <-- false
+//  console.log(vie2.equals(vie)); // <-- false
+//  console.log(vie.equals(vie)); //  <-- true
+VIE.prototype.equals = function(vieInstance) {
+	if (this.id && vieInstance && vieInstance.id) {
+		return vieInstance.id === this.id;
+	}
+	return false;
 };
 
 // IE per default doesn't have a console API. For making sure this doesn't break

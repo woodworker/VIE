@@ -13,13 +13,7 @@
 (function(){
 
     jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
-        
-        defaults: {
-            sparql : {
-                urlPostfix : "/sparql"
-            }
-        },
-        
+                
 		// ### sparql(query, success, error, options)
 		// TODO.  
 		// **Parameters**:  
