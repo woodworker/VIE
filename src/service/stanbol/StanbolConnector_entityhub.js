@@ -110,87 +110,7 @@
 			r.end();
 		},
 
-		// ### load(uri, success, error, options)
-		// This method loads all properties from an entity and returns the result by the success callback.  
-		// **Parameters**:  
-		// *{string}* **uri** The URI of the entity to be loaded.  
-		// *{function}* **success** The success callback.  
-		// *{function}* **error** The error callback.  
-		// *{object}* **options** Options, like the ```format```, the ```site```. If ```local``` is set, only the local entities are accessed.   
-		// **Throws**:  
-		// *nothing*  
-		// **Returns**:  
-		// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
-		// **Example usage**:  
-		//
-		//	     var stnblConn = new vie.StanbolConnector(opts);
-		//	     stnblConn.load("<http://dbpedia.org/resource/Barack_Obama>",
-		//	                 function (res) { ... },
-		//	                 function (err) { ... });
-
-		load: function (uri, success, error, options) {
-			var connector = this;
-			options = (options)? options :  {};
-
-			options.uri = uri.replace(/^</, '').replace(/>$/, '');
-
-			connector._iterate({
-				method : connector._load,
-				methodNode : connector._loadNode,
-				success : success,
-				error : error,
-				url : function (idx, opts) {
-					var site = (opts.site)? opts.site : this.options.entityhub.site;
-					site = (site)? "/" + site : "s";
-
-					var isLocal = opts.local;
-
-					var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
-					if (isLocal) {
-						u += "/entity?id=" + escape(opts.uri);
-					} else {
-						u += "/site" + site + "/entity?id=" + escape(opts.uri);
-					}
-					return u;
-				},
-				args : {
-					format : options.format || "application/rdf+json",
-					options : options
-				},
-				urlIndex : 0
-			});
-		},
-
-		_load : function (url, args, success, error) {
-			jQuery.ajax({
-				success: success,
-				error: error,
-				url: url,
-				type: "GET",
-				dataType: args.format,
-				contentType: "text/plain",
-				accepts: {"application/rdf+json": "application/rdf+json"}
-			});
-		},
-
-		_loadNode: function(url, args, success, error) {
-			var request = require('request');
-			var r = request({
-				method: "GET",
-				uri: url,
-				body: args.text,
-				headers: {
-					Accept: args.format
-				}
-			}, function(err, response, body) {
-				try {
-					success({results: JSON.parse(body)});
-				} catch (e) {
-					error(e);
-				}
-			});
-			r.end();
-		},
+		
 
 		// ### lookup(uri, success, error, options)
 		// TODO: add description  
@@ -461,6 +381,7 @@
                         u += "/site" + site;
                     u += "/query";
                     
+                    console.log("querying " + u)
                     return u;
                 },
                 args : {
@@ -520,6 +441,13 @@
         //    	                 function (res) { ... },
         //    	                 function (err) { ... },);	to create a new entity in the entityhub
         createEntity: function(entity, success, error, options) {
+        	
+        	console.log("createEntity receives arguments:")
+        	console.log(entity)
+        	console.log(success)
+        	console.log(error)
+        	console.log(options)
+        	
     			options = (options)? options :  {};
 
     			var connector = this;
@@ -550,7 +478,7 @@
     	        	error : error,
     	        	urlIndex : 0
     	        });
-    	    }, // end of createEntity
+    	    },
 
         _createEntity : function (url, args, success, error) {
         	jQuery.ajax({
@@ -561,7 +489,7 @@
                 data: args.entity,
                 contentType: args.format//,
             });
-        }, // end of _createEntity
+        }, 
 
         _createEntityNode: function(url, args, success, error) {
             var request = require('request');
@@ -581,8 +509,112 @@
                 }
             });
             r.end();
-        }, // end of _createEntityNode 
+        },
+        // ### save(id, success, error, option)
+        // This is an alias to createEntity
 
+//        save: function () {
+//            return this.createEntity(arguments[0], arguments[1], arguments[2], arguments[3]);
+
+        save: function (entity, success, error, options) {
+            return this.createEntity.call(this, entity, success, error, options);
+
+        },
+
+        // ### readEntity(uri, success, error, options)
+        // This method loads all properties from an entity and returns the result by the success callback.  
+        // **Parameters**:  
+        // *{string}* **uri** The URI of the entity to be loaded.  
+        // *{function}* **success** The success callback.  
+        // *{function}* **error** The error callback.  
+        // *{object}* **options** Options, like the ```format```, the ```site```. If ```local``` is set, only the local entities are accessed.   
+        // **Throws**:  
+        // *nothing*  
+        // **Returns**:  
+        // *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+        // **Example usage**:  
+        //
+        //       var stnblConn = new vie.StanbolConnector(opts);
+        //       stnblConn.load("<http://dbpedia.org/resource/Barack_Obama>",
+        //                   function (res) { ... },
+        //                   function (err) { ... });
+
+        readEntity: function (uri, success, error, options) {
+            var connector = this;
+            options = (options)? options :  {};
+
+            console.log("uri:")
+            console.log(uri)
+            console.log(" is of type: " + typeof(uri));
+            
+            options.uri = uri.replace(/^</, '').replace(/>$/, '');
+
+            connector._iterate({
+                method : connector._readEntity,
+                methodNode : connector._readEntityNode,
+                success : success,
+                error : error,
+                url : function (idx, opts) {
+                    var site = (opts.site)? opts.site : this.options.entityhub.site;
+                    site = (site)? "/" + site : "s";
+
+                    var isLocal = opts.local;
+
+                    var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+                    if (isLocal) {
+                        u += "/entity?id=" + escape(opts.uri);
+                    } else {
+                        u += "/site" + site + "/entity?id=" + escape(opts.uri);
+                    }
+                    return u;
+                },
+                args : {
+                    format : options.format || "application/rdf+json",
+                    options : options
+                },
+                urlIndex : 0
+            });
+        },
+
+        _readEntity : function (url, args, success, error) {
+            jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "GET",
+                dataType: args.format,
+                contentType: "text/plain",
+                accepts: {"application/rdf+json": "application/rdf+json"}
+            });
+        },
+
+        _readEntityNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "GET",
+                uri: url,
+                body: args.text,
+                headers: {
+                    Accept: args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        },
+        // ### load(id, success, error, option)
+
+        // This is an alias to createEntity
+        load: function (uri, success, error, options) {
+            return this.readEntity.call(this, uri, success, error, options);
+
+        },
+        
+        
         // ### udpateEntity(id, success, error, option)
     	// @author mere01
     	// This method updates a local entity on the Apache Stanbol entityhub/entity endpoint.
@@ -670,7 +702,7 @@
             r.end();
         }, // end of _updateEntityNode 
 
-        // ### deleteEntity(id, success, error)
+        // ### deleteEntity(id, success, error, options)
     	// @author mere01
     	// This method deletes a local entity from the Apache Stanbol entityhub/entity endpoint.
     	// **Parameters**:  
@@ -744,7 +776,101 @@
                 }
             });
             r.end();
-        } // end of _deleteEntityNode
-        
+        }, // end of _deleteEntityNode
+     
+     // ### getMapping(id, success, error, options)
+    	// @author mere01
+    	// This method looks up mappings from local Entities to Entities managed by a Referenced Site.
+    	// **Parameters**:  
+        // *{string}* **id** the ID of 	(a) the entity ID, when **options** specifies "entity: true"
+        //								(b) the symbol ID, when **options** specified "symbol: true"
+        //								(c) the mapping ID, otherwise
+        // *{function}* **success** The success callback.  
+    	// *{function}* **error** The error callback.  
+        // *{object}* **options** Options. 
+        //			If you want to look up the mappings for an entity, specify "entity: true".
+        //			If you want to look up the mappings for a symbol, specify "symbol: true".
+        //			If you want to look up the mappings by the mapping ID itself, specify nothing.
+    	// **Throws**:  
+    	// *nothing*  
+    	// **Returns**:  
+    	// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+    	// **Example usage**:  
+    	//
+        //    	     var stnblConn = new vie.StanbolConnector(opts);
+        //    	     stnblConn.deleteEntity(
+        //    					 "http://dbpedia.org/resource/Paris",
+        //    	                 function (res) { ... },
+        //    	                 function (err) { ... }, 
+        //        				 {
+        //							entity: true
+    	//							});						to retrieve the mapping for dbpedia entity Paris
+        getMapping: function(id, success, error, options) {
+
+    			var connector = this;
+    	
+    	    	connector._iterate({
+    	        	method : connector._getMapping,
+    	        	methodNode : connector._getMappingNode,
+
+    	        	url : function (idx, opts) {
+    	        		
+    	                var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+    	                
+    	                u += "/mapping";
+    	                
+    	                var entity = options.entity;
+    	                if (entity) {
+    	                	u += "/entity";
+    	                }
+    	                
+    	                var symbol = options.symbol;
+    	                if (symbol) {
+    	                	u += "/symbol";
+    	                }
+    	                
+    	                u += "?id=" + escape(id);
+    	                
+    	        		return u;
+    	        	},
+    	        	args : {
+    	        		format : "application/json",
+    	        		options: options
+    	        	},
+    	        	success : success,
+    	        	error : error,
+    	        	urlIndex : 0
+    	        });
+    	    }, // end of getMapping
+
+        _getMapping : function (url, args, success, error) {
+        	jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "GET",
+                contentType: args.format             
+            });
+        }, // end of _getMapping
+
+        _getMappingNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "GET",
+                uri: url,
+                headers: {
+                    Accept: "application/json",
+                    'Content-Type': args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        } // end of _getMappingNode
+     
 	});
 })();
