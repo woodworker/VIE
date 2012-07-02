@@ -241,7 +241,6 @@ test("vie.js Entities API - set()", function () {
     ok(madonna.get("knows").isCollection);
     equal(madonna.get("knows").size(), 1);
     equal(madonna.get("knows").at(0).getSubject(), courtney.getSubject());
-<<<<<<< HEAD
 
     // Set with array of subject URIs, should still be a collection
     var originalCollection = madonna.get("knows");
@@ -252,9 +251,6 @@ test("vie.js Entities API - set()", function () {
     equal(madonna.get("knows").size(), 1);
     equal(madonna.get("knows").at(0).getSubject(), courtney.getSubject());
     equal(madonna.get("knows"), originalCollection);
-=======
-    
->>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 });
 
 test("vie.js Entities API - setOrUpdate with entities", function () {
