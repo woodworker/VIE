@@ -120,6 +120,10 @@ VIE.prototype.Entity = function(attrs, opts) {
                 return this;
             }
 
+            if (attrs['@subject']) {
+                attrs['@subject'] = this.toReference(attrs['@subject']);
+            }
+
             // Use **`.set(attrName, value, options)`** for setting or changing exactly one 
             // entity attribute.
             if (typeof attrs === "string") {
@@ -154,10 +158,15 @@ VIE.prototype.Entity = function(attrs, opts) {
                    } else if (value.isEntity) {
                        self.vie.entities.addOrUpdate(value);
                        var coll = new self.vie.Collection();
+                       coll.vie = self.vie;
                        coll.add(value);
                        attrs[key] = coll;
                    } else if (_.isArray(value)) {
-                       // The value is an array, ignore
+                       if (this.attributes[key] && this.attributes[key].isCollection) {
+                         var newEntities = this.attributes[key].addOrUpdate(value);
+                         attrs[key] = this.attributes[key];
+                         attrs[key].reset(newEntities);
+                       }
                    } else if (value["@value"]) {
                        // The value is a literal object, ignore
                    } else if (typeof value == "object") {
@@ -167,6 +176,7 @@ VIE.prototype.Entity = function(attrs, opts) {
                        self.vie.entities.addOrUpdate(child);
                        // and set as VIE Collection attribute on the original entity 
                        var coll = new self.vie.Collection();
+                       coll.vie = self.vie;
                        coll.add(value);
                        attrs[key] = coll;
                    } else {
@@ -188,6 +198,19 @@ VIE.prototype.Entity = function(attrs, opts) {
                 return true;
             }
             return false;
+        },
+
+        hasChanged: function(attr) {
+            if (this.markedChanged) {
+                return true;
+            }
+
+            return Backbone.Model.prototype.hasChanged.call(this, attr);
+        },
+
+        // Force hasChanged to return true
+        forceChanged: function(changed) {
+            this.markedChanged = changed ? true : false;
         },
 
         // **`getSubject()`** is the getter for the entity identifier.
