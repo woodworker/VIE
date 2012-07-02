@@ -11,22 +11,36 @@ module("vie.js - Apache Stanbol Service");
 // !!!  /entityhub/sites/referenced
 // !!!  /entityhub/sites/entity
 // !!!  /entityhub/sites/find
+<<<<<<< HEAD
 // !!!	/entityhub/query
 // ??? 	/entityhub/sites/query			- strange exception, see test "Query (non-local)"
 // !!! 	/entityhub/site/<siteId>/query
+=======
+//	 	/entityhub/query
+//   	/entityhub/sites/query
+//   	/entityhub/site/<siteId>/query
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 // !!!  /entityhub/sites/ldpath
 // !!!  /entityhub/site/<siteId>/entity 
 // !!!  /entityhub/site/<siteId>/find
 // !!!  /entityhub/site/<siteId>/ldpath
 // ??? 	/entityhub/entity (GET, PUT, POST, DELETE) - still need to solve allow-methods problem
+<<<<<<< HEAD
 // !!! 	/entityhub/mapping
+=======
+//   	/entityhub/mapping
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 // !!!  /entityhub/find
 // !!!  /entityhub/lookup
 // !!!  /entityhub/ldpath
 
 // ???  /sparql
 
+<<<<<<< HEAD
 // !!! /contenthub/contenthub/ldpath						- createIndex(), deleteIndex() - DELETE access problem
+=======
+// !!! /contenthub/contenthub/ldpath						- createIndex()
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 // !!!  /contenthub/contenthub/store						- uploadContent()
 // !!!  /contenthub/contenthub/store/raw/<contentId>		- getTextContentByID()
 // !!!  /contenthub/contenthub/store/metadata/<contentId> 	- getMetadataByID()
@@ -80,8 +94,11 @@ test("VIE.js StanbolService - API", function() {
     equal(typeof z.service('stanbol').load, "function");
     ok(z.service('stanbol').query);
     equal(typeof z.service('stanbol').query, "function");
+<<<<<<< HEAD
     ok(z.service('stanbol').save);
     equal(typeof z.service('stanbol').save, "function");
+=======
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
     ok(z.service('stanbol').connector);
     ok(z.service('stanbol').connector instanceof z.StanbolConnector);
     ok(z.service('stanbol').rules);
@@ -97,6 +114,7 @@ test("VIE.js StanbolConnector - API", function() {
     //enhancer
     ok(stanbol.connector.analyze);
     equal(typeof stanbol.connector.analyze, "function");
+<<<<<<< HEAD
     //sparql
     ok(stanbol.connector.sparql);
     equal(typeof stanbol.connector.sparql, "function");
@@ -115,10 +133,19 @@ test("VIE.js StanbolConnector - API", function() {
     equal(typeof stanbol.connector.deleteEntity, "function");
     ok(stanbol.connector.find);
     equal(typeof stanbol.connector.find, "function");
+=======
+    ok(stanbol.connector.load);
+    equal(typeof stanbol.connector.load, "function");
+    ok(stanbol.connector.find);
+    equal(typeof stanbol.connector.find, "function");
+    ok(stanbol.connector.query);
+    equal(typeof stanbol.connector.query, "function");
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
     ok(stanbol.connector.lookup);
     equal(typeof stanbol.connector.lookup, "function");
     ok(stanbol.connector.referenced);
     equal(typeof stanbol.connector.referenced, "function");
+<<<<<<< HEAD
     ok(stanbol.connector.ldpath);
     equal(typeof stanbol.connector.ldpath, "function");
     ok(stanbol.connector.query);
@@ -140,15 +167,26 @@ test("VIE.js StanbolConnector - API", function() {
     equal(typeof stanbol.connector.deleteIndex, "function");
     //cmsadapter
     //factstore
+=======
+    ok(stanbol.connector.sparql);
+    equal(typeof stanbol.connector.sparql, "function");
+    ok(stanbol.connector.ldpath);
+    equal(typeof stanbol.connector.ldpath, "function");
+    ok(stanbol.connector.uploadContent);
+    equal(typeof stanbol.connector.uploadContent, "function");
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
     ok(stanbol.connector.createFactSchema);
     equal(typeof stanbol.connector.createFactSchema, "function");
     ok(stanbol.connector.createFact);
     equal(typeof stanbol.connector.createFact, "function");
     ok(stanbol.connector.queryFact);
     equal(typeof stanbol.connector.queryFact, "function");
+<<<<<<< HEAD
     //ontonet
     //rules
 
+=======
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 });
 
 test("VIE.js StanbolService - Analyze", function () {
@@ -899,6 +937,7 @@ test("VIE.js StanbolService - Query for Facts of a Certain Type", function () {
 });
 */
 
+<<<<<<< HEAD
 //### test for the StanbolService save interface to the entityhub/entity endpoint, 
 //	the service to create Entities managed on the Entityhub.
 //@author mere01
@@ -971,6 +1010,12 @@ test("VIE.js StanbolService - save (create) local entities", function() {
 // 	delete Entities managed on the Entityhub.
 //@author mere01
 test("VIE.js StanbolConnector - CRUD on local entities", function() {
+=======
+//### test for the entityhub/entity, the service to get/create/update and
+// 	delete Entities managed in the Entityhub.
+//@author mere01
+test( "VIE.js StanbolService - CRUD on local entities", function() {
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 	if (navigator.userAgent === 'Zombie') {
 	       return;
 	    }
@@ -991,6 +1036,7 @@ test("VIE.js StanbolConnector - CRUD on local entities", function() {
 	
 	stop();
 	stanbol.connector.createEntity(
+<<<<<<< HEAD
 			entity,
 			function(response) {
 				start();
@@ -1046,6 +1092,60 @@ test("VIE.js StanbolConnector - CRUD on local entities", function() {
 								    ok(response);
 								    if (response && response.id)
 								        ok(true, "E4: entity  " + response.id + " was updated successfully in the entityhub.");
+=======
+				entity,
+				function(response) {
+					ok(true, "E1: new entity " + id +  "created in entityhub/entity/ (using option update)");
+					// if an Entities already exists within the Entityhub, the request should fail with BAD REQUEST
+					stop();
+					stanbol.connector.createEntity(
+								entity,
+								function(response) {
+									ok(false, "E2: entityhub/entity: created already existing entity " + id + ". (using no option)");
+									console.log(response);
+									start();
+								},
+								function(err) {
+									ok(true, "E2: already-existing entity could not be created in the entityhub! (using no option) Received error message: " + err);
+									start();
+								}); // do NOT allow updating of already existing entities
+					
+					// retrieve the entity that's just been created
+					stop();
+					stanbol.connector.load(
+								id,
+								function(response) {
+									var first = null;
+									for (var key in response) 
+									// grab just the first key of the returned object
+									{
+										first = response[key];
+										if(typeof(first)!== 'function') {
+											console.log(key);
+											first = key;
+											break;
+										}
+										}
+									ok(true, "E3: got entity from entityhub/entity: " + first);
+									console.log("E3: got entity:");
+									console.log(first);
+									start();
+								},
+								function(err) {
+									ok(false, "E3: could not get entity from the entityhub!");
+									console.log(err);
+									start();
+								},
+								{local: 'true'}); // to denote that this is a local entity
+					
+					// update the entity that's just been created (modify the label)
+					stop();
+					console.log("sending id to updateEntity: " + id);
+					stanbol.connector.updateEntity(
+								modifEntity,
+								function(response) {
+									ok(true, "E4: entity  " + response.id + " was updated successfully in the entityhub.");
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 									start();
 								},
 								function(err) {
@@ -1062,9 +1162,13 @@ test("VIE.js StanbolConnector - CRUD on local entities", function() {
 					stanbol.connector.deleteEntity(
 								id,
 								function(response) {
+<<<<<<< HEAD
                                     ok(response);
                                     if (response && response.id)
                                         ok(true, "E6: entity  " + response.id + " was deleted successfully from the entityhub.");
+=======
+									ok(true, "E6: entity  " + response.id + " was deleted successfully from the entityhub.");
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 									start();
 								},
 								function(err) {
@@ -1076,7 +1180,11 @@ test("VIE.js StanbolConnector - CRUD on local entities", function() {
 					
 					// the deleted entity cannot be retrieved anymore
 					stop();
+<<<<<<< HEAD
 					stanbol.connector.readEntity(
+=======
+					stanbol.connector.load(
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 								id,
 								function(response) {
 									console.log("E7: got entity:");
@@ -1100,14 +1208,25 @@ test("VIE.js StanbolConnector - CRUD on local entities", function() {
 									console.log(err);
 									start();
 								});
+<<<<<<< HEAD
 				},
 				function(err) {
 					ok(false, "E1: entity could not be created in the entityhub! (using option update)");
+=======
+					start();
+				},
+				function(err) {
+					ok(false, "E1: entity could not be created in the entityhub! (using options local, update)");
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 					start();
 				}, 
 				{update: 'true' // option to allow repeated testing with same entity
 				}); 
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 	// we should be unable to update a non-existing entity
 	var modifId= 'http://developer.yahoo.com/javascript/howto-proxy-falseaddress.html';
 	stop();
@@ -1115,9 +1234,13 @@ test("VIE.js StanbolConnector - CRUD on local entities", function() {
 	stanbol.connector.updateEntity(
 				modifEntity,
 				function(response) {
+<<<<<<< HEAD
                     ok(response);
                     if (response && response.id)
                         ok(false, "E5: non-existing entity  " + response.id + " was updated successfully in the entityhub.");
+=======
+					ok(false, "E5: non-existing entity  " + response.id + " was updated successfully in the entityhub.");
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 					start();
 				},
 				function(err) {
@@ -1128,7 +1251,11 @@ test("VIE.js StanbolConnector - CRUD on local entities", function() {
 				},
 				{},
 				modifId);
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 	// create should fail due to invalid syntax (forgot quotation marks for xmlns:rdf entry)
 	var entity = '<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf=http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"><rdf:Description rdf:about="http://developer.yahoo.com/javascript/howto-proxy.html"><rdfs:label>Howto-Proxy</rdfs:label></rdf:Description></rdf:RDF>'; 
 	stop();
@@ -1150,11 +1277,18 @@ test("VIE.js StanbolConnector - CRUD on local entities", function() {
 }); // end of test for entityhub/entity
 
 
+<<<<<<< HEAD
 
 //### test for the /contenthub/contenthub/store/raw/<contentId>, the service to retrieve raw text
 // content from content items via the item's id
 //@author mere01
 test("Vie.js StanbolConnector - Contenthub/store/raw/<id>", function() {
+=======
+//### test for the /contenthub/contenthub/store/raw/<contentId>, the service to retrieve raw text
+// content from content items via the item's id
+//@author mere01
+test("Vie.js StanbolService - Contenthub/store/raw/<id>", function() {
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 
 	var z = new VIE();
 	ok(z.StanbolService, "Stanbol Service exists.");
@@ -1202,7 +1336,11 @@ test("Vie.js StanbolConnector - Contenthub/store/raw/<id>", function() {
 //### test for the /contenthub/contenthub/store/metadata/<contentId>, the service to retrieve the
 //metadata (=enhancements) from content items via the item's id
 //@author mere01
+<<<<<<< HEAD
 test("Vie.js StanbolConnector - Contenthub/store/metadata/<id>", function() {
+=======
+test("Vie.js StanbolService - Contenthub/store/metadata/<id>", function() {
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 
 	var z = new VIE();
 	ok(z.StanbolService, "Stanbol Service exists.");
@@ -1250,7 +1388,11 @@ test("Vie.js StanbolConnector - Contenthub/store/metadata/<id>", function() {
 //### test for the /contenthub endpoint, checking the ldpath functionality and options in working with 
 //		own indices on the contenthub
 //@author mere01
+<<<<<<< HEAD
 test("VIE.js StanbolConnector - CRD on contenthub indices", function() {
+=======
+test("VIE.js StanbolService - create and read contenthub indices", function() {
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 	
 	if (navigator.userAgent === 'Zombie') {
         return;
@@ -1260,13 +1402,17 @@ test("VIE.js StanbolConnector - CRD on contenthub indices", function() {
 	var ldpath = "name=melaniesIndex&program=@prefix rdf : <http://www.w3.org/1999/02/22-rdf-syntax-ns#>; @prefix rdfs : <http://www.w3.org/2000/01/rdf-schema#>; @prefix db-ont : <http://dbpedia.org/ontology/>; title = rdfs:label :: xsd:string; dbpediatype = rdf:type :: xsd:anyURI; population = db-ont:populationTotal :: xsd:int;";
 	var index = 'melaniesIndex';
 	
+<<<<<<< HEAD
 	// first, we delete the test index in case it already exists.
+=======
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 	var z = new VIE();
     ok (z.StanbolService);
     equal(typeof z.StanbolService, "function");
     var stanbol = new z.StanbolService({url : stanbolRootUrl});
     z.use(stanbol);
     stop();
+<<<<<<< HEAD
 	   stanbol.connector.deleteIndex(
     		index, 
     		function(success){
@@ -1280,6 +1426,8 @@ test("VIE.js StanbolConnector - CRD on contenthub indices", function() {
 	
 	// then, we create a new, empty index	
     stop();
+=======
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
     stanbol.connector.createIndex(ldpath, function(success) {
     	ok(true, "created new index on contenthub.");
     	console.log(success);
@@ -1299,7 +1447,10 @@ test("VIE.js StanbolConnector - CRD on contenthub indices", function() {
         stanbol.connector.uploadContent(item,
         	function(success){
         		ok(true, "stored item to " + index); start();
+<<<<<<< HEAD
         		start();
+=======
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
         		
         		// we can then get back this newly created item by its id:
         		var idToRetrieve = "urn:content-item-" + id;
@@ -1352,6 +1503,11 @@ test("VIE.js StanbolConnector - CRD on contenthub indices", function() {
         		});
         
         
+<<<<<<< HEAD
+=======
+        // and we can delete the new index again: TODO
+        
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
         // we can also view the list of indices that are currently being managed by the contenthub
         var z = new VIE();
         ok (z.StanbolService);
@@ -1385,6 +1541,7 @@ test("VIE.js StanbolConnector - CRD on contenthub indices", function() {
 	}
 );
 
+<<<<<<< HEAD
 //### test for the /entityhub/mapping endpoint, checking the retrieval of entity mappings
 // (the entityhub/mapping looks up mappings from local Entities to Entities managed by a Referenced Site.
 //@author mere01
@@ -1455,6 +1612,8 @@ test("VIE.js StanbolConnector - entityhub/mapping", function() {
 );
 
 
+=======
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 test("VIE.js StanbolService - Query (non-local)", function () {
     if (navigator.userAgent === 'Zombie') {
         return;
@@ -1479,6 +1638,7 @@ test("VIE.js StanbolService - Query (non-local)", function () {
                           "value": "http://dbpedia.org/ontology/Person"
                       }]
                   };
+<<<<<<< HEAD
 
      var query = { 
     		 "selected": ["http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"], 
@@ -1492,10 +1652,13 @@ test("VIE.js StanbolService - Query (non-local)", function () {
     			 "text": "Frankf*" }] 
                 };
                                                                                                                               
+=======
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
      
      var z = new VIE();
      z.use(new z.StanbolService({url : stanbolRootUrl}));
      stop();
+<<<<<<< HEAD
      // query all referenced sites (entityhub/sites/query)
      z.query({query : query, local: false})
      .using('stanbol').execute().done(function(entities) {
@@ -1516,10 +1679,20 @@ test("VIE.js StanbolService - Query (non-local)", function () {
      // curl -X POST -H "Content-Type:application/json" --data "@fieldQuery2.json" http://lnv-89012.dfki.uni-sb.de:9001/entityhub/sites/query
      // to
      // curl "http://lnv-89012.dfki.uni-sb.de:9001/entityhub/sites/entity?id=http://dbpedia.org/resource/Frankfurt
+=======
+     z.query({query : query, local : false})
+     .using('stanbol').execute().done(function(entities) {
+         ok(entities);
+         ok(entities.length > 0);
+         ok(entities instanceof Array);
+         start();
+     })
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
      .fail(function(f){
          ok(false, f.statusText);
          start();
      });
+<<<<<<< HEAD
      
      /** mere01 **/
      stop();
@@ -1542,6 +1715,8 @@ test("VIE.js StanbolService - Query (non-local)", function () {
          start();
      });
      /**/
+=======
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 });
 
 
@@ -1563,6 +1738,7 @@ test("VIE.js StanbolService - Query (local)", function () {
          ok(true, msg);
          start();
      });
+<<<<<<< HEAD
      
      /** mere01 **/
      var query = { 
@@ -1601,4 +1777,6 @@ test("VIE.js StanbolService - Query (local)", function () {
          start();
      });
      /**/
+=======
+>>>>>>> 482b1bac9129540fd58ce89d653259156bba0cb8
 });

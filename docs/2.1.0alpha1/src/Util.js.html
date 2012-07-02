@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><title>Util.js</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="../docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../index.html" class="source"><span class="file_name">README</span></a><a href="../src/Able.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Able.js</span></a><a href="../src/Attribute.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Attribute.js</span></a><a href="../src/Classic.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Classic.js</span></a><a href="../src/Collection.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Collection.js</span></a><a href="../src/Entity.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Entity.js</span></a><a href="../src/Namespace.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Namespace.js</span></a><a href="../src/service/DBPediaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">DBPediaService.js</span></a><a href="../src/service/OpenCalaisService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">OpenCalaisService.js</span></a><a href="../src/service/RdfaRdfQueryService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">RdfaRdfQueryService.js</span></a><a href="../src/service/RdfaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">RdfaService.js</span></a><a href="../src/service/StanbolService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">StanbolService.js</span></a><a href="../src/service/ZemantaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">ZemantaService.js</span></a><a href="../src/Type.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Type.js</span></a><a href="../src/Util.js.html" class="source selected"><span class="base_path">src / </span><span class="file_name">Util.js</span></a><a href="../src/VIE.js.html" class="source "><span class="base_path">src / </span><span class="file_name">VIE.js</span></a><a href="../src/view/CollectionView.js.html" class="source "><span class="base_path">src / view / </span><span class="file_name">CollectionView.js</span></a><a href="../src/view/EntityView.js.html" class="source "><span class="base_path">src / view / </span><span class="file_name">EntityView.js</span></a><a href="../src/xdr.js.html" class="source "><span class="base_path">src / </span><span class="file_name">xdr.js</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>Util.js</h1><div class="filepath">src/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><pre><code>VIE - Vienna IKS Editables
+<!DOCTYPE html><html><head><title>Util.js</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="../docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../index.html" class="source"><span class="file_name">README</span></a><a href="../src/Able.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Able.js</span></a><a href="../src/Attribute.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Attribute.js</span></a><a href="../src/Classic.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Classic.js</span></a><a href="../src/Collection.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Collection.js</span></a><a href="../src/Entity.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Entity.js</span></a><a href="../src/Namespace.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Namespace.js</span></a><a href="../src/service/DBPediaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">DBPediaService.js</span></a><a href="../src/service/OpenCalaisService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">OpenCalaisService.js</span></a><a href="../src/service/RdfaRdfQueryService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">RdfaRdfQueryService.js</span></a><a href="../src/service/RdfaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">RdfaService.js</span></a><a href="../src/service/stanbol/StanbolConnector.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector.js</span></a><a href="../src/service/stanbol/StanbolConnector_cmsadapter.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_cmsadapter.js</span></a><a href="../src/service/stanbol/StanbolConnector_contenthub.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_contenthub.js</span></a><a href="../src/service/stanbol/StanbolConnector_enhancer.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_enhancer.js</span></a><a href="../src/service/stanbol/StanbolConnector_entityhub.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_entityhub.js</span></a><a href="../src/service/stanbol/StanbolConnector_factstore.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_factstore.js</span></a><a href="../src/service/stanbol/StanbolConnector_ontonet.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_ontonet.js</span></a><a href="../src/service/stanbol/StanbolConnector_rules.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_rules.js</span></a><a href="../src/service/stanbol/StanbolConnector_sparql.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_sparql.js</span></a><a href="../src/service/StanbolService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">StanbolService.js</span></a><a href="../src/service/ZemantaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">ZemantaService.js</span></a><a href="../src/Type.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Type.js</span></a><a href="../src/Util.js.html" class="source selected"><span class="base_path">src / </span><span class="file_name">Util.js</span></a><a href="../src/VIE.js.html" class="source "><span class="base_path">src / </span><span class="file_name">VIE.js</span></a><a href="../src/view/CollectionView.js.html" class="source "><span class="base_path">src / view / </span><span class="file_name">CollectionView.js</span></a><a href="../src/view/EntityView.js.html" class="source "><span class="base_path">src / view / </span><span class="file_name">EntityView.js</span></a><a href="../src/xdr.js.html" class="source "><span class="base_path">src / </span><span class="file_name">xdr.js</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>Util.js</h1><div class="filepath">src/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><pre><code>VIE - Vienna IKS Editables
 (c) 2011 Henri Bergius, IKS Consortium
 (c) 2011 Sebastian Germesin, IKS Consortium
 (c) 2011 Szaby Grünwald, IKS Consortium
@@ -31,8 +31,8 @@ If no prefix could be found, an <code>Error</code> is thrown. <br />
       { "dbp": "http://dbpedia.org/ontology/" }
 );
 var uri = "&lt;http://dbpedia.org/ontology/Person&gt;";
-VIE.Util.toCurie(uri, false, ns); // --&gt; dbp:Person
-VIE.Util.toCurie(uri, true, ns); // --&gt; [dbp:Person]
+VIE.Util.toCurie(uri, false, ns);// --&gt; dbp:Person
+VIE.Util.toCurie(uri, true, ns);// --&gt; [dbp:Person]
 </code></pre>
 </td><td class="code"><div class="highlight"><pre>  <span class="nx">toCurie</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">safe</span><span class="p">,</span> <span class="nx">namespaces</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">VIE</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">isCurie</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">namespaces</span><span class="p">))</span> <span class="p">{</span>
@@ -72,10 +72,10 @@ var uri = "&lt;http://dbpedia.org/ontology/Person&gt;";
 var curie = "dbp:Person";
 var scurie = "[dbp:Person]";
 var text = "This is some text.";
-VIE.Util.isCurie(uri, ns);    // --&gt; false
-VIE.Util.isCurie(curie, ns);  // --&gt; true
-VIE.Util.isCurie(scurie, ns); // --&gt; true
-VIE.Util.isCurie(text, ns);   // --&gt; false
+VIE.Util.isCurie(uri, ns);   // --&gt; false
+VIE.Util.isCurie(curie, ns); // --&gt; true
+VIE.Util.isCurie(scurie, ns);// --&gt; true
+VIE.Util.isCurie(text, ns);  // --&gt; false
 </code></pre>
 </td><td class="code"><div class="highlight"><pre>    <span class="nx">isCurie</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">curie</span><span class="p">,</span> <span class="nx">namespaces</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">VIE</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">isUri</span><span class="p">(</span><span class="nx">curie</span><span class="p">))</span> <span class="p">{</span>
@@ -138,8 +138,8 @@ VIE.Util.toUri(scurie, ns);
 
 <pre><code>var uri = "&lt;http://dbpedia.org/ontology/Person&gt;";
 var curie = "dbp:Person";
-VIE.Util.isUri(uri);   // --&gt; true
-VIE.Util.isUri(curie); // --&gt; false
+VIE.Util.isUri(uri);  // --&gt; true
+VIE.Util.isUri(curie);// --&gt; false
 </code></pre>
 </td><td class="code"><div class="highlight"><pre>    <span class="nx">isUri</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">something</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">something</span> <span class="o">===</span> <span class="s2">&quot;string&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">something</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="sr">/^&lt;.+&gt;$/</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">);</span>
@@ -157,7 +157,7 @@ VIE.Util.isUri(curie); // --&gt; false
 
 <pre><code> var attr = "name";
  var ns = myVIE.namespaces;
- VIE.Util.mapAttributeNS(attr, ns); // '&lt;' + ns.base() + attr + '&gt;';
+ VIE.Util.mapAttributeNS(attr, ns);// '&lt;' + ns.base() + attr + '&gt;';
 </code></pre>
 </td><td class="code"><div class="highlight"><pre>    <span class="nx">mapAttributeNS</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">attr</span><span class="p">,</span> <span class="nx">ns</span><span class="p">)</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">attr</span><span class="p">;</span>
@@ -388,12 +388,12 @@ to the provided one. If it is not set, it will keep the base namespace of VIE un
 </td><td class="code"><div class="highlight"><pre>    <span class="nx">loadSchemaOrg</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">vie</span><span class="p">,</span> <span class="nx">SchemaOrg</span><span class="p">,</span> <span class="nx">baseNS</span><span class="p">)</span> <span class="p">{</span>
     
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">SchemaOrg</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Please load the schema.json file.&quot;</span><span class="p">);</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Please load the schema.rdfs.org-json file.&quot;</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="nx">vie</span><span class="p">.</span><span class="nx">types</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="s2">&quot;&lt;http://schema.org/Thing&gt;&quot;</span><span class="p">);</span>
         
-        <span class="kd">var</span> <span class="nx">baseNSBefore</span> <span class="o">=</span> <span class="p">(</span><span class="nx">baseNS</span><span class="p">)</span><span class="o">?</span> <span class="nx">baseNS</span> <span class="o">:</span> <span class="nx">vie</span><span class="p">.</span><span class="nx">namespaces</span><span class="p">.</span><span class="nx">base</span><span class="p">();</span>
-        <span class="nx">vie</span><span class="p">.</span><span class="nx">namespaces</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="nx">baseNS</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">baseNSBefore</span> <span class="o">=</span> <span class="p">(</span><span class="nx">baseNS</span><span class="p">)</span><span class="o">?</span> <span class="nx">baseNS</span> <span class="o">:</span> <span class="nx">vie</span><span class="p">.</span><span class="nx">namespaces</span><span class="p">.</span><span class="nx">base</span><span class="p">();</span></pre></div></td></tr><tr id="section-27"><td class="docs"><div class="pilwrap"><a href="#section-27" class="pilcrow">&#182;</a></div><div class="dox"><div class="summary"><p>temporarily set the schema.org namespace as the default one</p></div><div class="body"></div></div>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">vie</span><span class="p">.</span><span class="nx">namespaces</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="s2">&quot;http://schema.org/&quot;</span><span class="p">);</span>
         
         <span class="kd">var</span> <span class="nx">datatypeMapping</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;DataType&#39;</span><span class="o">:</span> <span class="s1">&#39;xsd:anyType&#39;</span><span class="p">,</span>
@@ -449,6 +449,7 @@ to the provided one. If it is not set, it will keep the base namespace of VIE un
             <span class="k">if</span> <span class="p">(</span><span class="nx">id</span> <span class="o">===</span> <span class="s2">&quot;Thing&quot;</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">type</span><span class="p">.</span><span class="nx">isof</span><span class="p">(</span><span class="s2">&quot;owl:Thing&quot;</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nx">type</span><span class="p">.</span><span class="nx">inherit</span><span class="p">(</span><span class="s2">&quot;owl:Thing&quot;</span><span class="p">);</span>
             <span class="p">}</span>
+            <span class="nx">type</span><span class="p">.</span><span class="nx">locked</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
             <span class="k">return</span> <span class="nx">type</span><span class="p">;</span>
         <span class="p">};</span>
         
@@ -457,9 +458,11 @@ to the provided one. If it is not set, it will keep the base namespace of VIE un
                 <span class="kd">var</span> <span class="nx">ancestors</span> <span class="o">=</span> <span class="nx">SchemaOrg</span><span class="p">[</span><span class="s2">&quot;types&quot;</span><span class="p">][</span><span class="nx">t</span><span class="p">].</span><span class="nx">supertypes</span><span class="p">;</span>
                 <span class="nx">typeHelper</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">vie</span><span class="p">,</span> <span class="nx">ancestors</span><span class="p">,</span> <span class="nx">t</span><span class="p">,</span> <span class="nx">typeProps</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">vie</span><span class="p">,</span> <span class="nx">t</span><span class="p">));</span>
             <span class="p">}</span>
-        <span class="p">}</span></pre></div></td></tr><tr id="section-27"><td class="docs"><div class="pilwrap"><a href="#section-27" class="pilcrow">&#182;</a></div><div class="dox"><div class="summary"><p>set the namespace to either the old value or the provided baseNS value</p></div><div class="body"></div></div>
+        <span class="p">}</span></pre></div></td></tr><tr id="section-28"><td class="docs"><div class="pilwrap"><a href="#section-28" class="pilcrow">&#182;</a></div><div class="dox"><div class="summary"><p>set the namespace(s) back to what they were before</p></div><div class="body"></div></div>
 </td><td class="code"><div class="highlight"><pre>        <span class="nx">vie</span><span class="p">.</span><span class="nx">namespaces</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="nx">baseNSBefore</span><span class="p">);</span>
-    <span class="p">},</span></pre></div></td></tr><tr id="section-28"><td class="docs"><div class="pilwrap"><a href="#section-28" class="pilcrow">&#182;</a></div><h3>VIE.Util.xsdDateTime(date)</h3>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">baseNS</span> <span class="o">!==</span> <span class="s2">&quot;http://schema.org/&quot;</span><span class="p">)</span>
+            <span class="nx">vie</span><span class="p">.</span><span class="nx">namespaces</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;schema&quot;</span><span class="p">,</span> <span class="s2">&quot;http://schema.org/&quot;</span><span class="p">);</span>
+    <span class="p">},</span></pre></div></td></tr><tr id="section-29"><td class="docs"><div class="pilwrap"><a href="#section-29" class="pilcrow">&#182;</a></div><h3>VIE.Util.xsdDateTime(date)</h3>
 
 <p>This transforms a <code>Date</code> instance into an xsd:DateTime format. <br />
 <strong>Parameters</strong>: <br />
@@ -482,7 +485,7 @@ to the provided one. If it is not set, it will keep the base namespace of VIE un
         <span class="kd">var</span> <span class="nx">ss</span>   <span class="o">=</span> <span class="nx">pad</span><span class="p">(</span><span class="nx">date</span><span class="p">.</span><span class="nx">getSeconds</span><span class="p">());</span>
 
         <span class="k">return</span> <span class="nx">yyyy</span> <span class="o">+</span><span class="s1">&#39;-&#39;</span> <span class="o">+</span><span class="nx">mm1</span> <span class="o">+</span><span class="s1">&#39;-&#39;</span> <span class="o">+</span><span class="nx">dd</span> <span class="o">+</span><span class="s1">&#39;T&#39;</span> <span class="o">+</span><span class="nx">hh</span> <span class="o">+</span><span class="s1">&#39;:&#39;</span> <span class="o">+</span><span class="nx">mm2</span> <span class="o">+</span><span class="s1">&#39;:&#39;</span> <span class="o">+</span><span class="nx">ss</span><span class="p">;</span>
-    <span class="p">},</span></pre></div></td></tr><tr id="section-29"><td class="docs"><div class="pilwrap"><a href="#section-29" class="pilcrow">&#182;</a></div><h3>VIE.Util.extractLanguageString(entity, attrs, langs)</h3>
+    <span class="p">},</span></pre></div></td></tr><tr id="section-30"><td class="docs"><div class="pilwrap"><a href="#section-30" class="pilcrow">&#182;</a></div><h3>VIE.Util.extractLanguageString(entity, attrs, langs)</h3>
 
 <p>This method extracts a literal string from an entity, searching through the given attributes and languages. <br />
 <strong>Parameters</strong>: <br />
@@ -497,7 +500,7 @@ to the provided one. If it is not set, it will keep the base namespace of VIE un
 
 <pre><code>     var attrs = ["name", "rdfs:label"];
      var langs = ["en", "de"];
-     VIE.Util.extractLanguageString(someEntity, attrs, langs); // "Barack Obama";
+     VIE.Util.extractLanguageString(someEntity, attrs, langs);// "Barack Obama";
 </code></pre>
 </td><td class="code"><div class="highlight"><pre>    <span class="nx">extractLanguageString</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">entity</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">,</span> <span class="nx">langs</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">entity</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span> <span class="nx">entity</span> <span class="o">!==</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span> <span class="p">{</span>
@@ -514,9 +517,8 @@ to the provided one. If it is not set, it will keep the base namespace of VIE un
                           <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">name</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
                           <span class="k">if</span> <span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">isEntity</span><span class="p">)</span> <span class="p">{</span>
                             <span class="nx">n</span> <span class="o">=</span> <span class="nx">VIE</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">extractLanguageString</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">,</span> <span class="nx">lang</span><span class="p">);</span>
-                          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">n</span> <span class="o">===</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="nx">n</span> <span class="o">=</span> <span class="nx">n</span><span class="p">;</span>
-                          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">n</span> <span class="o">===</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span> <span class="p">{</span></pre></div></td></tr><tr id="section-31"><td class="docs"><div class="pilwrap"><a href="#section-31" class="pilcrow">&#182;</a></div><p>n = n;</p>
+</td><td class="code"><div class="highlight"><pre>                          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
                             <span class="nx">n</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
                           <span class="p">}</span>
                             <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">&amp;&amp;</span> <span class="nx">n</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;@&#39;</span> <span class="o">+</span> <span class="nx">lang</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
@@ -525,7 +527,7 @@ to the provided one. If it is not set, it will keep the base namespace of VIE un
                         <span class="p">}</span>
                   <span class="p">}</span>
               <span class="p">}</span>
-          <span class="p">}</span></pre></div></td></tr><tr id="section-30"><td class="docs"><div class="pilwrap"><a href="#section-30" class="pilcrow">&#182;</a></div><div class="dox"><div class="summary"><p>let's do this again in case we haven't found a name but are dealing with<br />            broken data where no language is given</p></div><div class="body"></div></div>
+          <span class="p">}</span></pre></div></td></tr><tr id="section-32"><td class="docs"><div class="pilwrap"><a href="#section-32" class="pilcrow">&#182;</a></div><div class="dox"><div class="summary"><p>let's do this again in case we haven't found a name but are dealing with<br />            broken data where no language is given</p></div><div class="body"></div></div>
 </td><td class="code"><div class="highlight"><pre>          <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">p</span> <span class="o">&lt;</span> <span class="nx">attrs</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">p</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
                 <span class="kd">var</span> <span class="nx">attr</span> <span class="o">=</span> <span class="nx">attrs</span><span class="p">[</span><span class="nx">p</span><span class="p">];</span>
                 <span class="k">if</span> <span class="p">(</span><span class="nx">entity</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">attr</span><span class="p">))</span> <span class="p">{</span>
@@ -545,7 +547,7 @@ to the provided one. If it is not set, it will keep the base namespace of VIE un
         <span class="p">}</span>
         <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
     <span class="p">},</span>
-    </pre></div></td></tr><tr id="section-31"><td class="docs"><div class="pilwrap"><a href="#section-31" class="pilcrow">&#182;</a></div><h3>VIE.Util.transformationRules(service)</h3>
+    </pre></div></td></tr><tr id="section-33"><td class="docs"><div class="pilwrap"><a href="#section-33" class="pilcrow">&#182;</a></div><h3>VIE.Util.transformationRules(service)</h3>
 
 <p>This returns a default set of rdfQuery rules that transform semantic data into the
 VIE entity types. <br />
@@ -556,7 +558,7 @@ VIE entity types. <br />
 <strong>Returns</strong>: 
 <em>{array}</em> An array of rules with 'left' and 'right' side.</p>
 </td><td class="code"><div class="highlight"><pre>    <span class="nx">transformationRules</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">service</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="p">[</span></pre></div></td></tr><tr id="section-32"><td class="docs"><div class="pilwrap"><a href="#section-32" class="pilcrow">&#182;</a></div><p>rule(s) to transform a dbpedia:Person into a VIE:Person</p>
+        <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="p">[</span></pre></div></td></tr><tr id="section-34"><td class="docs"><div class="pilwrap"><a href="#section-34" class="pilcrow">&#182;</a></div><p>rule(s) to transform a dbpedia:Person into a VIE:Person</p>
 </td><td class="code"><div class="highlight"><pre>             <span class="p">{</span>
                 <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span>
                     <span class="s1">&#39;?subject a dbpedia:Person&#39;</span><span class="p">,</span>
@@ -578,7 +580,7 @@ VIE entity types. <br />
                              <span class="p">];</span>
                      <span class="p">};</span>
                  <span class="p">}(</span><span class="nx">service</span><span class="p">.</span><span class="nx">vie</span><span class="p">.</span><span class="nx">namespaces</span><span class="p">)</span>
-             <span class="p">},</span></pre></div></td></tr><tr id="section-33"><td class="docs"><div class="pilwrap"><a href="#section-33" class="pilcrow">&#182;</a></div><p>rule(s) to transform a foaf:Person into a VIE:Person</p>
+             <span class="p">},</span></pre></div></td></tr><tr id="section-35"><td class="docs"><div class="pilwrap"><a href="#section-35" class="pilcrow">&#182;</a></div><p>rule(s) to transform a foaf:Person into a VIE:Person</p>
 </td><td class="code"><div class="highlight"><pre>             <span class="p">{</span>
              <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span>
                      <span class="s1">&#39;?subject a foaf:Person&#39;</span><span class="p">,</span>
@@ -600,7 +602,7 @@ VIE entity types. <br />
                               <span class="p">];</span>
                       <span class="p">};</span>
                   <span class="p">}(</span><span class="nx">service</span><span class="p">.</span><span class="nx">vie</span><span class="p">.</span><span class="nx">namespaces</span><span class="p">)</span>
-              <span class="p">},</span></pre></div></td></tr><tr id="section-34"><td class="docs"><div class="pilwrap"><a href="#section-34" class="pilcrow">&#182;</a></div><p>rule(s) to transform a dbpedia:Place into a VIE:Place</p>
+              <span class="p">},</span></pre></div></td></tr><tr id="section-36"><td class="docs"><div class="pilwrap"><a href="#section-36" class="pilcrow">&#182;</a></div><p>rule(s) to transform a dbpedia:Place into a VIE:Place</p>
 </td><td class="code"><div class="highlight"><pre>             <span class="p">{</span>
                  <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span>
                      <span class="s1">&#39;?subject a dbpedia:Place&#39;</span><span class="p">,</span>
@@ -622,7 +624,7 @@ VIE entity types. <br />
                           <span class="p">];</span>
                       <span class="p">};</span>
                   <span class="p">}(</span><span class="nx">service</span><span class="p">.</span><span class="nx">vie</span><span class="p">.</span><span class="nx">namespaces</span><span class="p">)</span>
-              <span class="p">},</span></pre></div></td></tr><tr id="section-35"><td class="docs"><div class="pilwrap"><a href="#section-35" class="pilcrow">&#182;</a></div><p>rule(s) to transform a dbpedia:City into a VIE:City</p>
+              <span class="p">},</span></pre></div></td></tr><tr id="section-37"><td class="docs"><div class="pilwrap"><a href="#section-37" class="pilcrow">&#182;</a></div><p>rule(s) to transform a dbpedia:City into a VIE:City</p>
 </td><td class="code"><div class="highlight"><pre>              <span class="p">{</span>
                  <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span>
                      <span class="s1">&#39;?subject a dbpedia:City&#39;</span><span class="p">,</span>
@@ -660,55 +662,109 @@ VIE entity types. <br />
         <span class="p">];</span>
         <span class="k">return</span> <span class="nx">res</span><span class="p">;</span>
     <span class="p">},</span>
-    
-    <span class="nx">getAdditionalRules</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">service</span><span class="p">)</span> <span class="p">{</span>
+    </pre></div></td></tr><tr id="section-38"><td class="docs"><div class="pilwrap"><a href="#section-38" class="pilcrow">&#182;</a></div><h3>VIE.Util.getAdditionalRules(vie)</h3>
 
-      <span class="kd">var</span> <span class="nx">mapping</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="nx">Work</span> <span class="o">:</span> <span class="s2">&quot;CreativeWork&quot;</span><span class="p">,</span>
-      <span class="nx">Film</span> <span class="o">:</span> <span class="s2">&quot;Movie&quot;</span><span class="p">,</span>
-      <span class="nx">TelevisionEpisode</span> <span class="o">:</span> <span class="s2">&quot;TVEpisode&quot;</span><span class="p">,</span>
-      <span class="nx">TelevisionShow</span> <span class="o">:</span> <span class="s2">&quot;TVSeries&quot;</span><span class="p">,</span> <span class="c1">// not listed as equivalent class on dbpedia.org</span>
-      <span class="nx">Website</span> <span class="o">:</span> <span class="s2">&quot;WebPage&quot;</span><span class="p">,</span>
-      <span class="nx">Painting</span> <span class="o">:</span> <span class="s2">&quot;Painting&quot;</span><span class="p">,</span>
-      <span class="nx">Sculpture</span> <span class="o">:</span> <span class="s2">&quot;Sculpture&quot;</span><span class="p">,</span>
-  
-      <span class="nx">Event</span> <span class="o">:</span> <span class="s2">&quot;Event&quot;</span><span class="p">,</span>
-      <span class="nx">SportsEvent</span> <span class="o">:</span> <span class="s2">&quot;SportsEvent&quot;</span><span class="p">,</span>
-      <span class="nx">MusicFestival</span> <span class="o">:</span> <span class="s2">&quot;Festival&quot;</span><span class="p">,</span>
-      <span class="nx">FilmFestival</span> <span class="o">:</span> <span class="s2">&quot;Festival&quot;</span><span class="p">,</span>
-  
-      <span class="nx">Place</span> <span class="o">:</span> <span class="s2">&quot;Place&quot;</span><span class="p">,</span>
-      <span class="nx">Continent</span> <span class="o">:</span> <span class="s2">&quot;Continent&quot;</span><span class="p">,</span>
-      <span class="nx">Country</span> <span class="o">:</span> <span class="s2">&quot;Country&quot;</span><span class="p">,</span>
-      <span class="nx">City</span> <span class="o">:</span> <span class="s2">&quot;City&quot;</span><span class="p">,</span>
-      <span class="nx">Airport</span> <span class="o">:</span> <span class="s2">&quot;Airport&quot;</span><span class="p">,</span>
-      <span class="nx">Station</span> <span class="o">:</span> <span class="s2">&quot;TrainStation&quot;</span><span class="p">,</span> <span class="c1">// not listed as equivalent class on dbpedia.org</span>
-      <span class="nx">Hospital</span> <span class="o">:</span> <span class="s2">&quot;GovernmentBuilding&quot;</span><span class="p">,</span>
-      <span class="nx">Mountain</span> <span class="o">:</span> <span class="s2">&quot;Mountain&quot;</span><span class="p">,</span>
-      <span class="nx">BodyOfWater</span> <span class="o">:</span> <span class="s2">&quot;BodyOfWater&quot;</span><span class="p">,</span>
-  
-      <span class="nx">Company</span> <span class="o">:</span> <span class="s2">&quot;Organization&quot;</span><span class="p">,</span>
-      <span class="nx">Person</span> <span class="o">:</span> <span class="s2">&quot;Person&quot;</span><span class="p">,</span>
-      <span class="p">};</span>
+<p>This returns a extended set of rdfQuery rules that transform semantic data into the
+VIE entity types. <br />
+<strong>Parameters</strong>: <br />
+<em>{object}</em> <strong>vie</strong> An instance of a vie
+<strong>Throws</strong>: 
+<em>nothing</em>.. <br />
+<strong>Returns</strong>: 
+<em>{array}</em> An array of rules with 'left' and 'right' side.</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nx">getAdditionalRules</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">vie</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">mapping</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;Work&#39;</span>              <span class="o">:</span> <span class="s1">&#39;CreativeWork&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Film&#39;</span>              <span class="o">:</span> <span class="s1">&#39;Movie&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;TelevisionEpisode&#39;</span> <span class="o">:</span> <span class="s1">&#39;TVEpisode&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;TelevisionShow&#39;</span>    <span class="o">:</span> <span class="s1">&#39;TVSeries&#39;</span><span class="p">,</span><span class="c1">// not listed as equivalent class on dbpedia.org</span>
+                <span class="s1">&#39;Website&#39;</span>           <span class="o">:</span> <span class="s1">&#39;WebPage&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Painting&#39;</span>          <span class="o">:</span> <span class="s1">&#39;Painting&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Sculpture&#39;</span>         <span class="o">:</span> <span class="s1">&#39;Sculpture&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Event&#39;</span>             <span class="o">:</span> <span class="s1">&#39;Event&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;SportsEvent&#39;</span>       <span class="o">:</span> <span class="s1">&#39;SportsEvent&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;MusicFestival&#39;</span>     <span class="o">:</span> <span class="s1">&#39;Festival&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;FilmFestival&#39;</span>      <span class="o">:</span> <span class="s1">&#39;Festival&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Place&#39;</span>             <span class="o">:</span> <span class="s1">&#39;Place&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Continent&#39;</span>         <span class="o">:</span> <span class="s1">&#39;Continent&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Country&#39;</span>           <span class="o">:</span> <span class="s1">&#39;Country&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;City&#39;</span>              <span class="o">:</span> <span class="s1">&#39;City&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Airport&#39;</span>           <span class="o">:</span> <span class="s1">&#39;Airport&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Station&#39;</span>           <span class="o">:</span> <span class="s1">&#39;TrainStation&#39;</span><span class="p">,</span><span class="c1">// not listed as equivalent class on dbpedia.org</span>
+                <span class="s1">&#39;Hospital&#39;</span>          <span class="o">:</span> <span class="s1">&#39;GovernmentBuilding&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Mountain&#39;</span>          <span class="o">:</span> <span class="s1">&#39;Mountain&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;BodyOfWater&#39;</span>       <span class="o">:</span> <span class="s1">&#39;BodyOfWater&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Company&#39;</span>           <span class="o">:</span> <span class="s1">&#39;Organization&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Person&#39;</span>            <span class="o">:</span> <span class="s1">&#39;Person&#39;</span> <span class="p">};</span>
+        <span class="kd">var</span> <span class="nx">additionalRules</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">mapping</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">additionalRules</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">createSimpleRule</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">mapping</span><span class="p">[</span><span class="nx">key</span><span class="p">],</span> <span class="nx">vie</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">additionalRules</span><span class="p">;</span>
+    <span class="p">},</span></pre></div></td></tr><tr id="section-39"><td class="docs"><div class="pilwrap"><a href="#section-39" class="pilcrow">&#182;</a></div><h3>VIE.Util.createSimpleRule(key, value, vie)</h3>
 
-    <span class="kd">var</span> <span class="nx">additionalRules</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">();</span>
-    <span class="k">for</span> <span class="p">(</span> <span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">mapping</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">tripple</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;?subject a dbpedia:&#39;</span> <span class="o">+</span> <span class="nx">key</span><span class="p">,</span> <span class="s1">&#39;?subject rdfs:label ?label&#39;</span> <span class="p">],</span>
-        <span class="s1">&#39;right&#39;</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ns</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="p">[</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">rdf</span><span class="p">.</span><span class="nx">triple</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">subject</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="nx">ns</span><span class="p">.</span><span class="nx">base</span><span class="p">()</span> <span class="o">+</span> <span class="nx">mapping</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
-              <span class="nx">namespaces</span> <span class="o">:</span> <span class="nx">ns</span><span class="p">.</span><span class="nx">toObj</span><span class="p">()</span>
-            <span class="p">}),</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">rdf</span><span class="p">.</span><span class="nx">triple</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">subject</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="nx">ns</span><span class="p">.</span><span class="nx">base</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;name&gt;&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">label</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span> <span class="p">{</span>
-              <span class="nx">namespaces</span> <span class="o">:</span> <span class="nx">ns</span><span class="p">.</span><span class="nx">toObj</span><span class="p">()</span>
-            <span class="p">})</span> <span class="p">];</span>
-          <span class="p">};</span>
-        <span class="p">}(</span><span class="nx">service</span><span class="p">.</span><span class="nx">vie</span><span class="p">.</span><span class="nx">namespaces</span><span class="p">)</span>
-      <span class="p">};</span>
-      <span class="nx">additionalRules</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">tripple</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">additionalRules</span><span class="p">;</span>
+<p>Returns a simple rule that only transforms the rdfs:label from dbpedia into VIE entity type. <br />
+<strong>Parameters</strong>:
+<em>{string}</em> <strong>key</strong> The dbpedia ontology name (left side)
+<em>{string}</em> <strong>value</strong> The target ontology name (right side)
+<em>{object}</em> <strong>vie</strong> An instance of a vie.
+<strong>Throws</strong>:
+<em>nothing</em>..
+<strong>Returns</strong>:
+<em>{array}</em> A single rule with 'left' and 'right' side.</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nx">createSimpleRule</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">vie</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">rule</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;?subject a dbpedia:&#39;</span> <span class="o">+</span> <span class="nx">key</span><span class="p">,</span> <span class="s1">&#39;?subject rdfs:label ?label&#39;</span> <span class="p">],</span>
+                <span class="s1">&#39;right&#39;</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ns</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="p">[</span> <span class="nx">vie</span><span class="p">.</span><span class="nx">jQuery</span><span class="p">.</span><span class="nx">rdf</span><span class="p">.</span><span class="nx">triple</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">subject</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="nx">ns</span><span class="p">.</span><span class="nx">base</span><span class="p">()</span> <span class="o">+</span> <span class="nx">value</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+                            <span class="nx">namespaces</span> <span class="o">:</span> <span class="nx">ns</span><span class="p">.</span><span class="nx">toObj</span><span class="p">()</span>
+                        <span class="p">}),</span> <span class="nx">vie</span><span class="p">.</span><span class="nx">jQuery</span><span class="p">.</span><span class="nx">rdf</span><span class="p">.</span><span class="nx">triple</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">subject</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="nx">ns</span><span class="p">.</span><span class="nx">base</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;name&gt;&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">label</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span> <span class="p">{</span>
+                            <span class="nx">namespaces</span> <span class="o">:</span> <span class="nx">ns</span><span class="p">.</span><span class="nx">toObj</span><span class="p">()</span>
+                        <span class="p">})</span> <span class="p">];</span>
+                    <span class="p">};</span>
+                <span class="p">}(</span><span class="nx">vie</span><span class="p">.</span><span class="nx">namespaces</span><span class="p">)</span>
+            <span class="p">};</span>
+        <span class="k">return</span> <span class="nx">rule</span><span class="p">;</span>
+    <span class="p">},</span></pre></div></td></tr><tr id="section-40"><td class="docs"><div class="pilwrap"><a href="#section-40" class="pilcrow">&#182;</a></div><h3>VIE.Util.getDepiction(entity, picWidth)</h3>
+
+<p>Returns the URL of the "foaf:depiction" or the "schema:thumbnail" of an entity.
+<strong>Parameters</strong>:
+<em>{object}</em> <strong>entity</strong> The entity to get the picture for
+<em>{int}</em> <strong>picWidth</strong> The prefered width in px for the found image
+<strong>Throws</strong>:
+<em>nothing</em>..
+<strong>Returns</strong>:
+<em>{string}</em> the image url</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nx">getDepiction</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">entity</span><span class="p">,</span> <span class="nx">picWidth</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">depictionUrl</span><span class="p">,</span> <span class="nx">field</span><span class="p">,</span> <span class="nx">fieldValue</span><span class="p">,</span> <span class="nx">preferredFields</span><span class="p">;</span>
+        <span class="nx">preferredFields</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;foaf:depiction&quot;</span><span class="p">,</span> <span class="s2">&quot;schema:thumbnail&quot;</span> <span class="p">];</span>
+        <span class="nx">field</span> <span class="o">=</span> <span class="nx">_</span><span class="p">(</span><span class="nx">preferredFields</span><span class="p">).</span><span class="nx">detect</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">field</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">entity</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">field</span><span class="p">))</span> <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">});</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">field</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">fieldValue</span> <span class="o">=</span> <span class="nx">_</span><span class="p">([</span><span class="nx">entity</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">field</span><span class="p">)]).</span><span class="nx">flatten</span><span class="p">()))</span> <span class="p">{</span>
+            <span class="nx">depictionUrl</span> <span class="o">=</span> <span class="nx">_</span><span class="p">(</span><span class="nx">fieldValue</span><span class="p">).</span><span class="nx">detect</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">uri</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">uri</span> <span class="o">=</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">uri</span><span class="p">.</span><span class="nx">getSubject</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span> <span class="o">?</span> <span class="nx">uri</span><span class="p">.</span><span class="nx">getSubject</span><span class="p">()</span> <span class="o">:</span> <span class="k">void</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="nx">uri</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">uri</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;thumb&quot;</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">}).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[0-9]{2..3}px/</span><span class="p">,</span> <span class="s2">&quot;&quot;</span> <span class="o">+</span> <span class="nx">picWidth</span> <span class="o">+</span> <span class="s2">&quot;px&quot;</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nx">depictionUrl</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^&lt;|&gt;$/g</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    </pre></div></td></tr><tr id="section-41"><td class="docs"><div class="pilwrap"><a href="#section-41" class="pilcrow">&#182;</a></div><h3>VIE.Util.UUIDGenerator()</h3>
+
+<p>Returns a UUID. The original code is from <a href="http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript">stackoverflow</a>.
+<strong>Parameters</strong>:
+<em>nothing</em>
+<strong>Throws</strong>:
+<em>nothing</em>.
+<strong>Returns</strong>:
+<em>{string}</em> The generated UUID.    </p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nx">UUIDGenerator</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">S4</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+           <span class="k">return</span> <span class="p">(((</span><span class="mi">1</span><span class="o">+</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">())</span><span class="o">*</span><span class="mh">0x10000</span><span class="p">)</span><span class="o">|</span><span class="mi">0</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="nx">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="p">};</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nx">S4</span><span class="p">()</span><span class="o">+</span><span class="nx">S4</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;-&quot;</span><span class="o">+</span><span class="nx">S4</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;-&quot;</span><span class="o">+</span><span class="nx">S4</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;-&quot;</span><span class="o">+</span><span class="nx">S4</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;-&quot;</span><span class="o">+</span><span class="nx">S4</span><span class="p">()</span><span class="o">+</span><span class="nx">S4</span><span class="p">()</span><span class="o">+</span><span class="nx">S4</span><span class="p">());</span>
     <span class="p">}</span>
 <span class="p">};</span>
 
-</pre></div></td></tr></tbody></table><div id="generated">generated Wed May 16 2012 14:57:26 GMT+0200 (CEST)  </div><div id="projectname"><a href="../index.html">VIE</a></div></div></body></html>
+</pre></div></td></tr></tbody></table><div id="generated">generated Mon Jun 04 2012 14:43:41 GMT+0200 (CEST)  </div><div id="projectname"><a href="../index.html">VIE</a></div></div></body></html>

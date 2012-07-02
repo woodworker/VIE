@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><title>ZemantaService.js</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="../../docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../../index.html" class="source"><span class="file_name">README</span></a><a href="../../src/Able.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Able.js</span></a><a href="../../src/Attribute.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Attribute.js</span></a><a href="../../src/Classic.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Classic.js</span></a><a href="../../src/Collection.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Collection.js</span></a><a href="../../src/Entity.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Entity.js</span></a><a href="../../src/Namespace.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Namespace.js</span></a><a href="../../src/service/DBPediaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">DBPediaService.js</span></a><a href="../../src/service/OpenCalaisService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">OpenCalaisService.js</span></a><a href="../../src/service/RdfaRdfQueryService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">RdfaRdfQueryService.js</span></a><a href="../../src/service/RdfaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">RdfaService.js</span></a><a href="../../src/service/StanbolService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">StanbolService.js</span></a><a href="../../src/service/ZemantaService.js.html" class="source selected"><span class="base_path">src / service / </span><span class="file_name">ZemantaService.js</span></a><a href="../../src/Type.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Type.js</span></a><a href="../../src/Util.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Util.js</span></a><a href="../../src/VIE.js.html" class="source "><span class="base_path">src / </span><span class="file_name">VIE.js</span></a><a href="../../src/view/CollectionView.js.html" class="source "><span class="base_path">src / view / </span><span class="file_name">CollectionView.js</span></a><a href="../../src/view/EntityView.js.html" class="source "><span class="base_path">src / view / </span><span class="file_name">EntityView.js</span></a><a href="../../src/xdr.js.html" class="source "><span class="base_path">src / </span><span class="file_name">xdr.js</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>ZemantaService.js</h1><div class="filepath">src/service/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><pre><code>VIE - Vienna IKS Editables
+<!DOCTYPE html><html><head><title>ZemantaService.js</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="../../docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../../index.html" class="source"><span class="file_name">README</span></a><a href="../../src/Able.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Able.js</span></a><a href="../../src/Attribute.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Attribute.js</span></a><a href="../../src/Classic.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Classic.js</span></a><a href="../../src/Collection.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Collection.js</span></a><a href="../../src/Entity.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Entity.js</span></a><a href="../../src/Namespace.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Namespace.js</span></a><a href="../../src/service/DBPediaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">DBPediaService.js</span></a><a href="../../src/service/OpenCalaisService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">OpenCalaisService.js</span></a><a href="../../src/service/RdfaRdfQueryService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">RdfaRdfQueryService.js</span></a><a href="../../src/service/RdfaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">RdfaService.js</span></a><a href="../../src/service/stanbol/StanbolConnector.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector.js</span></a><a href="../../src/service/stanbol/StanbolConnector_cmsadapter.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_cmsadapter.js</span></a><a href="../../src/service/stanbol/StanbolConnector_contenthub.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_contenthub.js</span></a><a href="../../src/service/stanbol/StanbolConnector_enhancer.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_enhancer.js</span></a><a href="../../src/service/stanbol/StanbolConnector_entityhub.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_entityhub.js</span></a><a href="../../src/service/stanbol/StanbolConnector_factstore.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_factstore.js</span></a><a href="../../src/service/stanbol/StanbolConnector_ontonet.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_ontonet.js</span></a><a href="../../src/service/stanbol/StanbolConnector_rules.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_rules.js</span></a><a href="../../src/service/stanbol/StanbolConnector_sparql.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_sparql.js</span></a><a href="../../src/service/StanbolService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">StanbolService.js</span></a><a href="../../src/service/ZemantaService.js.html" class="source selected"><span class="base_path">src / service / </span><span class="file_name">ZemantaService.js</span></a><a href="../../src/Type.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Type.js</span></a><a href="../../src/Util.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Util.js</span></a><a href="../../src/VIE.js.html" class="source "><span class="base_path">src / </span><span class="file_name">VIE.js</span></a><a href="../../src/view/CollectionView.js.html" class="source "><span class="base_path">src / view / </span><span class="file_name">CollectionView.js</span></a><a href="../../src/view/EntityView.js.html" class="source "><span class="base_path">src / view / </span><span class="file_name">EntityView.js</span></a><a href="../../src/xdr.js.html" class="source "><span class="base_path">src / </span><span class="file_name">xdr.js</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>ZemantaService.js</h1><div class="filepath">src/service/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><pre><code>VIE - Vienna IKS Editables
 (c) 2011 Henri Bergius, IKS Consortium
 (c) 2011 Sebastian Germesin, IKS Consortium
 (c) 2011 Szaby Grünwald, IKS Consortium
@@ -29,19 +29,78 @@ properties of an entity from Zemanta. <br />
 </td><td class="code"><div class="highlight"><pre>        <span class="nx">url</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;http://api.zemanta.com/services/rest/0.0/&quot;</span><span class="p">],</span>
         <span class="nx">timeout</span> <span class="o">:</span> <span class="mi">20000</span><span class="p">,</span> <span class="cm">/* 20 seconds timeout */</span>
         <span class="nx">namespaces</span> <span class="o">:</span> <span class="p">{</span>
-          <span class="nx">zemanta</span><span class="o">:</span> <span class="s2">&quot;http://s.zemanta.com/ns#&quot;</span>
+          <span class="nx">zemanta</span><span class="o">:</span> <span class="s2">&quot;http://s.zemanta.com/ns#&quot;</span><span class="p">,</span>
+      <span class="nx">freebase</span><span class="o">:</span><span class="s2">&quot;http://rdf.freebase.com/ns/schema/&quot;</span>
         <span class="p">},</span></pre></div></td></tr><tr id="section-6"><td class="docs"><div class="pilwrap"><a href="#section-6" class="pilcrow">&#182;</a></div><div class="dox"><div class="summary"><p>default rules that are shipped with this service</p></div><div class="body"></div></div>
 </td><td class="code"><div class="highlight"><pre>        <span class="nx">rules</span> <span class="o">:</span> <span class="p">[</span>
-                 <span class="p">{</span>
+            <span class="p">{</span>
                 <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span>
                     <span class="s1">&#39;?subject a zemanta:Recognition&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;?subject zemanta:object ?object&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;?object owl:sameAs ?entity&#39;</span>
-                <span class="p">],</span>
+          <span class="s1">&#39;?object zemanta:entity_type ?type&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;?object owl:sameAs ?entity&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;?entity zemanta:title ?title&#39;</span>
+          <span class="p">],</span>
                 <span class="s1">&#39;right&#39;</span> <span class="o">:</span> <span class="p">[</span>
-                    <span class="s1">&#39;?entity zemanta:hasEntityAnnotation ?subject&#39;</span>
-                <span class="p">]</span>
-            <span class="p">}</span>
+                    <span class="s1">&#39;?entity zemanta:hasEntityAnnotation ?subject&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;?entity a ?type&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;?entity rdfs:label ?title&#39;</span>
+          <span class="p">]</span>
+      <span class="p">},</span>
+      
+      <span class="p">{</span>
+                <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span>
+                    <span class="s1">&#39;?subject a freebase:people/person&#39;</span><span class="p">,</span>
+                 <span class="p">],</span>
+                 <span class="s1">&#39;right&#39;</span><span class="o">:</span> <span class="p">[</span>
+          <span class="s1">&#39;?subject a dbpedia:Person&#39;</span>
+         <span class="p">]</span>
+             <span class="p">}</span> <span class="p">,</span>
+       
+       <span class="p">{</span>
+                <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span>
+                    <span class="s1">&#39;?subject a freebase:location/location&#39;</span><span class="p">,</span>
+                 <span class="p">],</span>
+                 <span class="s1">&#39;right&#39;</span><span class="o">:</span> <span class="p">[</span>
+          <span class="s1">&#39;?subject a dbpedia:Place&#39;</span>
+         <span class="p">]</span>
+             <span class="p">},</span>
+       
+       <span class="p">{</span>
+                <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span>
+                    <span class="s1">&#39;?subject a freebase:location/citytown&#39;</span><span class="p">,</span>
+                 <span class="p">],</span>
+                 <span class="s1">&#39;right&#39;</span><span class="o">:</span> <span class="p">[</span>
+          <span class="s1">&#39;?subject a dbpedia:City&#39;</span>
+         <span class="p">]</span>
+             <span class="p">},</span>
+       
+       <span class="p">{</span>
+                <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span>
+                    <span class="s1">&#39;?subject a freebase:business/company&#39;</span><span class="p">,</span>
+                 <span class="p">],</span>
+                 <span class="s1">&#39;right&#39;</span><span class="o">:</span> <span class="p">[</span>
+          <span class="s1">&#39;?subject a dbpedia:Company&#39;</span>
+         <span class="p">]</span>
+             <span class="p">},</span>
+       
+       <span class="p">{</span>
+                <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span>
+                    <span class="s1">&#39;?subject a freebase:location/country&#39;</span><span class="p">,</span>
+                 <span class="p">],</span>
+                 <span class="s1">&#39;right&#39;</span><span class="o">:</span> <span class="p">[</span>
+          <span class="s1">&#39;?subject a dbpedia:Country&#39;</span>
+         <span class="p">]</span>
+             <span class="p">},</span>
+       
+       <span class="p">{</span>
+                <span class="s1">&#39;left&#39;</span> <span class="o">:</span> <span class="p">[</span>
+                    <span class="s1">&#39;?subject a freebase:organization/organization&#39;</span><span class="p">,</span>
+                 <span class="p">],</span>
+                 <span class="s1">&#39;right&#39;</span><span class="o">:</span> <span class="p">[</span>
+          <span class="s1">&#39;?subject a dbpedia:Organisation&#39;</span>
+         <span class="p">]</span>
+             <span class="p">}</span>
          <span class="p">],</span>
          <span class="s2">&quot;api_key&quot;</span> <span class="o">:</span> <span class="kc">undefined</span>
     <span class="p">};</span></pre></div></td></tr><tr id="section-7"><td class="docs"><div class="pilwrap"><a href="#section-7" class="pilcrow">&#182;</a></div><div class="dox"><div class="summary"><p>the options are merged with the default options</p></div><div class="body"></div></div>
@@ -301,4 +360,4 @@ conn.analyze("&lt;p&gt;This is some HTML text.&lt;/p&gt;",
 <span class="p">};</span>
 <span class="p">})();</span>
 
-</pre></div></td></tr></tbody></table><div id="generated">generated Wed May 16 2012 14:57:25 GMT+0200 (CEST)  </div><div id="projectname"><a href="../../index.html">VIE</a></div></div></body></html>
+</pre></div></td></tr></tbody></table><div id="generated">generated Mon Jun 04 2012 14:43:40 GMT+0200 (CEST)  </div><div id="projectname"><a href="../../index.html">VIE</a></div></div></body></html>
