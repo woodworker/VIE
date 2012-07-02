@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><title>StanbolConnector_entityhub.js</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="../../../docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../../../index.html" class="source"><span class="file_name">README</span></a><a href="../../../src/Able.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Able.js</span></a><a href="../../../src/Attribute.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Attribute.js</span></a><a href="../../../src/Classic.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Classic.js</span></a><a href="../../../src/Collection.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Collection.js</span></a><a href="../../../src/Entity.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Entity.js</span></a><a href="../../../src/Namespace.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Namespace.js</span></a><a href="../../../src/service/DBPediaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">DBPediaService.js</span></a><a href="../../../src/service/OpenCalaisService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">OpenCalaisService.js</span></a><a href="../../../src/service/RdfaRdfQueryService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">RdfaRdfQueryService.js</span></a><a href="../../../src/service/RdfaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">RdfaService.js</span></a><a href="../../../src/service/stanbol/StanbolConnector.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_cmsadapter.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_cmsadapter.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_contenthub.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_contenthub.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_enhancer.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_enhancer.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_entityhub.js.html" class="source selected"><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_entityhub.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_factstore.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_factstore.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_ontonet.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_ontonet.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_rules.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_rules.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_sparql.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_sparql.js</span></a><a href="../../../src/service/StanbolService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">StanbolService.js</span></a><a href="../../../src/service/ZemantaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">ZemantaService.js</span></a><a href="../../../src/Type.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Type.js</span></a><a href="../../../src/Util.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Util.js</span></a><a href="../../../src/VIE.js.html" class="source "><span class="base_path">src / </span><span class="file_name">VIE.js</span></a><a href="../../../src/view/CollectionView.js.html" class="source "><span class="base_path">src / view / </span><span class="file_name">CollectionView.js</span></a><a href="../../../src/view/EntityView.js.html" class="source "><span class="base_path">src / view / </span><span class="file_name">EntityView.js</span></a><a href="../../../src/xdr.js.html" class="source "><span class="base_path">src / </span><span class="file_name">xdr.js</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>StanbolConnector_entityhub.js</h1><div class="filepath">src/service/stanbol/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><pre><code>VIE - Vienna IKS Editables
+<!DOCTYPE html><html><head><title>StanbolConnector_entityhub.js</title><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><link rel="stylesheet" media="all" href="../../../docco.css"></head><body><div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../../../index.html" class="source"><span class="file_name">README</span></a><a href="../../../src/Able.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Able.js</span></a><a href="../../../src/Attribute.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Attribute.js</span></a><a href="../../../src/Classic.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Classic.js</span></a><a href="../../../src/Collection.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Collection.js</span></a><a href="../../../src/Entity.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Entity.js</span></a><a href="../../../src/Namespace.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Namespace.js</span></a><a href="../../../src/service/DBPediaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">DBPediaService.js</span></a><a href="../../../src/service/OpenCalaisService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">OpenCalaisService.js</span></a><a href="../../../src/service/RdfaRdfQueryService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">RdfaRdfQueryService.js</span></a><a href="../../../src/service/RdfaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">RdfaService.js</span></a><a href="../../../src/service/SameAsService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">SameAsService.js</span></a><a href="../../../src/service/stanbol/StanbolConnector.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_cmsadapter.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_cmsadapter.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_contenthub.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_contenthub.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_enhancer.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_enhancer.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_entityhub.js.html" class="source selected"><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_entityhub.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_factstore.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_factstore.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_ontonet.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_ontonet.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_rules.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_rules.js</span></a><a href="../../../src/service/stanbol/StanbolConnector_sparql.js.html" class="source "><span class="base_path">src / service / stanbol / </span><span class="file_name">StanbolConnector_sparql.js</span></a><a href="../../../src/service/StanbolService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">StanbolService.js</span></a><a href="../../../src/service/ZemantaService.js.html" class="source "><span class="base_path">src / service / </span><span class="file_name">ZemantaService.js</span></a><a href="../../../src/Type.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Type.js</span></a><a href="../../../src/Util.js.html" class="source "><span class="base_path">src / </span><span class="file_name">Util.js</span></a><a href="../../../src/VIE.js.html" class="source "><span class="base_path">src / </span><span class="file_name">VIE.js</span></a><a href="../../../src/view/CollectionView.js.html" class="source "><span class="base_path">src / view / </span><span class="file_name">CollectionView.js</span></a><a href="../../../src/view/EntityView.js.html" class="source "><span class="base_path">src / view / </span><span class="file_name">EntityView.js</span></a><a href="../../../src/xdr.js.html" class="source "><span class="base_path">src / </span><span class="file_name">xdr.js</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>StanbolConnector_entityhub.js</h1><div class="filepath">src/service/stanbol/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><pre><code>VIE - Vienna IKS Editables
 (c) 2011 Henri Bergius, IKS Consortium
 (c) 2011 Sebastian Germesin, IKS Consortium
 (c) 2011 Szaby Grünwald, IKS Consortium
@@ -108,88 +108,9 @@ the service does not allow for saving, removing or analyzing methods.</p>
         <span class="p">}</span>
       <span class="p">});</span>
       <span class="nx">r</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
-    <span class="p">},</span></pre></div></td></tr><tr id="section-5"><td class="docs"><div class="pilwrap"><a href="#section-5" class="pilcrow">&#182;</a></div><h3>load(uri, success, error, options)</h3>
-
-<p>This method loads all properties from an entity and returns the result by the success callback. <br />
-<strong>Parameters</strong>: <br />
-<em>{string}</em> <strong>uri</strong> The URI of the entity to be loaded. <br />
-<em>{function}</em> <strong>success</strong> The success callback. <br />
-<em>{function}</em> <strong>error</strong> The error callback. <br />
-<em>{object}</em> <strong>options</strong> Options, like the <code>format</code>, the <code>site</code>. If <code>local</code> is set, only the local entities are accessed. <br />
-<strong>Throws</strong>: <br />
-<em>nothing</em> <br />
-<strong>Returns</strong>: <br />
-<em>{VIE.StanbolConnector}</em> : The VIE.StanbolConnector instance itself. <br />
-<strong>Example usage</strong>:  </p>
-
-<pre><code> var stnblConn = new vie.StanbolConnector(opts);
- stnblConn.load("&lt;http://dbpedia.org/resource/Barack_Obama&gt;",
-             function (res) { ... },
-             function (err) { ... });
-</code></pre>
-</td><td class="code"><div class="highlight"><pre>    <span class="nx">load</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">connector</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-      <span class="nx">options</span> <span class="o">=</span> <span class="p">(</span><span class="nx">options</span><span class="p">)</span><span class="o">?</span> <span class="nx">options</span> <span class="o">:</span>  <span class="p">{};</span>
-
-      <span class="nx">options</span><span class="p">.</span><span class="nx">uri</span> <span class="o">=</span> <span class="nx">uri</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^&lt;/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/&gt;$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
-
-      <span class="nx">connector</span><span class="p">.</span><span class="nx">_iterate</span><span class="p">({</span>
-        <span class="nx">method</span> <span class="o">:</span> <span class="nx">connector</span><span class="p">.</span><span class="nx">_load</span><span class="p">,</span>
-        <span class="nx">methodNode</span> <span class="o">:</span> <span class="nx">connector</span><span class="p">.</span><span class="nx">_loadNode</span><span class="p">,</span>
-        <span class="nx">success</span> <span class="o">:</span> <span class="nx">success</span><span class="p">,</span>
-        <span class="nx">error</span> <span class="o">:</span> <span class="nx">error</span><span class="p">,</span>
-        <span class="nx">url</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">idx</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span> <span class="p">{</span>
-          <span class="kd">var</span> <span class="nx">site</span> <span class="o">=</span> <span class="p">(</span><span class="nx">opts</span><span class="p">.</span><span class="nx">site</span><span class="p">)</span><span class="o">?</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">site</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">entityhub</span><span class="p">.</span><span class="nx">site</span><span class="p">;</span>
-          <span class="nx">site</span> <span class="o">=</span> <span class="p">(</span><span class="nx">site</span><span class="p">)</span><span class="o">?</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nx">site</span> <span class="o">:</span> <span class="s2">&quot;s&quot;</span><span class="p">;</span>
-
-          <span class="kd">var</span> <span class="nx">isLocal</span> <span class="o">=</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">local</span><span class="p">;</span>
-
-          <span class="kd">var</span> <span class="nx">u</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">url</span><span class="p">[</span><span class="nx">idx</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\/$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">entityhub</span><span class="p">.</span><span class="nx">urlPostfix</span><span class="p">;</span>
-          <span class="k">if</span> <span class="p">(</span><span class="nx">isLocal</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">u</span> <span class="o">+=</span> <span class="s2">&quot;/entity?id=&quot;</span> <span class="o">+</span> <span class="nx">escape</span><span class="p">(</span><span class="nx">opts</span><span class="p">.</span><span class="nx">uri</span><span class="p">);</span>
-          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="nx">u</span> <span class="o">+=</span> <span class="s2">&quot;/site&quot;</span> <span class="o">+</span> <span class="nx">site</span> <span class="o">+</span> <span class="s2">&quot;/entity?id=&quot;</span> <span class="o">+</span> <span class="nx">escape</span><span class="p">(</span><span class="nx">opts</span><span class="p">.</span><span class="nx">uri</span><span class="p">);</span>
-          <span class="p">}</span>
-          <span class="k">return</span> <span class="nx">u</span><span class="p">;</span>
-        <span class="p">},</span>
-        <span class="nx">args</span> <span class="o">:</span> <span class="p">{</span>
-          <span class="nx">format</span> <span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">format</span> <span class="o">||</span> <span class="s2">&quot;application/rdf+json&quot;</span><span class="p">,</span>
-          <span class="nx">options</span> <span class="o">:</span> <span class="nx">options</span>
-        <span class="p">},</span>
-        <span class="nx">urlIndex</span> <span class="o">:</span> <span class="mi">0</span>
-      <span class="p">});</span>
     <span class="p">},</span>
 
-    <span class="nx">_load</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">jQuery</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
-        <span class="nx">success</span><span class="o">:</span> <span class="nx">success</span><span class="p">,</span>
-        <span class="nx">error</span><span class="o">:</span> <span class="nx">error</span><span class="p">,</span>
-        <span class="nx">url</span><span class="o">:</span> <span class="nx">url</span><span class="p">,</span>
-        <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
-        <span class="nx">dataType</span><span class="o">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">format</span><span class="p">,</span>
-        <span class="nx">contentType</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
-        <span class="nx">accepts</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;application/rdf+json&quot;</span><span class="o">:</span> <span class="s2">&quot;application/rdf+json&quot;</span><span class="p">}</span>
-      <span class="p">});</span>
-    <span class="p">},</span>
-
-    <span class="nx">_loadNode</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span>
-      <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">request</span><span class="p">({</span>
-        <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
-        <span class="nx">uri</span><span class="o">:</span> <span class="nx">url</span><span class="p">,</span>
-        <span class="nx">body</span><span class="o">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">text</span><span class="p">,</span>
-        <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
-          <span class="nx">Accept</span><span class="o">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">format</span>
-        <span class="p">}</span>
-      <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">try</span> <span class="p">{</span>
-          <span class="nx">success</span><span class="p">({</span><span class="nx">results</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">body</span><span class="p">)});</span>
-        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">error</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
-        <span class="p">}</span>
-      <span class="p">});</span>
-      <span class="nx">r</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
-    <span class="p">},</span></pre></div></td></tr><tr id="section-6"><td class="docs"><div class="pilwrap"><a href="#section-6" class="pilcrow">&#182;</a></div><h3>lookup(uri, success, error, options)</h3>
+    </pre></div></td></tr><tr id="section-5"><td class="docs"><div class="pilwrap"><a href="#section-5" class="pilcrow">&#182;</a></div><h3>lookup(uri, success, error, options)</h3>
 
 <p>TODO: add description <br />
 <strong>Parameters</strong>: <br />
@@ -208,7 +129,7 @@ the service does not allow for saving, removing or analyzing methods.</p>
 <strong>Returns</strong>: <br />
 <em>{VIE.StanbolConnector}</em> : The VIE.StanbolConnector instance itself.  </p>
 </td><td class="code"><div class="highlight"><pre>    <span class="nx">lookup</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">options</span> <span class="o">=</span> <span class="p">(</span><span class="nx">options</span><span class="p">)</span><span class="o">?</span> <span class="nx">options</span> <span class="o">:</span>  <span class="p">{};</span></pre></div></td></tr><tr id="section-7"><td class="docs"><div class="pilwrap"><a href="#section-7" class="pilcrow">&#182;</a></div><div class="dox"><div class="summary"><p>lookup/?id=<a href='http://dbpedia.org/resource/Paris&amp;create=false'>http://dbpedia.org/resource/Paris&amp;create=false</a>"</p></div><div class="body"></div></div>
+      <span class="nx">options</span> <span class="o">=</span> <span class="p">(</span><span class="nx">options</span><span class="p">)</span><span class="o">?</span> <span class="nx">options</span> <span class="o">:</span>  <span class="p">{};</span></pre></div></td></tr><tr id="section-6"><td class="docs"><div class="pilwrap"><a href="#section-6" class="pilcrow">&#182;</a></div><div class="dox"><div class="summary"><p>lookup/?id=<a href='http://dbpedia.org/resource/Paris&amp;create=false'>http://dbpedia.org/resource/Paris&amp;create=false</a>"</p></div><div class="body"></div></div>
 </td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">connector</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
 
       <span class="nx">uri</span> <span class="o">=</span> <span class="nx">uri</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^&lt;/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/&gt;$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
@@ -264,7 +185,7 @@ the service does not allow for saving, removing or analyzing methods.</p>
         <span class="p">}</span>
       <span class="p">});</span>
       <span class="nx">r</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
-    <span class="p">},</span></pre></div></td></tr><tr id="section-8"><td class="docs"><div class="pilwrap"><a href="#section-8" class="pilcrow">&#182;</a></div><h3>referenced(success, error, options)</h3>
+    <span class="p">},</span></pre></div></td></tr><tr id="section-7"><td class="docs"><div class="pilwrap"><a href="#section-7" class="pilcrow">&#182;</a></div><h3>referenced(success, error, options)</h3>
 
 <p>This method returns a list of all referenced sites that the entityhub comprises. <br />
 <strong>Parameters</strong>: <br />
@@ -342,7 +263,7 @@ function (err) { ... });
         <span class="p">}</span>
       <span class="p">});</span>
       <span class="nx">r</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
-    <span class="p">},</span></pre></div></td></tr><tr id="section-9"><td class="docs"><div class="pilwrap"><a href="#section-9" class="pilcrow">&#182;</a></div><h3>ldpath(query, success, error, options)</h3>
+    <span class="p">},</span></pre></div></td></tr><tr id="section-8"><td class="docs"><div class="pilwrap"><a href="#section-8" class="pilcrow">&#182;</a></div><h3>ldpath(query, success, error, options)</h3>
 
 <p>TODO. <br />
 <strong>Parameters</strong>: <br />
@@ -423,7 +344,7 @@ TODO
                 <span class="p">}</span>
             <span class="p">});</span>
             <span class="nx">r</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
-        <span class="p">},</span></pre></div></td></tr><tr id="section-10"><td class="docs"><div class="pilwrap"><a href="#section-10" class="pilcrow">&#182;</a></div><h3>query(query, success, error, options)</h3>
+        <span class="p">},</span></pre></div></td></tr><tr id="section-9"><td class="docs"><div class="pilwrap"><a href="#section-9" class="pilcrow">&#182;</a></div><h3>query(query, success, error, options)</h3>
 
 <p>TODO: add description
 <strong>Parameters</strong>: <br />
@@ -455,6 +376,7 @@ TODO
                         <span class="nx">u</span> <span class="o">+=</span> <span class="s2">&quot;/site&quot;</span> <span class="o">+</span> <span class="nx">site</span><span class="p">;</span>
                     <span class="nx">u</span> <span class="o">+=</span> <span class="s2">&quot;/query&quot;</span><span class="p">;</span>
                     
+                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;querying &quot;</span> <span class="o">+</span> <span class="nx">u</span><span class="p">)</span>
                     <span class="k">return</span> <span class="nx">u</span><span class="p">;</span>
                 <span class="p">},</span>
                 <span class="nx">args</span> <span class="o">:</span> <span class="p">{</span>
@@ -496,7 +418,7 @@ TODO
             <span class="nx">r</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
         <span class="p">},</span>
         
-                </pre></div></td></tr><tr id="section-11"><td class="docs"><div class="pilwrap"><a href="#section-11" class="pilcrow">&#182;</a></div><h3>createEntity(entity, success, error, option)</h3>
+                </pre></div></td></tr><tr id="section-10"><td class="docs"><div class="pilwrap"><a href="#section-10" class="pilcrow">&#182;</a></div><h3>createEntity(entity, success, error, option)</h3>
 
 <p>@author mere01
 This method creates a new local entity on the Apache Stanbol entityhub endpoint.
@@ -515,6 +437,13 @@ If options.update is not set to true, the method fails if the entity is already 
                     function (err) { ... },);  to create a new entity in the entityhub
 </code></pre>
 </td><td class="code"><div class="highlight"><pre>        <span class="nx">createEntity</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">entity</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+          
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;createEntity receives arguments:&quot;</span><span class="p">)</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">entity</span><span class="p">)</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">success</span><span class="p">)</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
+          
           <span class="nx">options</span> <span class="o">=</span> <span class="p">(</span><span class="nx">options</span><span class="p">)</span><span class="o">?</span> <span class="nx">options</span> <span class="o">:</span>  <span class="p">{};</span>
 
           <span class="kd">var</span> <span class="nx">connector</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
@@ -545,7 +474,7 @@ If options.update is not set to true, the method fails if the entity is already 
                 <span class="nx">error</span> <span class="o">:</span> <span class="nx">error</span><span class="p">,</span>
                 <span class="nx">urlIndex</span> <span class="o">:</span> <span class="mi">0</span>
               <span class="p">});</span>
-          <span class="p">},</span> <span class="c1">// end of createEntity</span>
+          <span class="p">},</span>
 
         <span class="nx">_createEntity</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
           <span class="nx">jQuery</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
@@ -556,7 +485,7 @@ If options.update is not set to true, the method fails if the entity is already 
                 <span class="nx">data</span><span class="o">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">entity</span><span class="p">,</span>
                 <span class="nx">contentType</span><span class="o">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">format</span><span class="c1">//,</span>
             <span class="p">});</span>
-        <span class="p">},</span> <span class="c1">// end of _createEntity</span>
+        <span class="p">},</span> 
 
         <span class="nx">_createEntityNode</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span>
@@ -576,7 +505,108 @@ If options.update is not set to true, the method fails if the entity is already 
                 <span class="p">}</span>
             <span class="p">});</span>
             <span class="nx">r</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
-        <span class="p">},</span> <span class="c1">// end of _createEntityNode </span></pre></div></td></tr><tr id="section-12"><td class="docs"><div class="pilwrap"><a href="#section-12" class="pilcrow">&#182;</a></div><h3>udpateEntity(id, success, error, option)</h3>
+        <span class="p">},</span></pre></div></td></tr><tr id="section-11"><td class="docs"><div class="pilwrap"><a href="#section-11" class="pilcrow">&#182;</a></div><h3>save(id, success, error, option)</h3>
+
+<p>This is an alias to createEntity</p>
+</td><td class="code"><div class="highlight"><pre></pre></div></td></tr><tr id="section-12"><td class="docs"><div class="pilwrap"><a href="#section-12" class="pilcrow">&#182;</a></div><pre><code>   save: function () {
+       return this.createEntity(arguments[0], arguments[1], arguments[2], arguments[3]);
+</code></pre>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">save</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">entity</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">createEntity</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">entity</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+
+        <span class="p">},</span></pre></div></td></tr><tr id="section-13"><td class="docs"><div class="pilwrap"><a href="#section-13" class="pilcrow">&#182;</a></div><h3>readEntity(uri, success, error, options)</h3>
+
+<p>This method loads all properties from an entity and returns the result by the success callback. <br />
+<strong>Parameters</strong>: <br />
+<em>{string}</em> <strong>uri</strong> The URI of the entity to be loaded. <br />
+<em>{function}</em> <strong>success</strong> The success callback. <br />
+<em>{function}</em> <strong>error</strong> The error callback. <br />
+<em>{object}</em> <strong>options</strong> Options, like the <code>format</code>, the <code>site</code>. If <code>local</code> is set, only the local entities are accessed. <br />
+<strong>Throws</strong>: <br />
+<em>nothing</em> <br />
+<strong>Returns</strong>: <br />
+<em>{VIE.StanbolConnector}</em> : The VIE.StanbolConnector instance itself. <br />
+<strong>Example usage</strong>:  </p>
+
+<pre><code>  var stnblConn = new vie.StanbolConnector(opts);
+  stnblConn.load("&lt;http://dbpedia.org/resource/Barack_Obama&gt;",
+              function (res) { ... },
+              function (err) { ... });
+</code></pre>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">readEntity</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">connector</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+            <span class="nx">options</span> <span class="o">=</span> <span class="p">(</span><span class="nx">options</span><span class="p">)</span><span class="o">?</span> <span class="nx">options</span> <span class="o">:</span>  <span class="p">{};</span>
+
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;uri:&quot;</span><span class="p">)</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">uri</span><span class="p">)</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot; is of type: &quot;</span> <span class="o">+</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">uri</span><span class="p">));</span>
+            
+            <span class="nx">options</span><span class="p">.</span><span class="nx">uri</span> <span class="o">=</span> <span class="nx">uri</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^&lt;/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/&gt;$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+
+            <span class="nx">connector</span><span class="p">.</span><span class="nx">_iterate</span><span class="p">({</span>
+                <span class="nx">method</span> <span class="o">:</span> <span class="nx">connector</span><span class="p">.</span><span class="nx">_readEntity</span><span class="p">,</span>
+                <span class="nx">methodNode</span> <span class="o">:</span> <span class="nx">connector</span><span class="p">.</span><span class="nx">_readEntityNode</span><span class="p">,</span>
+                <span class="nx">success</span> <span class="o">:</span> <span class="nx">success</span><span class="p">,</span>
+                <span class="nx">error</span> <span class="o">:</span> <span class="nx">error</span><span class="p">,</span>
+                <span class="nx">url</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">idx</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kd">var</span> <span class="nx">site</span> <span class="o">=</span> <span class="p">(</span><span class="nx">opts</span><span class="p">.</span><span class="nx">site</span><span class="p">)</span><span class="o">?</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">site</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">entityhub</span><span class="p">.</span><span class="nx">site</span><span class="p">;</span>
+                    <span class="nx">site</span> <span class="o">=</span> <span class="p">(</span><span class="nx">site</span><span class="p">)</span><span class="o">?</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nx">site</span> <span class="o">:</span> <span class="s2">&quot;s&quot;</span><span class="p">;</span>
+
+                    <span class="kd">var</span> <span class="nx">isLocal</span> <span class="o">=</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">local</span><span class="p">;</span>
+
+                    <span class="kd">var</span> <span class="nx">u</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">url</span><span class="p">[</span><span class="nx">idx</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\/$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">entityhub</span><span class="p">.</span><span class="nx">urlPostfix</span><span class="p">;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nx">isLocal</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nx">u</span> <span class="o">+=</span> <span class="s2">&quot;/entity?id=&quot;</span> <span class="o">+</span> <span class="nx">escape</span><span class="p">(</span><span class="nx">opts</span><span class="p">.</span><span class="nx">uri</span><span class="p">);</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="nx">u</span> <span class="o">+=</span> <span class="s2">&quot;/site&quot;</span> <span class="o">+</span> <span class="nx">site</span> <span class="o">+</span> <span class="s2">&quot;/entity?id=&quot;</span> <span class="o">+</span> <span class="nx">escape</span><span class="p">(</span><span class="nx">opts</span><span class="p">.</span><span class="nx">uri</span><span class="p">);</span>
+                    <span class="p">}</span>
+                    <span class="k">return</span> <span class="nx">u</span><span class="p">;</span>
+                <span class="p">},</span>
+                <span class="nx">args</span> <span class="o">:</span> <span class="p">{</span>
+                    <span class="nx">format</span> <span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">format</span> <span class="o">||</span> <span class="s2">&quot;application/rdf+json&quot;</span><span class="p">,</span>
+                    <span class="nx">options</span> <span class="o">:</span> <span class="nx">options</span>
+                <span class="p">},</span>
+                <span class="nx">urlIndex</span> <span class="o">:</span> <span class="mi">0</span>
+            <span class="p">});</span>
+        <span class="p">},</span>
+
+        <span class="nx">_readEntity</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">jQuery</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+                <span class="nx">success</span><span class="o">:</span> <span class="nx">success</span><span class="p">,</span>
+                <span class="nx">error</span><span class="o">:</span> <span class="nx">error</span><span class="p">,</span>
+                <span class="nx">url</span><span class="o">:</span> <span class="nx">url</span><span class="p">,</span>
+                <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+                <span class="nx">dataType</span><span class="o">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">format</span><span class="p">,</span>
+                <span class="nx">contentType</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+                <span class="nx">accepts</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;application/rdf+json&quot;</span><span class="o">:</span> <span class="s2">&quot;application/rdf+json&quot;</span><span class="p">}</span>
+            <span class="p">});</span>
+        <span class="p">},</span>
+
+        <span class="nx">_readEntityNode</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">request</span><span class="p">({</span>
+                <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+                <span class="nx">uri</span><span class="o">:</span> <span class="nx">url</span><span class="p">,</span>
+                <span class="nx">body</span><span class="o">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">text</span><span class="p">,</span>
+                <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="nx">Accept</span><span class="o">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">format</span>
+                <span class="p">}</span>
+            <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">try</span> <span class="p">{</span>
+                    <span class="nx">success</span><span class="p">({</span><span class="nx">results</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">body</span><span class="p">)});</span>
+                <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">error</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">});</span>
+            <span class="nx">r</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
+        <span class="p">},</span></pre></div></td></tr><tr id="section-14"><td class="docs"><div class="pilwrap"><a href="#section-14" class="pilcrow">&#182;</a></div><h3>load(id, success, error, option)</h3>
+</td><td class="code"><div class="highlight"><pre></pre></div></td></tr><tr id="section-15"><td class="docs"><div class="pilwrap"><a href="#section-15" class="pilcrow">&#182;</a></div><p>This is an alias to createEntity</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">load</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">readEntity</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">uri</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+
+        <span class="p">},</span>
+        
+        </pre></div></td></tr><tr id="section-16"><td class="docs"><div class="pilwrap"><a href="#section-16" class="pilcrow">&#182;</a></div><h3>udpateEntity(id, success, error, option)</h3>
 
 <p>@author mere01
 This method updates a local entity on the Apache Stanbol entityhub/entity endpoint.
@@ -598,7 +628,7 @@ This method updates a local entity on the Apache Stanbol entityhub/entity endpoi
                     function (res) { ... },
                     function (err) { ... }, id);   to update the entity referenced by the specified ID
 </code></pre>
-</td><td class="code"><div class="highlight"><pre>        <span class="nx">updateEntity</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">entity</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span> <span class="p">{</span></pre></div></td></tr><tr id="section-13"><td class="docs"><div class="pilwrap"><a href="#section-13" class="pilcrow">&#182;</a></div><p>TODO access problem for method PUT</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">updateEntity</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">entity</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span> <span class="p">{</span></pre></div></td></tr><tr id="section-17"><td class="docs"><div class="pilwrap"><a href="#section-17" class="pilcrow">&#182;</a></div><p>TODO access problem for method PUT</p>
 </td><td class="code"><div class="highlight"><pre>          <span class="nx">id</span> <span class="o">=</span> <span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="o">?</span> <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="o">:</span>  <span class="s2">&quot;&quot;</span><span class="p">;</span>
         
           <span class="kd">var</span> <span class="nx">connector</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
@@ -662,7 +692,7 @@ This method updates a local entity on the Apache Stanbol entityhub/entity endpoi
                 <span class="p">}</span>
             <span class="p">});</span>
             <span class="nx">r</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
-        <span class="p">},</span> <span class="c1">// end of _updateEntityNode </span></pre></div></td></tr><tr id="section-14"><td class="docs"><div class="pilwrap"><a href="#section-14" class="pilcrow">&#182;</a></div><h3>deleteEntity(id, success, error)</h3>
+        <span class="p">},</span> <span class="c1">// end of _updateEntityNode </span></pre></div></td></tr><tr id="section-18"><td class="docs"><div class="pilwrap"><a href="#section-18" class="pilcrow">&#182;</a></div><h3>deleteEntity(id, success, error, options)</h3>
 
 <p>@author mere01
 This method deletes a local entity from the Apache Stanbol entityhub/entity endpoint.
@@ -684,7 +714,7 @@ This method deletes a local entity from the Apache Stanbol entityhub/entity endp
                     function (err) { ... }, 
                     );                     to delete the entity referenced by the specified ID
 </code></pre>
-</td><td class="code"><div class="highlight"><pre>        <span class="nx">deleteEntity</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span></pre></div></td></tr><tr id="section-15"><td class="docs"><div class="pilwrap"><a href="#section-15" class="pilcrow">&#182;</a></div><p>TODO access problem for method DELETE</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">deleteEntity</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span></pre></div></td></tr><tr id="section-19"><td class="docs"><div class="pilwrap"><a href="#section-19" class="pilcrow">&#182;</a></div><p>TODO access problem for method DELETE</p>
 </td><td class="code"><div class="highlight"><pre>          <span class="kd">var</span> <span class="nx">connector</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
       
             <span class="nx">connector</span><span class="p">.</span><span class="nx">_iterate</span><span class="p">({</span>
@@ -736,9 +766,104 @@ This method deletes a local entity from the Apache Stanbol entityhub/entity endp
                 <span class="p">}</span>
             <span class="p">});</span>
             <span class="nx">r</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
-        <span class="p">}</span> <span class="c1">// end of _deleteEntityNode</span>
-        
+        <span class="p">},</span> <span class="c1">// end of _deleteEntityNode</span>
+     </pre></div></td></tr><tr id="section-20"><td class="docs"><div class="pilwrap"><a href="#section-20" class="pilcrow">&#182;</a></div><h3>getMapping(id, success, error, options)</h3>
+
+<p>@author mere01
+This method looks up mappings from local Entities to Entities managed by a Referenced Site.
+<strong>Parameters</strong>: <br />
+<em>{string}</em> <strong>id</strong> the ID of     (a) the entity ID, when <strong>options</strong> specifies "entity: true"
+                            (b) the symbol ID, when <strong>options</strong> specified "symbol: true"
+                            (c) the mapping ID, otherwise
+<em>{function}</em> <strong>success</strong> The success callback. <br />
+<em>{function}</em> <strong>error</strong> The error callback. <br />
+<em>{object}</em> <strong>options</strong> Options. 
+        If you want to look up the mappings for an entity, specify "entity: true".
+        If you want to look up the mappings for a symbol, specify "symbol: true".
+        If you want to look up the mappings by the mapping ID itself, specify nothing.
+<strong>Throws</strong>: <br />
+<em>nothing</em> <br />
+<strong>Returns</strong>: <br />
+<em>{VIE.StanbolConnector}</em> : The VIE.StanbolConnector instance itself. <br />
+<strong>Example usage</strong>:  </p>
+
+<pre><code>        var stnblConn = new vie.StanbolConnector(opts);
+        stnblConn.deleteEntity(
+                    "http://dbpedia.org/resource/Paris",
+                    function (res) { ... },
+                    function (err) { ... }, 
+                    {
+                    entity: true
+                    });                     to retrieve the mapping for dbpedia entity Paris
+</code></pre>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">getMapping</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+
+          <span class="kd">var</span> <span class="nx">connector</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+      
+            <span class="nx">connector</span><span class="p">.</span><span class="nx">_iterate</span><span class="p">({</span>
+                <span class="nx">method</span> <span class="o">:</span> <span class="nx">connector</span><span class="p">.</span><span class="nx">_getMapping</span><span class="p">,</span>
+                <span class="nx">methodNode</span> <span class="o">:</span> <span class="nx">connector</span><span class="p">.</span><span class="nx">_getMappingNode</span><span class="p">,</span>
+
+                <span class="nx">url</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">idx</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span> <span class="p">{</span>
+                  
+                      <span class="kd">var</span> <span class="nx">u</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">url</span><span class="p">[</span><span class="nx">idx</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\/$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">entityhub</span><span class="p">.</span><span class="nx">urlPostfix</span><span class="p">;</span>
+                      
+                      <span class="nx">u</span> <span class="o">+=</span> <span class="s2">&quot;/mapping&quot;</span><span class="p">;</span>
+                      
+                      <span class="kd">var</span> <span class="nx">entity</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">entity</span><span class="p">;</span>
+                      <span class="k">if</span> <span class="p">(</span><span class="nx">entity</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nx">u</span> <span class="o">+=</span> <span class="s2">&quot;/entity&quot;</span><span class="p">;</span>
+                      <span class="p">}</span>
+                      
+                      <span class="kd">var</span> <span class="nx">symbol</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">symbol</span><span class="p">;</span>
+                      <span class="k">if</span> <span class="p">(</span><span class="nx">symbol</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nx">u</span> <span class="o">+=</span> <span class="s2">&quot;/symbol&quot;</span><span class="p">;</span>
+                      <span class="p">}</span>
+                      
+                      <span class="nx">u</span> <span class="o">+=</span> <span class="s2">&quot;?id=&quot;</span> <span class="o">+</span> <span class="nx">escape</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+                      
+                  <span class="k">return</span> <span class="nx">u</span><span class="p">;</span>
+                <span class="p">},</span>
+                <span class="nx">args</span> <span class="o">:</span> <span class="p">{</span>
+                  <span class="nx">format</span> <span class="o">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+                  <span class="nx">options</span><span class="o">:</span> <span class="nx">options</span>
+                <span class="p">},</span>
+                <span class="nx">success</span> <span class="o">:</span> <span class="nx">success</span><span class="p">,</span>
+                <span class="nx">error</span> <span class="o">:</span> <span class="nx">error</span><span class="p">,</span>
+                <span class="nx">urlIndex</span> <span class="o">:</span> <span class="mi">0</span>
+              <span class="p">});</span>
+          <span class="p">},</span> <span class="c1">// end of getMapping</span>
+
+        <span class="nx">_getMapping</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">jQuery</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+                <span class="nx">success</span><span class="o">:</span> <span class="nx">success</span><span class="p">,</span>
+                <span class="nx">error</span><span class="o">:</span> <span class="nx">error</span><span class="p">,</span>
+                <span class="nx">url</span><span class="o">:</span> <span class="nx">url</span><span class="p">,</span>
+                <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+                <span class="nx">contentType</span><span class="o">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">format</span>             
+            <span class="p">});</span>
+        <span class="p">},</span> <span class="c1">// end of _getMapping</span>
+
+        <span class="nx">_getMappingNode</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">request</span><span class="p">({</span>
+                <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+                <span class="nx">uri</span><span class="o">:</span> <span class="nx">url</span><span class="p">,</span>
+                <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="nx">Accept</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+                    <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">format</span>
+                <span class="p">}</span>
+            <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">try</span> <span class="p">{</span>
+                    <span class="nx">success</span><span class="p">({</span><span class="nx">results</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">body</span><span class="p">)});</span>
+                <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">error</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">});</span>
+            <span class="nx">r</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
+        <span class="p">}</span> <span class="c1">// end of _getMappingNode</span>
+     
   <span class="p">});</span>
 <span class="p">})();</span>
 
-</pre></div></td></tr></tbody></table><div id="generated">generated Mon Jun 04 2012 14:43:39 GMT+0200 (CEST)  </div><div id="projectname"><a href="../../../index.html">VIE</a></div></div></body></html>
+</pre></div></td></tr></tbody></table><div id="generated">generated Mon Jul 02 2012 16:03:35 GMT+0200 (CEST)  </div><div id="projectname"><a href="../../../index.html">VIE</a></div></div></body></html>
