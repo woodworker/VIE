@@ -85,6 +85,8 @@ var root = this,
 //     vie.RDFaEntities.getInstances();
 var VIE = root.VIE = function(config) {
     this.config = (config) ? config : {};
+    
+    this.id = VIE.Util.UUIDGenerator();
     this.services = {};
     this.jQuery = jQuery;
     this.entities = new this.Collection();
@@ -251,24 +253,44 @@ VIE.prototype.getServicesArray = function() {
   return _.map(this.services, function (v) {return v;});
 };
 
-// ### load(options)
-// This method instantiates a new VIE.Loadable in order to
-// perform queries on the services.  
-// **Parameters**:  
-// *{object}* **options** Options to be set.  
-// **Throws**:  
-// *nothing*  
-// **Returns**:  
-// *{VIE.Loadable}* : A new instance of VIE.Loadable.  
-// **Example usage**:  
+//### load(options)
+//This method instantiates a new VIE.Loadable in order to
+//perform queries on the services.  
+//**Parameters**:  
+//*{object}* **options** Options to be set.  
+//**Throws**:  
+//*nothing*  
+//**Returns**:  
+//*{VIE.Loadable}* : A new instance of VIE.Loadable.  
+//**Example usage**:  
 //
-//     var vie = new VIE();
-//     vie.use(new vie.StanbolService(), "stanbol");
-//     var loader = vie.load({...});
+//  var vie = new VIE();
+//  vie.use(new vie.StanbolService(), "stanbol");
+//  var loader = vie.load({...});
 VIE.prototype.load = function(options) {
-  if (!options) { options = {}; }
-  options.vie = this;
-  return new this.Loadable(options);
+if (!options) { options = {}; }
+options.vie = this;
+return new this.Loadable(options);
+};
+
+//### query(options)
+//This method instantiates a new VIE.Queryable in order to
+//perform queries on the services.  
+//**Parameters**:  
+//*{object}* **options** Options to be set.  
+//**Throws**:  
+//*nothing*  
+//**Returns**:  
+//*{VIE.Queryable}* : A new instance of VIE.Queryable.  
+//**Example usage**:  
+//
+//  var vie = new VIE();
+//  vie.use(new vie.StanbolService(), "stanbol");
+//  var querier = vie.query({...});
+VIE.prototype.query = function(options) {
+if (!options) { options = {}; }
+options.vie = this;
+return new this.Queryable(options);
 };
 
 // ### save(options)
@@ -400,6 +422,29 @@ VIE.prototype.loadSchema = function(url, options) {
     }
     
     return this;
+};
+
+//### equals(vieInstance)
+//This method tests for equality of two VIE instances.  
+//**Parameters**:  
+//*{VIE}* **vieInstance** The other VIE instance.  
+//**Throws**:  
+//*nothing*.  
+//**Returns**:  
+//*{boolean}* : `true` if the current instance 
+// equals to the given instance, false otherwise.  
+//**Example usage**:  
+//
+//  var vie = new VIE();
+//  var vie2 = new VIE();
+//  console.log(vie.equals(vie2)); // <-- false
+//  console.log(vie2.equals(vie)); // <-- false
+//  console.log(vie.equals(vie)); //  <-- true
+VIE.prototype.equals = function(vieInstance) {
+	if (this.id && vieInstance && vieInstance.id) {
+		return vieInstance.id === this.id;
+	}
+	return false;
 };
 
 // IE per default doesn't have a console API. For making sure this doesn't break
@@ -610,13 +655,21 @@ VIE.prototype.Analyzable = function (options) {
 };
 VIE.prototype.Analyzable.prototype = new VIE.prototype.Able();
 
-// ## VIE.Findable
-// A ```VIE.Findable``` is a wrapper around the deferred object
-// to **find** semantic data on a semantic storage.
+//## VIE.Findable
+//A ```VIE.Findable``` is a wrapper around the deferred object
+//to **find** semantic data on a semantic storage.
 VIE.prototype.Findable = function (options) {
-    this.init(options, "find");
+ this.init(options, "find");
 };
 VIE.prototype.Findable.prototype = new VIE.prototype.Able();
+
+//## VIE.Queryable
+//A ```VIE.Queryable``` is a wrapper around the deferred object
+//to **query** semantic data on a semantic storage.
+VIE.prototype.Queryable = function (options) {
+ this.init(options, "query");
+};
+VIE.prototype.Queryable.prototype = new VIE.prototype.Able();
 
 //     VIE - Vienna IKS Editables
 //     (c) 2011 Henri Bergius, IKS Consortium
@@ -652,8 +705,8 @@ VIE.Util = {
 //           { "dbp": "http://dbpedia.org/ontology/" }
 //     );
 //     var uri = "<http://dbpedia.org/ontology/Person>";
-//     VIE.Util.toCurie(uri, false, ns); // --> dbp:Person
-//     VIE.Util.toCurie(uri, true, ns); // --> [dbp:Person]
+//     VIE.Util.toCurie(uri, false, ns);// --> dbp:Person
+//     VIE.Util.toCurie(uri, true, ns);// --> [dbp:Person]
 	toCurie : function (uri, safe, namespaces) {
         if (VIE.Util.isCurie(uri, namespaces)) {
             return uri;
@@ -693,10 +746,10 @@ VIE.Util = {
 //     var curie = "dbp:Person";
 //     var scurie = "[dbp:Person]";
 //     var text = "This is some text.";
-//     VIE.Util.isCurie(uri, ns);    // --> false
-//     VIE.Util.isCurie(curie, ns);  // --> true
-//     VIE.Util.isCurie(scurie, ns); // --> true
-//     VIE.Util.isCurie(text, ns);   // --> false
+//     VIE.Util.isCurie(uri, ns);   // --> false
+//     VIE.Util.isCurie(curie, ns); // --> true
+//     VIE.Util.isCurie(scurie, ns);// --> true
+//     VIE.Util.isCurie(text, ns);  // --> false
     isCurie : function (curie, namespaces) {
         if (VIE.Util.isUri(curie)) {
             return false;
@@ -759,8 +812,8 @@ VIE.Util = {
 //
 //     var uri = "<http://dbpedia.org/ontology/Person>";
 //     var curie = "dbp:Person";
-//     VIE.Util.isUri(uri);   // --> true
-//     VIE.Util.isUri(curie); // --> false
+//     VIE.Util.isUri(uri);  // --> true
+//     VIE.Util.isUri(curie);// --> false
     isUri : function (something) {
         return (typeof something === "string" && something.search(/^<.+>$/) === 0);
     },
@@ -778,7 +831,7 @@ VIE.Util = {
 //
 //      var attr = "name";
 //      var ns = myVIE.namespaces;
-//      VIE.Util.mapAttributeNS(attr, ns); // '<' + ns.base() + attr + '>';
+//      VIE.Util.mapAttributeNS(attr, ns);// '<' + ns.base() + attr + '>';
     mapAttributeNS : function (attr, ns) {
         var a = attr;
         if (ns.isUri (attr) || attr.indexOf('@') === 0) {
@@ -847,7 +900,7 @@ VIE.Util = {
 	                //jQuery.createCurie(propertyUri, {namespaces: service.vie.namespaces.toObj(true)});
 	            } catch (e) {
 	                propertyCurie = propertyUri;
-	                // console.warn(propertyUri + " doesn't have a namespace definition in '", service.vie.namespaces.toObj());
+	               // console.warn(propertyUri + " doesn't have a namespace definition in '", service.vie.namespaces.toObj());
 	            }
 	            entities[subject][propertyCurie] = entities[subject][propertyCurie] || [];
 
@@ -909,6 +962,8 @@ VIE.Util = {
       resArr = [];
       /* Try to find a label in the preferred language
       */
+      preferredFields = (_.isArray(preferredFields))? preferredFields : [ preferredFields ];
+      preferredLanguages = (_.isArray(preferredLanguages))? preferredLanguages : [ preferredLanguages ];
       for (l = 0, _len = preferredLanguages.length; l < _len; l++) {
         lang = preferredLanguages[l];
         for (p = 0, _len2 = preferredFields.length; p < _len2; p++) {
@@ -1049,12 +1104,13 @@ VIE.Util = {
     loadSchemaOrg : function (vie, SchemaOrg, baseNS) {
     
         if (!SchemaOrg) {
-            throw new Error("Please load the schema.json file.");
+            throw new Error("Please load the schema.rdfs.org-json file.");
         }
         vie.types.remove("<http://schema.org/Thing>");
         
         var baseNSBefore = (baseNS)? baseNS : vie.namespaces.base();
-        vie.namespaces.base(baseNS);
+        /* temporarily set the schema.org namespace as the default one */
+        vie.namespaces.base("http://schema.org/");
         
         var datatypeMapping = {
             'DataType': 'xsd:anyType',
@@ -1110,6 +1166,7 @@ VIE.Util = {
             if (id === "Thing" && !type.isof("owl:Thing")) {
                 type.inherit("owl:Thing");
             }
+            type.locked = true;
             return type;
         };
         
@@ -1119,8 +1176,10 @@ VIE.Util = {
                 typeHelper.call(vie, ancestors, t, typeProps.call(vie, t));
             }
         }
-        /* set the namespace to either the old value or the provided baseNS value */
+        /* set the namespace(s) back to what they were before */
         vie.namespaces.base(baseNSBefore);
+        if (baseNS !== "http://schema.org/")
+            vie.namespaces.add("schema", "http://schema.org/");
     },
 
 // ### VIE.Util.xsdDateTime(date)
@@ -1161,7 +1220,7 @@ VIE.Util = {
 //
 //          var attrs = ["name", "rdfs:label"];
 //          var langs = ["en", "de"];
-//          VIE.Util.extractLanguageString(someEntity, attrs, langs); // "Barack Obama";
+//          VIE.Util.extractLanguageString(someEntity, attrs, langs);// "Barack Obama";
     extractLanguageString : function(entity, attrs, langs) {
         if (entity && typeof entity !== "string") {
         	attrs = (_.isArray(attrs))? attrs : [ attrs ];
@@ -1178,7 +1237,7 @@ VIE.Util = {
                         	if (n.isEntity) {
                         		n = VIE.Util.extractLanguageString(n, attrs, lang);
                         	} else if (typeof n === "string") {
-                        		n = n;
+                        		// n = n;
                         	} else {
                         		n = "";
                         	}
@@ -1222,7 +1281,7 @@ VIE.Util = {
 // *{array}* An array of rules with 'left' and 'right' side.
     transformationRules : function (service) {
         var res = [
-            // rule(s) to transform a dbpedia:Person into a VIE:Person
+           // rule(s) to transform a dbpedia:Person into a VIE:Person
              {
                 'left' : [
                     '?subject a dbpedia:Person',
@@ -1245,7 +1304,7 @@ VIE.Util = {
                      };
                  }(service.vie.namespaces)
              },
-             // rule(s) to transform a foaf:Person into a VIE:Person
+            // rule(s) to transform a foaf:Person into a VIE:Person
              {
              'left' : [
                      '?subject a foaf:Person',
@@ -1268,7 +1327,7 @@ VIE.Util = {
                       };
                   }(service.vie.namespaces)
               },
-             // rule(s) to transform a dbpedia:Place into a VIE:Place
+            // rule(s) to transform a dbpedia:Place into a VIE:Place
              {
                  'left' : [
                      '?subject a dbpedia:Place',
@@ -1291,7 +1350,7 @@ VIE.Util = {
                       };
                   }(service.vie.namespaces)
               },
-             // rule(s) to transform a dbpedia:City into a VIE:City
+            // rule(s) to transform a dbpedia:City into a VIE:City
               {
                  'left' : [
                      '?subject a dbpedia:City',
@@ -1330,53 +1389,107 @@ VIE.Util = {
         return res;
     },
     
-    getAdditionalRules : function (service) {
-
-    	var mapping = {
-			Work : "CreativeWork",
-			Film : "Movie",
-			TelevisionEpisode : "TVEpisode",
-			TelevisionShow : "TVSeries", // not listed as equivalent class on dbpedia.org
-			Website : "WebPage",
-			Painting : "Painting",
-			Sculpture : "Sculpture",
-	
-			Event : "Event",
-			SportsEvent : "SportsEvent",
-			MusicFestival : "Festival",
-			FilmFestival : "Festival",
-	
-			Place : "Place",
-			Continent : "Continent",
-			Country : "Country",
-			City : "City",
-			Airport : "Airport",
-			Station : "TrainStation", // not listed as equivalent class on dbpedia.org
-			Hospital : "GovernmentBuilding",
-			Mountain : "Mountain",
-			BodyOfWater : "BodyOfWater",
-	
-			Company : "Organization",
-			Person : "Person",
-    	};
-
-		var additionalRules = new Array();
-		for ( var key in mapping) {
-			var tripple = {
-				'left' : [ '?subject a dbpedia:' + key, '?subject rdfs:label ?label' ],
-				'right' : function(ns) {
-					return function() {
-						return [ jQuery.rdf.triple(this.subject.toString(), 'a', '<' + ns.base() + mapping[key] + '>', {
-							namespaces : ns.toObj()
-						}), jQuery.rdf.triple(this.subject.toString(), '<' + ns.base() + 'name>', this.label.toString(), {
-							namespaces : ns.toObj()
-						}) ];
-					};
-				}(service.vie.namespaces)
-			};
-			additionalRules.push(tripple);
-		}
-		return additionalRules;
+// ### VIE.Util.getAdditionalRules(vie)
+// This returns a extended set of rdfQuery rules that transform semantic data into the
+// VIE entity types.  
+// **Parameters**:  
+// *{object}* **vie** An instance of a vie
+// **Throws**: 
+// *nothing*..  
+// **Returns**: 
+// *{array}* An array of rules with 'left' and 'right' side.
+    getAdditionalRules : function (vie) {
+        mapping = {
+                'Work'              : 'CreativeWork',
+                'Film'              : 'Movie',
+                'TelevisionEpisode' : 'TVEpisode',
+                'TelevisionShow'    : 'TVSeries',// not listed as equivalent class on dbpedia.org
+                'Website'           : 'WebPage',
+                'Painting'          : 'Painting',
+                'Sculpture'         : 'Sculpture',
+                'Event'             : 'Event',
+                'SportsEvent'       : 'SportsEvent',
+                'MusicFestival'     : 'Festival',
+                'FilmFestival'      : 'Festival',
+                'Place'             : 'Place',
+                'Continent'         : 'Continent',
+                'Country'           : 'Country',
+                'City'              : 'City',
+                'Airport'           : 'Airport',
+                'Station'           : 'TrainStation',// not listed as equivalent class on dbpedia.org
+                'Hospital'          : 'GovernmentBuilding',
+                'Mountain'          : 'Mountain',
+                'BodyOfWater'       : 'BodyOfWater',
+                'Company'           : 'Organization',
+                'Person'            : 'Person' };
+        var additionalRules = new Array();
+        for (var key in mapping) {
+            additionalRules.push(this.createSimpleRule(key, mapping[key], vie));
+        }
+        return additionalRules;
+    },
+// ### VIE.Util.createSimpleRule(key, value, vie)
+// Returns a simple rule that only transforms the rdfs:label from dbpedia into VIE entity type.  
+// **Parameters**:
+// *{string}* **key** The dbpedia ontology name (left side)
+// *{string}* **value** The target ontology name (right side)
+// *{object}* **vie** An instance of a vie.
+// **Throws**:
+// *nothing*..
+// **Returns**:
+// *{array}* A single rule with 'left' and 'right' side.
+    createSimpleRule : function (key, value, vie) {
+        var rule = {
+                'left' : [ '?subject a dbpedia:' + key, '?subject rdfs:label ?label' ],
+                'right' : function(ns) {
+                    return function() {
+                        return [ vie.jQuery.rdf.triple(this.subject.toString(), 'a', '<' + ns.base() + value + '>', {
+                            namespaces : ns.toObj()
+                        }), vie.jQuery.rdf.triple(this.subject.toString(), '<' + ns.base() + 'name>', this.label.toString(), {
+                            namespaces : ns.toObj()
+                        }) ];
+                    };
+                }(vie.namespaces)
+            };
+        return rule;
+    },
+// ### VIE.Util.getDepiction(entity, picWidth)
+// Returns the URL of the "foaf:depiction" or the "schema:thumbnail" of an entity.
+// **Parameters**:
+// *{object}* **entity** The entity to get the picture for
+// *{int}* **picWidth** The prefered width in px for the found image
+// **Throws**:
+// *nothing*..
+// **Returns**:
+// *{string}* the image url
+    getDepiction : function (entity, picWidth) {
+        var depictionUrl, field, fieldValue, preferredFields;
+        preferredFields = [ "foaf:depiction", "schema:thumbnail" ];
+        field = _(preferredFields).detect(function(field) {
+            if (entity.get(field)) return true;
+        });
+        if (field && (fieldValue = _([entity.get(field)]).flatten())) {
+            depictionUrl = _(fieldValue).detect(function(uri) {
+                uri = (typeof uri.getSubject === "function" ? uri.getSubject() : void 0) || uri;
+                if (uri.indexOf("thumb") !== -1) return true;
+            }).replace(/[0-9]{2..3}px/, "" + picWidth + "px");
+            return depictionUrl.replace(/^<|>$/g, '');
+        }
+    },
+    
+ // ### VIE.Util.UUIDGenerator()
+ // Returns a UUID. The original code is from [stackoverflow](http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript).
+ // **Parameters**:
+ // *nothing*
+ // **Throws**:
+ // *nothing*.
+ // **Returns**:
+ // *{string}* The generated UUID.    
+    UUIDGenerator: function () {
+        var S4 = function() {
+           return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        };
+        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
     }
 };
 //     VIE - Vienna IKS Editables
@@ -1501,6 +1614,10 @@ VIE.prototype.Entity = function(attrs, opts) {
                 return this;
             }
 
+            if (attrs['@subject']) {
+                attrs['@subject'] = this.toReference(attrs['@subject']);
+            }
+
             // Use **`.set(attrName, value, options)`** for setting or changing exactly one 
             // entity attribute.
             if (typeof attrs === "string") {
@@ -1535,10 +1652,15 @@ VIE.prototype.Entity = function(attrs, opts) {
                    } else if (value.isEntity) {
                        self.vie.entities.addOrUpdate(value);
                        var coll = new self.vie.Collection();
+                       coll.vie = self.vie;
                        coll.add(value);
                        attrs[key] = coll;
                    } else if (_.isArray(value)) {
-                       // The value is an array, ignore
+                       if (this.attributes[key] && this.attributes[key].isCollection) {
+                         var newEntities = this.attributes[key].addOrUpdate(value);
+                         attrs[key] = this.attributes[key];
+                         attrs[key].reset(newEntities);
+                       }
                    } else if (value["@value"]) {
                        // The value is a literal object, ignore
                    } else if (typeof value == "object") {
@@ -1548,6 +1670,7 @@ VIE.prototype.Entity = function(attrs, opts) {
                        self.vie.entities.addOrUpdate(child);
                        // and set as VIE Collection attribute on the original entity 
                        var coll = new self.vie.Collection();
+                       coll.vie = self.vie;
                        coll.add(value);
                        attrs[key] = coll;
                    } else {
@@ -1569,6 +1692,19 @@ VIE.prototype.Entity = function(attrs, opts) {
                 return true;
             }
             return false;
+        },
+
+        hasChanged: function(attr) {
+            if (this.markedChanged) {
+                return true;
+            }
+
+            return Backbone.Model.prototype.hasChanged.call(this, attr);
+        },
+
+        // Force hasChanged to return true
+        forceChanged: function(changed) {
+            this.markedChanged = changed ? true : false;
         },
 
         // **`getSubject()`** is the getter for the entity identifier.
@@ -1748,8 +1884,7 @@ VIE.prototype.Entity = function(attrs, opts) {
                 var arr = [ existing ];
                 arr.push(value);
                 obj[attr] = arr;
-                this.set(obj, options);
-                return this._setOrAddOne(attr, value, options);
+                return this.set(obj, options);
             }
         },
 
@@ -1799,6 +1934,7 @@ VIE.prototype.Entity = function(attrs, opts) {
             }
             return false;
         },
+        
         // TODO describe
         addTo : function (collection, update) {
             var self = this;
@@ -1812,7 +1948,46 @@ VIE.prototype.Entity = function(attrs, opts) {
             }
             throw new Error("Please provide a proper collection of type VIE.Collection as argument!");
         },
+        
 
+// ### toString(options)  
+// This method converts an entity into a string representation.  
+// If no options are set, it tries to guess the "name" of  
+// entity with a preference on the default given attributes:  
+// `["rdfs:label", "name", "schema:name", "foaf:name", "dcterms:identifier"]`  
+// and it tries to guess the language from the browser. However,  
+// you can also specify these options to be used directly (see  
+// code example below).  
+// **Parameters**:  
+// *{object}* **options** The options to be set. (optional)  
+// *{String|object}* **options.prop** Either a string or an array of strings. (optional) 
+// *{String|object}* **options.lang** Either a string or an array of strings. (optional)  
+// **Throws**:  
+// *nothing*  
+// **Returns**:  
+// *{string}* : The string representation of the entity, 
+//              based on the options/default values.    
+// **Example usage**:  
+//
+//    var entity = vie.entities.add({"name" : "Barack Obama"});
+//    entity.toString(); // <-- "Barack Obama"
+//    entity.toString({prop : ["name"], prop : ["en"]}); // <-- "Barack Obama"
+        toString: function (options) {
+            options = (options)? options : {};
+            options.prop = (options.prop)? 
+                    options.prop : 
+                    ["rdfs:label", "name", "schema:name", "foaf:name", "dcterms:identifier"];
+            var browserLang = "en";
+            if (navigator.userLanguage) // IE
+                browserLang = navigator.userLanguage;
+            else if (navigator.language) // FF
+                browserLang = navigator.language;
+            options.lang = (options.lang)? 
+                    options.lang : 
+                    [browserLang, "en", "de", "fi", "fr", "es", "ja", "zh-tw"];
+            return VIE.Util.getPreferredLangForPreferredProperty(this, options.prop, options.lang);
+        },
+        
         isEntity: true,
 
         vie: self.vie
@@ -1865,6 +2040,12 @@ VIE.prototype.Collection = Backbone.Collection.extend({
 
         if (model === undefined) {
             throw new Error("No model given");
+        }
+
+        if (_.isString(model) && collection.isReference(model)) {
+          model = {
+            '@subject': model
+          };
         }
 
         if (!model.isEntity) {
@@ -2041,7 +2222,21 @@ VIE.prototype.Type = function (id, attrs) {
 //
 //     console.log(person.attributes);
     this.attributes = new this.vie.Attributes(this, (attrs)? attrs : []);
-
+    
+// ### locked
+// This field is set to `true` when the type has been imported
+// from an external ontology and hence should not be altered.  
+// **Parameters**:  
+// nothing  
+// **Throws**:  
+// nothing  
+// **Returns**:  
+// *{boolean}* : `true` when the type is locked, `false` otherwise.  
+// **Example usage**:  
+//
+//      console.log(person.locked);
+     this.locked = false;
+    
 // ### isof(type)
 // This method checks whether the current type is a child of the given type.  
 // **Parameters**:  
@@ -2053,7 +2248,7 @@ VIE.prototype.Type = function (id, attrs) {
 // **Example usage**:  
 //
 //     console.log(person.isof("owl:Thing"));
-//     // <-- true    
+//    // <-- true    
     this.isof = function (type) {
         type = this.vie.types.get(type);
         if (type) {
@@ -2113,6 +2308,10 @@ VIE.prototype.Type = function (id, attrs) {
 //     var y = new vie.Type(...).inherit(x);
 //     y.isof(x) // <-- true
     this.inherit = function (supertype) {
+        if (this.locked) {
+            throw new Error("The type " + this.id + " has been imported from an external ontology and must not " + 
+                    "be altered! Please create a new type that inherits from the current type!");
+        }
         if (typeof supertype === "string") {
             this.inherit(this.vie.types.get(supertype));
         }
@@ -2542,7 +2741,7 @@ VIE.prototype.Attribute = function (id, range, domain, minCount, maxCount) {
 //
 //     console.log(person.max);
 //      // --> 1.7976931348623157e+308
-    maxCount = maxCount ? maxCount : Number.MAX_VALUE
+    maxCount = maxCount ? maxCount : Number.MAX_VALUE;
     this.max = (maxCount >= this.min)? maxCount : this.min;
 // ### applies(range)
 // This method checks, whether the current attribute applies in the given range.
@@ -2636,6 +2835,10 @@ VIE.prototype.Attributes = function (domain, attrs) {
 //
 //     personAttrs.add("name", "Text", 0, 1);
     this.add = function (id, range, min, max) {
+        if (this.domain.locked) {
+            throw new Error("The type " + domain.id + " has been imported from an external ontology and must not " + 
+                    "be altered! Please create a new type that inherits from the current type!");
+        }
         if (this.get(id)) {
             throw new Error("Attribute '" + id + "' already registered for domain " + this.domain.id + "!");
         } 
@@ -2668,6 +2871,10 @@ VIE.prototype.Attributes = function (domain, attrs) {
 //
 //     personAttrs.remove("knows");
     this.remove = function (id) {
+        if (this.domain.locked) {
+            throw new Error("The type " + domain.id + " has been imported from an external ontology and must not " + 
+                    "be altered!");
+        }
         var a = this.get(id);
         if (a.id in this._local) {
             delete this._local[a.id];
@@ -3500,8 +3707,8 @@ VIE.prototype.DBPediaService.prototype = {
                     for (var e = 0; e < entities.length; e++) {
                     	entities[e].set("DBPediaServiceLoad", VIE.Util.xsdDateTime(new Date()));
                     }
-                    entities = (entities.length === 1)? entities[0] : entities;
-                    loadable.resolve(entities);
+                    var retCollection = new service.vie.Collection(entities);
+                    loadable.resolve(retCollection);
                 } catch (e) {
                     loadable.reject(e);
                 }
@@ -3552,7 +3759,7 @@ VIE.prototype.DBPediaConnector.prototype = {
 // ### load(uri, success, error, options)
 // This method loads all properties from an entity and returns the result by the success callback.  
 // **Parameters**:  
-// *{string}* **uri** The URI of the entity to be loaded.  
+// *{string|array}* **uri** The URI of the entity to be loaded or an array of URIs.  
 // *{function}* **success** The success callback.  
 // *{function}* **error** The error callback.  
 // *{object}* **options** Options, like the ```format```.  
@@ -3618,7 +3825,10 @@ VIE.prototype.DBPediaConnector.prototype = {
             headers: {
                 Accept: format
             }
-        }, function(error, response, body) {
+        }, function(err, response, body) {
+            if (response.statusCode !== 200) {
+              return error(body);
+            }
             success(JSON.parse(body));
         });
         r.end();
@@ -3662,10 +3872,59 @@ VIE.prototype.OpenCalaisService = function(options) {
         namespaces : {
         	opencalaisc:  "http://s.opencalais.com/1/pred/",
         	opencalaiscr: "http://s.opencalais.com/1/type/er/",
-        	opencalaiscm: "http://s.opencalais.com/1/type/em/e/"
+        	opencalaiscm: "http://s.opencalais.com/1/type/em/e/",
+			opencalaiscs: "http://s.opencalais.com/1/type/sys/"
         },
         /* default rules that are shipped with this service */
-        rules : []
+        rules : [
+			{
+                'left' : [
+                    '?instance a opencalaiscs:InstanceInfo',
+                    '?instance opencalaisc:subject ?object',
+					'?entity opencalaisc:subject ?object',
+					'?entity opencalaisc:name ?name'
+                ],
+                'right' : [
+                    '?entity opencalaisc:hasTextAnnotation ?instance',
+					'?entity rdfs:label ?name'
+                ]
+            },
+			{
+                'left' : [
+                    '?subject a opencalaiscm:Person',
+                 ],
+                 'right':[
+					'?subject a dbpedia:Person'
+				 ]
+             },
+			 
+			 {
+                'left' : [
+                    '?subject a opencalaiscm:Organization',
+                 ],
+                 'right': [
+					'?subject a dbpedia:Organisation'
+				 ]
+             },
+			 
+			 {
+                'left' : [
+                    '?subject a opencalaiscr:Geo/City',
+                 ],
+                 'right': [
+					'?subject a dbpedia:City'
+				 ]
+             },
+
+			 {
+                'left' : [
+                    '?subject a opencalaiscr:Geo/Country',
+                 ],
+                 'right': [
+					'?subject a dbpedia:Country'
+				 ]
+             }
+		]
     };
     /* the options are merged with the default options */
     this.options = jQuery.extend(true, defaults, options ? options : {});
@@ -3704,28 +3963,6 @@ VIE.prototype.OpenCalaisService.prototype = {
         }
         
         this.rules = jQuery.extend([], VIE.Util.transformationRules(this));
-       /* this.rules = jQuery.extend(this.rules, [{
-        	'left' : [
-        	          '?subject a opencalaiscm:Person',
-                      '?subject opencalaisc:name ?name'
-                ],
-            	'right': function(ns) {
-                    return function() {
-                        return [
-                            jQuery.rdf.triple(this.subject.toString(),
-                                'a',
-                                '<' + ns.base() + 'Person>', {
-                                    namespaces: ns.toObj()
-                                }),
-                            jQuery.rdf.triple(this.subject.toString(),
-                                '<' + ns.base() + 'name>',
-                                this.label, {
-                                    namespaces: ns.toObj()
-                                })
-                            ];
-                    };
-                }(this.vie.namespaces)
-            }]);*/
         this.rules = jQuery.merge(this.rules, (this.options.rules) ? this.options.rules : []);
         //this.rules = [];
         this.connector = new this.vie.OpenCalaisConnector(this.options);
@@ -3778,19 +4015,7 @@ VIE.prototype.OpenCalaisService.prototype = {
 
     // this private method extracts text from a jQuery element
     _extractText: function (element) {
-        if (element.get(0) &&
-            element.get(0).tagName &&
-            (element.get(0).tagName == 'TEXTAREA' ||
-            element.get(0).tagName == 'INPUT' && element.attr('type', 'text'))) {
-            return element.get(0).val();
-        }
-        else {
-            var res = element
-                .text()    /* get the text of element */
-                .replace(/\s+/g, ' ') /* collapse multiple whitespaces */
-                .replace(/\0\b\n\r\f\t/g, ''); /* remove non-letter symbols */
-            return jQuery.trim(res);
-        }
+        return jQuery(element).html();
     }
 };
 
@@ -3869,7 +4094,7 @@ VIE.prototype.OpenCalaisConnector.prototype = {
             type: "POST",
             url: enhancerUrl,
             data: data,
-            accept: "text/plain"
+            dataType: "text"
         });
     },
 
@@ -3895,10 +4120,12 @@ VIE.prototype.OpenCalaisConnector.prototype = {
     _prepareData : function (text) {
     	return {
     		licenseID: this.options.api_key,
-            calculareRelevanceScore: "true",
+            calculateRelevanceScore: "true",
             enableMetadataType: "GenericRelations,SocialTags",
             contentType: "text/html",
-            content: text
+            outputFormat : "Application/JSON",
+            content: text,
+			docRDFaccessible: "true"
             // for more options check http://developer.opencalais.com/docs/suggest/
         };
     }
@@ -4136,6 +4363,7 @@ VIE.prototype.RdfaService.prototype = {
                 continue;
             }
             valueCollection = new this.vie.Collection();
+            valueCollection.vie = this.vie;
             _.each(value, function(valueItem) {
                 var linkedEntity = vie.entities.addOrUpdate({'@subject': valueItem});
                 valueCollection.addOrUpdate(linkedEntity);
@@ -4443,7 +4671,7 @@ VIE.prototype.RdfaService.prototype = {
     
     writeElementValue : function(predicate, element, value) {
         //TODO: this is a hack, please fix!
-        if (value instanceof Array && value.length > 0) {
+        if (_.isArray(value) && value.length > 0) {
             value = value[0];
         }
         
@@ -4504,6 +4732,254 @@ VIE.prototype.RdfaService.prototype = {
 };
 
 })();
+//     VIE - Vienna IKS Editables
+//     (c) 2011 Henri Bergius, IKS Consortium
+//     (c) 2011 Sebastian Germesin, IKS Consortium
+//     (c) 2011 Szaby Grünwald, IKS Consortium
+//     VIE may be freely distributed under the MIT license.
+//     For all details and documentation:
+//     http://viejs.org/
+
+// ## VIE - SameAsService service
+// The SameAsService service allows a VIE developer to directly query
+// "sameAs"-relations of entities from http://sameas.org .
+(function(){
+
+// ## VIE.SameAsService(options)
+// This is the constructor to instantiate a new service to collect
+// "sameAs" relations of an entity from <a href="http://sameas.org">SameAs.org</a>.  
+// **Parameters**:  
+// *{object}* **options** Optional set of fields, ```namespaces```, ```rules```, or ```name```.  
+// **Throws**:  
+// *nothing*  
+// **Returns**:  
+// *{VIE.SameAsService}* : A **new** VIE.SameAsService instance.  
+// **Example usage**:  
+//
+//     var service = new vie.SameAsService({<some-configuration>});
+VIE.prototype.SameAsService = function (options) {
+    var defaults = {
+        /* the default name of this service */
+        name : 'sameas',
+        /* default namespaces that are shipped with this service */
+        namespaces : {
+            owl    : "http://www.w3.org/2002/07/owl#",
+            yago   : "http://dbpedia.org/class/yago/",
+            foaf: 'http://xmlns.com/foaf/0.1/',
+            georss: "http://www.georss.org/georss/",
+            geo: 'http://www.w3.org/2003/01/geo/wgs84_pos#',
+            rdfs: "http://www.w3.org/2000/01/rdf-schema#",
+            rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            dbpedia: "http://dbpedia.org/ontology/",
+            dbprop : "http://dbpedia.org/property/",
+            dcelements : "http://purl.org/dc/elements/1.1/"
+        },
+        /* default rules that are shipped with this service */
+        rules : []
+    };
+    /* the options are merged with the default options */
+    this.options = jQuery.extend(true, defaults, options ? options : {});
+
+    this.vie = null; /* this.vie will be set via VIE.use(); */
+    /* overwrite options.name if you want to set another name */
+    this.name = this.options.name;
+    
+    /* basic setup for the ajax connection */
+    jQuery.ajaxSetup({
+        converters: {"text application/rdf+json": function(s){return JSON.parse(s);}},
+        timeout: 60000 /* 60 seconds timeout */
+    });
+};
+
+VIE.prototype.SameAsService.prototype = {
+    
+// ### init()
+// This method initializes certain properties of the service and is called
+// via ```VIE.use()```.  
+// **Parameters**:  
+// *nothing*  
+// **Throws**:  
+// *nothing*  
+// **Returns**:  
+// *{VIE.SameAsService}* : The VIE.SameAsService instance itself.  
+// **Example usage**:  
+//
+//     var service = new vie.SameAsService({<some-configuration>});
+//     service.init();
+    init: function() {
+
+        for (var key in this.options.namespaces) {
+            var val = this.options.namespaces[key];
+            this.vie.namespaces.add(key, val);
+        }
+        
+        this.rules = jQuery.extend([], VIE.Util.transformationRules(this));
+        this.rules = jQuery.merge(this.rules, (this.options.rules) ? this.options.rules : []);
+        
+        this.connector = new this.vie.SameAsConnector(this.options);
+        
+        return this;
+    },
+
+// ### load(loadable)
+// This method loads the "sameAs" relations for the entity taht is stored  
+// within the loadable into VIE. You can also query for multiple queries  
+// by setting ```entities``` with an array of entities.  
+// **Parameters**:  
+// *{VIE.Loadable}* **lodable** The loadable.  
+// **Throws**:  
+// *{Error}* if an invalid VIE.Loadable is passed.  
+// **Returns**:  
+// *{VIE.SameAsService}* : The VIE.SameAsService instance itself.  
+// **Example usage**:  
+//
+//  var service = new vie.SameAsService({<some-configuration>});
+//  service.load(new vie.Loadable({entity : "<http://...>"}));
+//    OR
+//  var service = new vie.SameAsService({<some-configuration>});
+//  service.load(new vie.Loadable({entities : ["<http://...>", "<http://...>"]}));
+    load: function(loadable){
+        var service = this;
+        
+        var correct = loadable instanceof this.vie.Loadable;
+        if (!correct) {
+            throw new Error("Invalid Loadable passed");
+        }
+
+        var entities = (loadable.options.entity)? loadable.options.entity : loadable.options.entities;
+        
+        if (!entities) {
+            loadable.reject([]);
+        } else {
+            entities = (_.isArray(entities))? entities : [ entities ];
+        
+            var success = function (ents) {
+                return function (results) {
+                    _.defer(function() {
+                        try {
+                            var returnEntities = new service.vie.Collection();
+                            var newEnts = VIE.Util.rdf2Entities(service, results);
+                            for (var e = 0; e < newEnts.length; e++) {
+                                var isValid = false;
+                                var id1 = (newEnts[e].id)? newEnts[e].id : newEnts[e];
+                                for (var f = 0; f < ents.length; f++) {
+                                    var id2 = (ents[f].id)? ents[f].id : ents[f];
+                                    isValid |= id1 === id2;
+                                }
+                                if (isValid) {
+                                    returnEntities.add(newEnts[e]);
+                                }
+                            }
+                            returnEntities.each(function (ent) {
+                                ent.set("SameAsServiceLoad", VIE.Util.xsdDateTime(new Date()));
+                            });
+                            loadable.resolve(returnEntities);
+                        } catch (except) {
+                            loadable.reject(except);
+                        }
+                    });
+                };
+            }(entities);
+            
+            var error = function (e) {
+                loadable.reject(e);
+            };
+                
+        	var tmpEntities = [];
+        	for (var e = 0; e < entities.length; e++) {
+        		var tmpEnt = (typeof entities[e] === "string")? entities[e] : entities[e].id;
+        		tmpEntities.push(tmpEnt);
+        	}
+                        
+            this.connector.load(tmpEntities, success, error);
+        }
+        return this;
+    }
+};
+
+// ## VIE.SameAsConnector(options)
+// The SameAsConnector is the connection between the http://sameas.org service
+// and the backend service.  
+// **Parameters**:  
+// *{object}* **options** The options.  
+// **Throws**:  
+// *nothing*  
+// **Returns**:  
+// *{VIE.SameAsConnector}* : The **new** VIE.SameAsConnector instance.  
+// **Example usage**:  
+//
+//     var dbpConn = new vie.SameAsConnector({<some-configuration>});
+VIE.prototype.SameAsConnector = function (options) {
+    this.options = options;
+    this.baseUrl = "http://sameas.org/rdf?uri=";
+};
+
+VIE.prototype.SameAsConnector.prototype = {
+
+// ### load(uri, success, error, options)
+// This method loads the sameas-relations from an entity and returns the result by the success callback.  
+// **Parameters**:  
+// *{string|array}* **uri** The URI of the entity to be loaded or an array of URIs.  
+// *{function}* **success** The success callback.  
+// *{function}* **error** The error callback.  
+// *{object}* **options** Options, like the ```format```.  
+// **Throws**:  
+// *nothing*  
+// **Returns**:  
+// *{VIE.SameAsConnector}* : The VIE.SameAsConnector instance itself.  
+// **Example usage**:  
+//
+//     var conn = new vie.SameAsConnector(opts);
+//     conn.load("<http://dbpedia.org/resource/Barack_Obama>",
+//                 function (res) { ... },
+//                 function (err) { ... });
+    load: function (uri, success, error, options) {
+        if (!options) { options = {}; }
+        
+        var url = this.baseUrl;
+
+        var _load = function (u, s, e) {
+            jQuery.ajax({
+                success: s,
+                error: e,
+                type: "GET",
+                url: u
+            });
+        };
+        
+        uri = (_.isArray(uri))? uri : [ uri ];
+
+        for (var i = 0; i < uri.length; i++) {
+            var u = uri[i];
+            u = u.replace(/[<>]/g, "");
+
+            if (typeof exports !== "undefined" && typeof process !== "undefined") {
+                /* We're on Node.js, don't use jQuery.ajax */
+                this._loadNode(url + encodeURIComponent(u), success, error, options, format);
+            } else {
+                _load(url + encodeURIComponent(u), success, error);
+            }
+        }
+
+        
+        return this;
+    },
+
+    _loadNode: function (uri, success, error, options, format) {
+        var request = require('request');
+        var r = request({
+            method: "GET",
+            uri: uri
+        }, function(error, response, body) {
+            success(JSON.parse(body));
+        });
+        r.end();
+        
+        return this;
+    }
+};
+})();
+
 //     VIE - Vienna IKS Editables
 //     (c) 2011 Henri Bergius, IKS Consortium
 //     (c) 2011 Sebastian Germesin, IKS Consortium
@@ -4601,1184 +5077,310 @@ VIE.prototype.StanbolService = function(options) {
 };
 
 VIE.prototype.StanbolService.prototype = {
-    
-// ### init()
-// This method initializes certain properties of the service and is called
-// via ```VIE.use()```.  
-// **Parameters**:  
-// *nothing*  
-// **Throws**:  
-// *nothing*  
-// **Returns**:  
-// *{VIE.StanbolService}* : The VIE.StanbolService instance itself.  
-// **Example usage**:  
-//
-//     var stnblService = new vie.StanbolService({<some-configuration>});
-//     stnblService.init();
-    init: function(){
 
-        for (var key in this.options.namespaces) {
-            var val = this.options.namespaces[key];
-            this.vie.namespaces.add(key, val);
-        }
-        
-        this.rules = jQuery.extend([], VIE.Util.transformationRules(this));
-        this.rules = jQuery.merge(this.rules, (this.options.rules) ? this.options.rules : []);
-        
-        this.connector = new this.vie.StanbolConnector(this.options);
+//      ### init()
+//      This method initializes certain properties of the service and is called
+//      via ```VIE.use()```.  
+//      **Parameters**:  
+//      *nothing*  
+//      **Throws**:  
+//      *nothing*  
+//      **Returns**:  
+//      *{VIE.StanbolService}* : The VIE.StanbolService instance itself.  
+//      **Example usage**:  
 
-        /* adding these entity types to VIE helps later the querying */
-        this.vie.types.addOrOverwrite('enhancer:EntityAnnotation', [
-            /*TODO: add attributes */
-        ]).inherit("owl:Thing");
-        this.vie.types.addOrOverwrite('enhancer:TextAnnotation', [
-            /*TODO: add attributes */
-        ]).inherit("owl:Thing");
-        this.vie.types.addOrOverwrite('enhancer:Enhancement', [
-            /*TODO: add attributes */
-        ]).inherit("owl:Thing");
-    },
+//      var stnblService = new vie.StanbolService({<some-configuration>});
+//      stnblService.init();
+        init: function(){
 
-// ### analyze(analyzable)
-// This method extracts text from the jQuery element and sends it to Apache Stanbol for analysis.  
-// **Parameters**:  
-// *{VIE.Analyzable}* **analyzable** The analyzable.  
-// **Throws**:  
-// *{Error}* if an invalid VIE.Findable is passed.  
-// **Returns**:  
-// *{VIE.StanbolService}* : The VIE.StanbolService instance itself.  
-// **Example usage**:  
-//
-//     var stnblService = new vie.StanbolService({<some-configuration>});
-//     stnblService.analyzable(
-//         new vie.Analyzable({element : jQuery("#foo")})
-//     );
-    analyze: function(analyzable) {
-        var service = this;
+            for (var key in this.options.namespaces) {
+                var val = this.options.namespaces[key];
+                this.vie.namespaces.add(key, val);
+            }
 
-        var correct = analyzable instanceof this.vie.Analyzable;
-        if (!correct) {throw "Invalid Analyzable passed";}
+            this.rules = jQuery.extend([], VIE.Util.transformationRules(this));
+            this.rules = jQuery.merge(this.rules, (this.options.rules) ? this.options.rules : []);
 
-        var element = analyzable.options.element ? analyzable.options.element : jQuery('body');
+            this.connector = new this.vie.StanbolConnector(this.options);
 
-        var text = service._extractText(element);
+            /* adding these entity types to VIE helps later the querying */
+            this.vie.types.addOrOverwrite('enhancer:EntityAnnotation', [
+                                                                        /*TODO: add attributes */
+                                                                        ]).inherit("owl:Thing");
+            this.vie.types.addOrOverwrite('enhancer:TextAnnotation', [
+                                                                      /*TODO: add attributes */
+                                                                      ]).inherit("owl:Thing");
+            this.vie.types.addOrOverwrite('enhancer:Enhancement', [
+                                                                   /*TODO: add attributes */
+                                                                   ]).inherit("owl:Thing");
+        },
 
-        if (text.length > 0) {
-            /* query enhancer with extracted text */
+//      ### analyze(analyzable)
+//      This method extracts text from the jQuery element and sends it to Apache Stanbol for analysis.  
+//      **Parameters**:  
+//      *{VIE.Analyzable}* **analyzable** The analyzable.  
+//      **Throws**:  
+//      *{Error}* if an invalid VIE.Findable is passed.  
+//      **Returns**:  
+//      *{VIE.StanbolService}* : The VIE.StanbolService instance itself.  
+//      **Example usage**:  
+
+//      var stnblService = new vie.StanbolService({<some-configuration>});
+//      stnblService.analyzable(
+//      new vie.Analyzable({element : jQuery("#foo")})
+//      );
+        analyze: function(analyzable) {
+        	console.log("analyzable passed to me:")
+        	console.log(analyzable)
+            var service = this;
+
+            var correct = analyzable instanceof this.vie.Analyzable;
+            if (!correct) {throw "Invalid Analyzable passed";}
+
+            var element = analyzable.options.element ? analyzable.options.element : jQuery('body');
+
+            var text = service._extractText(element);
+
+            if (text.length > 0) {
+                /* query enhancer with extracted text */
+                var success = function (results) {
+                    _.defer(function(){
+                        var entities = VIE.Util.rdf2Entities(service, results);
+                        analyzable.resolve(entities);
+                    });
+                };
+                var error = function (e) {
+                    analyzable.reject(e);
+                };
+
+                var options = {
+                        chain : (analyzable.options.chain)? analyzable.options.chain : service.options.enhancer.chain
+                };
+
+                this.connector.analyze(text, success, error, options);
+
+            } else {
+                console.warn("No text found in element.");
+                analyzable.reject([]);
+            }
+
+        },
+
+//      ### find(findable)
+//      This method finds entities given the term from the entity hub.  
+//      **Parameters**:  
+//      *{VIE.Findable}* **findable** The findable.  
+//      **Throws**:  
+//      *{Error}* if an invalid VIE.Findable is passed.  
+//      **Returns**:  
+//      *{VIE.StanbolService}* : The VIE.StanbolService instance itself.  
+//      **Example usage**:  
+
+//      var stnblService = new vie.StanbolService({<some-configuration>});
+//      stnblService.load(new vie.Findable({
+//      term : "Bischofsh", 
+//      limit : 10, 
+//      offset: 0,
+//      field: "skos:prefLabel", // used for the term lookup, default: "rdfs:label"
+//      properties: ["skos:prefLabel", "rdfs:label"] // are going to be loaded with the result entities
+//      }));
+        find: function (findable) {        
+            var correct = findable instanceof this.vie.Findable;
+            if (!correct) {throw "Invalid Findable passed";}
+            var service = this;
+            /* The term to find, * as wildcard allowed */
+            if(!findable.options.term) {
+                console.info("StanbolConnector: No term to look for!");
+                findable.reject([]);
+            };
+            var term = escape(findable.options.term);
+            var limit = (typeof findable.options.limit === "undefined") ? 20 : findable.options.limit;
+            var offset = (typeof findable.options.offset === "undefined") ? 0 : findable.options.offset;
             var success = function (results) {
                 _.defer(function(){
                     var entities = VIE.Util.rdf2Entities(service, results);
-                    analyzable.resolve(entities);
+                    findable.resolve(entities);
                 });
             };
             var error = function (e) {
-                analyzable.reject(e);
+                findable.reject(e);
+            };
+
+            findable.options.site = (findable.options.site)? findable.options.site : service.options.entityhub.site;
+
+            var vie = this.vie;
+            if(findable.options.properties){
+                var properties = findable.options.properties;
+                findable.options.ldPath = _(properties)
+                .map(function(property){
+                    if(vie.namespaces.isCurie(property)){
+                        return vie.namespaces.uri(property) + ";"
+                    } else {
+                        return property;
+                    }
+                })
+                .join("");
+            }
+            if(findable.options.field && vie.namespaces.isCurie(field)){
+                var field = findable.options.field;
+                findable.options.field = vie.namespaces.uri(field);
+            }
+            this.connector.find(term, limit, offset, success, error, findable.options);
+        },
+
+        // ### load(loadable)
+        // This method loads the entity that is stored within the loadable into VIE.  
+        // **Parameters**:  
+        // *{VIE.Loadable}* **lodable** The loadable.  
+        // **Throws**:  
+        // *{Error}* if an invalid VIE.Loadable is passed.  
+        // **Returns**:  
+        // *{VIE.StanbolService}* : The VIE.StanbolService instance itself.  
+        // **Example usage**:  
+        //
+        //      var stnblService = new vie.StanbolService({<some-configuration>});
+        //      stnblService.load(new vie.Loadable({
+        //      entity : "<http://...>"
+        //      }));
+        load: function(loadable){
+            var correct = loadable instanceof this.vie.Loadable;
+            if (!correct) {throw "Invalid Loadable passed";}
+            var service = this;
+
+            var entity = loadable.options.entity;
+            if(!entity){
+                console.warn("StanbolConnector: No entity to look for!");
+                loadable.resolve([]);
+            };
+            var success = function (results) {
+                _.defer(function(){
+                    var entities = VIE.Util.rdf2Entities(service, results);
+                    loadable.resolve(entities);
+                });
+            };
+            var error = function (e) {
+                loadable.reject(e);
+            };
+
+            var options = {
+                    site : (loadable.options.site)? loadable.options.site : service.options.entityhub.site,
+                    local : loadable.options.local
+            };
+
+            this.connector.load(entity, success, error, options);
+        },
+
+        // ### query(queryable)
+        // This method queries for entities, given the query that is stored in the queryable element.  
+        // **Parameters**:  
+        // *{VIE.Queryable}* **queryable** The queryable.  
+        // **Throws**:  
+        // *{Error}* if an invalid VIE.Queryable is passed.  
+        // **Returns**:  
+        // *{VIE.StanbolService}* : The VIE.StanbolService instance itself.  
+        // **Example usage**:  
+        //
+        //      var stnblService = new vie.StanbolService({<some-configuration>});
+        //      stnblService.query(new vie.Queryable({
+        //          {
+        //              select: ["rdfs:label", "population"],
+        //              fieldQuery: {
+        //                  "rdfs:label": "mongolia*",
+        //                  "@type": "schema:Country"
+        //              }
+        //          }));
+        query: function(queryable){
+            var correct = queryable instanceof this.vie.Queryable;
+            if (!correct) {throw "Invalid Queryable passed";}
+            var service = this;
+
+            var query = queryable.options.query;
+            if(!query){
+                console.warn("StanbolConnector: No query to be executed!");
+                queryable.resolve([]);
+            };
+            var success = function (response) {
+                _.defer(function(){
+                    var entities = VIE.Util.rdf2Entities(service, response.results);
+                    queryable.resolve(entities);
+                });
+            };
+            var error = function (e) {
+                queryable.reject(e);
+            };
+
+            var options = {
+                    site : (queryable.options.site)? queryable.options.site : service.options.entityhub.site,
+                    local : queryable.options.local
+            };
+
+            this.connector.query(query, success, error, options);
+        },
+
+        // ### save(savable)
+        // This method saves the given entity to the Apache Stanbol installation.  
+        // **Parameters**:  
+        // *{VIE.Savable}* **savable** The savable.  
+        // **Throws**:  
+        // *{Error}* if an invalid VIE.Savable is passed.  
+        // **Returns**:  
+        // *{VIE.StanbolService}* : The VIE.StanbolService instance itself.  
+        // **Example usage**:  
+        //
+        //      var entity = new vie.Entity({'name' : 'Test Entity'});
+        //      var stnblService = new vie.StanbolService({<some-configuration>});
+        //      stnblService.save(new vie.Savable(entity));
+        save: function(savable) {
+        	console.log("received Savable: " + typeof(savable))
+        	console.log(savable)
+            var correct = savable instanceof this.vie.Savable;
+            if (!correct) {throw "Invalid Savable passed";}
+            var service = this;
+
+            var entity = savable.options.entity;
+            console.log("entity to save is: " + entity)
+            if(!entity){
+                console.warn("StanbolConnector: No entity to save!");
+                savable.reject("StanbolConnector: No entity to save!");
+            };
+            var success = function (results) {
+                _.defer(function() {
+                    var entities = VIE.Util.rdf2Entities(service, results);
+                    savable.resolve(entities);
+                });
+            };
+
+            var error = function (e) {
+                savable.reject(e);
+            };
+
+            var options = {
+                    site : (savable.options.site)? savable.options.site : service.options.entityhub.site,
+                    local : savable.options.local,
+                    update : savable.options.update
             };
             
-            var options = {
-        		chain : (analyzable.options.chain)? analyzable.options.chain : service.options.enhancer.chain
-            };
+            this.connector.save(entity, success, error, options);
+        },
 
-            this.connector.analyze(text, success, error, options);
-
-        } else {
-            console.warn("No text found in element.");
-            analyzable.resolve([]);
-        }
-
-    },
-
-// ### find(findable)
-// This method finds entities given the term from the entity hub.  
-// **Parameters**:  
-// *{VIE.Findable}* **findable** The findable.  
-// **Throws**:  
-// *{Error}* if an invalid VIE.Findable is passed.  
-// **Returns**:  
-// *{VIE.StanbolService}* : The VIE.StanbolService instance itself.  
-// **Example usage**:  
-//
-//     var stnblService = new vie.StanbolService({<some-configuration>});
-//     stnblService.load(new vie.Findable({
-//         term : "Bischofsh", 
-//         limit : 10, 
-//         offset: 0,
-//         field: "skos:prefLabel", // used for the term lookup, default: "rdfs:label"
-//         properties: ["skos:prefLabel", "rdfs:label"] // are going to be loaded with the result entities
-//     }));
-    find: function (findable) {        
-        var correct = findable instanceof this.vie.Findable;
-        if (!correct) {throw "Invalid Findable passed";}
-        var service = this;
-        /* The term to find, * as wildcard allowed */
-        if(!findable.options.term) {
-            console.info("StanbolConnector: No term to look for!");
-            findable.reject([]);
-        };
-        var term = escape(findable.options.term);
-        var limit = (typeof findable.options.limit === "undefined") ? 20 : findable.options.limit;
-        var offset = (typeof findable.options.offset === "undefined") ? 0 : findable.options.offset;
-        var success = function (results) {
-            _.defer(function(){
-                var entities = VIE.Util.rdf2Entities(service, results);
-                findable.resolve(entities);
-            });
-        };
-        var error = function (e) {
-            findable.reject(e);
-        };
-        
-        findable.options.site = (findable.options.site)? findable.options.site : service.options.entityhub.site;
-        
-        var vie = this.vie;
-        if(findable.options.properties){
-            var properties = findable.options.properties;
-            findable.options.ldPath = _(properties)
-            .map(function(property){
-                if(vie.namespaces.isCurie(property)){
-                    return vie.namespaces.uri(property) + ";"
-                } else {
-                    return property;
-                }
-            })
-            .join("");
-        }
-        if(findable.options.field && vie.namespaces.isCurie(field)){
-            var field = findable.options.field;
-                findable.options.field = vie.namespaces.uri(field);
-        }
-        this.connector.find(term, limit, offset, success, error, findable.options);
-    },
-
-// ### load(loadable)
-// This method loads the entity that is stored within the loadable into VIE.  
-// **Parameters**:  
-// *{VIE.Loadable}* **lodable** The loadable.  
-// **Throws**:  
-// *{Error}* if an invalid VIE.Loadable is passed.  
-// **Returns**:  
-// *{VIE.StanbolService}* : The VIE.StanbolService instance itself.  
-// **Example usage**:  
-//
-//     var stnblService = new vie.StanbolService({<some-configuration>});
-//     stnblService.load(new vie.Loadable({
-//         entity : "<http://...>"
-//     }));
-    load: function(loadable){
-        var correct = loadable instanceof this.vie.Loadable;
-        if (!correct) {throw "Invalid Loadable passed";}
-        var service = this;
-
-        var entity = loadable.options.entity;
-        if(!entity){
-            console.warn("StanbolConnector: No entity to look for!");
-            loadable.resolve([]);
-        };
-        var success = function (results) {
-            _.defer(function(){
-                var entities = VIE.Util.rdf2Entities(service, results);
-                loadable.resolve(entities);
-            });
-        };
-        var error = function (e) {
-            loadable.reject(e);
-        };
-        
-        var options = {
-    		site : (loadable.options.site)? loadable.options.site : service.options.entityhub.site,
-    		local : loadable.options.local
-        };
-        
-        this.connector.load(entity, success, error, options);
-    },
-
- // ### save(savable)
- // This method saves the given entity to the Apache Stanbol installation.  
- // **Parameters**:  
- // *{VIE.Savable}* **savable** The savable.  
- // **Throws**:  
- // *{Error}* if an invalid VIE.Savable is passed.  
- // **Returns**:  
- // *{VIE.StanbolService}* : The VIE.StanbolService instance itself.  
- // **Example usage**:  
- //
- //      var entity = new vie.Entity({'name' : 'Test Entity'});
- //      var stnblService = new vie.StanbolService({<some-configuration>});
- //      stnblService.save(new vie.Savable(entity));
-     save: function(savable){
-         var correct = savable instanceof this.vie.Savable;
-         if (!correct) {throw "Invalid Savable passed";}
-         var service = this;
-
-         var entity = savable.options.entity;
-         if(!entity){
-             console.warn("StanbolConnector: No entity to save!");
-             savable.reject("StanbolConnector: No entity to save!");
-         };
-         var success = function (results) {
-             _.defer(function() {
-                 var entities = VIE.Util.rdf2Entities(service, results);
-                 savable.resolve(entities);
-             });
-         };
-         
-         var error = function (e) {
-        	 savable.reject(e);
-         };
-         
-         var options = {
-     		site : (loadable.options.site)? loadable.options.site : service.options.entityhub.site,
-     		local : loadable.options.local
-         };
-         
-         this.connector.save(entity, success, error, options);
-     },
-
-    /* this private method extracts text from a jQuery element */
-    _extractText: function (element) {
-        if (element.get(0) &&
-            element.get(0).tagName &&
-            (element.get(0).tagName == 'TEXTAREA' ||
-            element.get(0).tagName == 'INPUT' && element.attr('type', 'text'))) {
-            return element.get(0).val();
-        }
-        else {
-            var res = element
+        /* this private method extracts text from a jQuery element */
+        _extractText: function (element) {
+            if (element.get(0) &&
+                    element.get(0).tagName &&
+                    (element.get(0).tagName == 'TEXTAREA' ||
+                            element.get(0).tagName == 'INPUT' && element.attr('type', 'text'))) {
+                return element.get(0).val();
+            }
+            else {
+                var res = element
                 .text()    /* get the text of element */
                 .replace(/\s+/g, ' ') /* collapse multiple whitespaces */
                 .replace(/\0\b\n\r\f\t/g, ''); /* remove non-letter symbols */
-            return jQuery.trim(res);
+                return jQuery.trim(res);
+            }
         }
-    }
 };
 
-// ## VIE.StanbolConnector(options)
-// The StanbolConnector is the connection between the VIE Stanbol service
-// and the actual ajax calls.  
-// **Parameters**:  
-// *{object}* **options** The options.  
-// **Throws**:  
-// *nothing*  
-// **Returns**:  
-// *{VIE.StanbolConnector}* : The **new** VIE.StanbolConnector instance.  
-// **Example usage**:  
-//
-//     var stnblConn = new vie.StanbolConnector({<some-configuration>});
-VIE.prototype.StanbolConnector = function (options) {
-    
-    var defaults =  {
-		/* you can pass an array of URLs which are then tried sequentially */
-	    url: ["http://dev.iks-project.eu/stanbolfull"],
-	    timeout : 20000, /* 20 seconds timeout */
-        enhancer : {
-        	urlPostfix : "/enhancer",
-        	chain : "default"
-        },
-        entityhub : {
-        	/* if set to undefined, the Referenced Site Manager @ /entityhub/sites is used. */
-        	/* if set to, e.g., dbpedia, referenced Site @ /entityhub/site/dbpedia is used. */
-        	site : undefined,
-        	urlPostfix : "/entityhub",
-        	local : false
-        },
-        sparql : {
-        	urlPostfix : "/sparql"
-        },
-        contenthub : {
-        	urlPostfix : "/contenthub",
-        	index : "contenthub"
-        },
-        ontonet : {
-        	urlPostfix : "/ontonet"
-        },
-        factstore : {
-        	urlPostfix : "/factstore"
-        },
-        rules : {
-        	urlPostfix : "/rules"
-        },
-        cmsadapter : {
-        	urlPostfix : "/cmsadapter"
-        }
-    };
-
-    /* the options are merged with the default options */
-    this.options = jQuery.extend(true, defaults, options ? options : {});
-    this.options.url = (_.isArray(this.options.url))? this.options.url : [ this.options.url ];
-    
-    this._init();
-
-    this.baseUrl = (_.isArray(options.url))? options.url : [ options.url ];
-};
-
-VIE.prototype.StanbolConnector.prototype = {
-		
-// ### _init()
-// Basic setup of the stanbol connector.  This is called internally by the constructor!
-// **Parameters**:  
-// *nothing*
-// **Throws**:  
-// *nothing*  
-// **Returns**:  
-// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself. 
-	_init : function () {
-		var connector = this;
-		
-	    /* basic setup for the ajax connection */
-	    jQuery.ajaxSetup({
-	        converters: {"text application/rdf+json": function(s){return JSON.parse(s);}},
-	        timeout: connector.options.timeout
-	    });
-	    
-	    return this;
-	},
-	
-	_iterate : function (params) {
-        if (!params) { return; }
-        
-        if (params.urlIndex >= this.options.url.length) {
-        	params.error.call(this, "Could not connect to the given Stanbol endpoints! Please check for their setup!");
-            return;
-        }
-        
-        var retryErrorCb = function (c, p) {
-            /* in case a Stanbol backend is not responding and
-             * multiple URLs have been registered
-             */
-            return function () {
-                console.log("Stanbol connection error", arguments);
-                p.urlIndex = p.urlIndex+1;
-                c._iterate(p);
-            };
-        }(this, params);
-
-        if (typeof exports !== "undefined" && typeof process !== "undefined") {
-            /* We're on Node.js, don't use jQuery.ajax */
-            return params.methodNode.call(
-            		this, 
-            		params.url.call(this, params.urlIndex, params.args.options),
-            		params.args,
-            		params.success,
-            		retryErrorCb);
-        }
-        
-        return params.method.call(
-        		this, 
-        		params.url.call(this, params.urlIndex, params.args.options),
-        		params.args,
-        		params.success,
-        		retryErrorCb);
-	},
-
-// ### analyze(text, success, error, options)
-// This method sends the given text to Apache Stanbol returns the result by the success callback.  
-// **Parameters**:  
-// *{string}* **text** The text to be analyzed.  
-// *{function}* **success** The success callback.  
-// *{function}* **error** The error callback.  
-// *{object}* **options** Options, like the ```format```, or the ```chain``` to be used.  
-// **Throws**:  
-// *nothing*  
-// **Returns**:  
-// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
-// **Example usage**:  
-//
-//     var stnblConn = new vie.StanbolConnector(opts);
-//     stnblConn.analyze("This is some text.",
-//                 function (res) { ... },
-//                 function (err) { ... });
-    analyze: function(text, success, error, options) {
-    	options = (options)? options :  {};
-    	var connector = this;
-        
-    	connector._iterate({
-        	method : connector._analyze,
-        	methodNode : connector._analyzeNode,
-        	url : function (idx, opts) {
-        		var chain = (opts.chain)? opts.chain : this.options.enhancer.chain;
-                
-        		var u = this.options.url[idx].replace(/\/$/, '');
-        		u += this.options.enhancer.urlPostfix + "/chain/" + chain.replace(/\/$/, '');
-        		return u;
-        	},
-        	args : {
-        		text : text,
-        		format : options.format || "application/rdf+json",
-        		options : options
-        	},
-        	success : success,
-        	error : error,
-        	urlIndex : 0
-        });
-    },
-    
-    _analyze : function (url, args, success, error) {
-    	jQuery.ajax({
-            success: success,
-            error: error,
-            url: url,
-            type: "POST",
-            data: args.text,
-            dataType: args.format,
-            contentType: "text/plain",
-            accepts: {"application/rdf+json": "application/rdf+json"}
-        });
-    },
-
-    _analyzeNode: function(url, args, success, error) {
-        var request = require('request');
-        var r = request({
-            method: "POST",
-            uri: url,
-            body: args.text,
-            headers: {
-                Accept: args.format,
-                'Content-Type': 'text/plain'
-            }
-        }, function(err, response, body) {
-            try {
-                success({results: JSON.parse(body)});
-            } catch (e) {
-                error(e);
-            }
-        });
-        r.end();
-    },
-
-// ### load(uri, success, error, options)
-// This method loads all properties from an entity and returns the result by the success callback.  
-// **Parameters**:  
-// *{string}* **uri** The URI of the entity to be loaded.  
-// *{function}* **success** The success callback.  
-// *{function}* **error** The error callback.  
-// *{object}* **options** Options, like the ```format```, the ```site```. If ```local``` is set, only the local entities are accessed.   
-// **Throws**:  
-// *nothing*  
-// **Returns**:  
-// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
-// **Example usage**:  
-//
-//     var stnblConn = new vie.StanbolConnector(opts);
-//     stnblConn.load("<http://dbpedia.org/resource/Barack_Obama>",
-//                 function (res) { ... },
-//                 function (err) { ... });
-
-    load: function (uri, success, error, options) {
-    	var connector = this;
-        options = (options)? options :  {};
-    	
-        options.uri = uri.replace(/^</, '').replace(/>$/, '');
-        
-    	connector._iterate({
-        	method : connector._load,
-        	methodNode : connector._loadNode,
-        	success : success,
-        	error : error,
-        	url : function (idx, opts) {
-        		var site = (opts.site)? opts.site : this.options.entityhub.site;
-                site = (site)? "/" + site : "s";
-                
-                var isLocal = opts.local;
-                
-                var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
-                if (isLocal) {
-                	u += "/entity?id=" + escape(opts.uri);
-                } else {
-                	u += "/site" + site + "/entity?id=" + escape(opts.uri);
-                }
-        		return u;
-        	},
-        	args : {
-        		format : options.format || "application/rdf+json",
-        		options : options
-        	},
-        	urlIndex : 0
-        });
-    },
-    
-    _load : function (url, args, success, error) {
-    	jQuery.ajax({
-            success: success,
-            error: error,
-            url: url,
-            type: "GET",
-            dataType: args.format,
-            contentType: "text/plain",
-            accepts: {"application/rdf+json": "application/rdf+json"}
-        });
-    },
-
-    _loadNode: function(url, args, success, error) {
-        var request = require('request');
-        var r = request({
-            method: "GET",
-            uri: url,
-            body: args.text,
-            headers: {
-                Accept: args.format
-            }
-        }, function(err, response, body) {
-            try {
-                success({results: JSON.parse(body)});
-            } catch (e) {
-                error(e);
-            }
-        });
-        r.end();
-    },
-
-// ### find(term, limit, offset, success, error, options)
-// This method finds entities given the term from the entity hub and returns the result by the success callback.  
-// **Parameters**:  
-// *{string}* **term** The term to be searched for. 
-// *{int}* **limit** The limit of results to be returned. 
-// *{int}* **offset** The offset to be search for.  
-// *{function}* **success** The success callback.  
-// *{function}* **error** The error callback.  
-// *{object}* **options** Options, like the ```format```. If ```local``` is set, only the local entities are accessed.  
-// **Throws**:  
-// *nothing*  
-// **Returns**:  
-// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
-// **Example usage**:  
-//
-//     var stnblConn = new vie.StanbolConnector(opts);
-//     stnblConn.find("Bishofsh", 10, 0,
-//                 function (res) { ... },
-//                 function (err) { ... });
-    find: function(term, limit, offset, success, error, options) {
-    	options = (options)? options :  {};
-        /* curl -X POST -d "name=Bishofsh&limit=10&offset=0" http://localhost:8080/entityhub/sites/find */
-
-    	var connector = this;
-    	
-    	if (!term || term === "") {
-    		error ("No term given!");
-    		return;
-    	}
-    	
-    	offset = (offset)? offset : 0;
-        limit  = (limit)? limit : 10;
-        
-    	connector._iterate({
-        	method : connector._find,
-        	methodNode : connector._findNode,
-        	success : success,
-        	error : error,
-        	url : function (idx, opts) {
-        		var site = (opts.site)? opts.site : this.options.entityhub.site;
-                site = (site)? "/" + site : "s";
-                
-                var isLocal = opts.local;
-                
-                var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
-                if (isLocal) {
-                	u += "/sites/find";
-                } else {
-                	u += "/site" + site + "/find";
-                }
-                
-        		return u;
-        	},
-        	args : {
-        		term : term,
-        		offset : offset,
-        		limit : limit,
-        		format : options.format || "application/rdf+json",
-        		options : options
-        	},
-        	urlIndex : 0
-        });
-    },
-    
-    _find : function (url, args, success, error) {
-    	jQuery.ajax({
-            success: success,
-            error: error,
-            url: url,
-            type: "POST",
-            data: "name=" + args.term + "&limit=" + args.limit + "&offset=" + args.offset,
-            dataType: args.format,
-            contentType : "application/x-www-form-urlencoded",
-            accepts: {"application/rdf+json": "application/rdf+json"}
-        });
-    },
-
-    _findNode: function(url, args, success, error) {
-        var request = require('request');
-        var r = request({
-            method: "POST",
-            uri: url,
-            body : "name=" + args.term + "&limit=" + args.limit + "&offset=" + args.offset,
-            headers: {
-                Accept: args.format
-            }
-        }, function(err, response, body) {
-            try {
-                success({results: JSON.parse(body)});
-            } catch (e) {
-                error(e);
-            }
-        });
-        r.end();
-    },
-    
-// ### lookup(uri, success, error, options)
-// TODO.  
-// **Parameters**:  
-// *{string}* **uri** The URI of the entity to be loaded.  
-// *{function}* **success** The success callback.  
-// *{function}* **error** The error callback.  
-// *{object}* **options** Options, ```create```.
-//    If the parsed ID is a URI of a Symbol, than the stored information of the Symbol are returned in the requested media type ('accept' header field).
-//    If the parsed ID is a URI of an already mapped entity, then the existing mapping is used to get the according Symbol.
-//    If "create" is enabled, and the parsed URI is not already mapped to a Symbol, than all the currently active referenced sites are searched for an Entity with the parsed URI.
-//    If the configuration of the referenced site allows to create new symbols, than a the entity is imported in the Entityhub, a new Symbol and EntityMapping is created and the newly created Symbol is returned.
-//    In case the entity is not found (this also includes if the entity would be available via a referenced site, but create=false) a 404 "Not Found" is returned.
-//    In case the entity is found on a referenced site, but the creation of a new Symbol is not allowed a 403 "Forbidden" is returned.   
-// **Throws**:  
-// *nothing*  
-// **Returns**:  
-// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
-    lookup: function(uri, success, error, options) {
-    	options = (options)? options :  {};
-    	/*/lookup/?id=http://dbpedia.org/resource/Paris&create=false"*/
-    	var connector = this;
-     	
-     	uri = uri.replace(/^</, '').replace(/>$/, '');
-
-     	options.uri = uri;
-     	options.create = (options.create)? options.create : false;
-         
-     	connector._iterate({
-         	method : connector._lookup,
-         	methodNode : connector._lookupNode,
-         	success : success,
-         	error : error,
-         	url : function (idx, opts) {
-         		 
-                 var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
-                 u += "/lookup?id=" + escape(opts.uri) + "&create=" + opts.create;
-         		 return u;
-         	},
-         	args : {
-         		format : options.format || "application/rdf+json",
-         		options : options
-         	},
-         	urlIndex : 0
-         });
-     },
-     
-     _lookup : function (url, args, success, error) {
-     	jQuery.ajax({
-             success: success,
-             error: error,
-             url: url,
-             type: "GET",
-             dataType: args.format,
-             contentType: "text/plain",
-             accepts: {"application/rdf+json": "application/rdf+json"}
-         });
-     },
-
-     _lookupNode: function(url, args, success, error) {
-         var request = require('request');
-         var r = request({
-             method: "GET",
-             uri: url,
-             body: args.text,
-             headers: {
-                 Accept: args.format
-             }
-         }, function(err, response, body) {
-             try {
-                 success({results: JSON.parse(body)});
-             } catch (e) {
-                 error(e);
-             }
-         });
-         r.end();
-     },
-    
- // ### referenced(success, error, options)
- // This method returns a list of all referenced sites that the entityhub comprises.  
- // **Parameters**:  
- // *{function}* **success** The success callback.  
- // *{function}* **error** The error callback.  
- // *{object}* **options** Options, unused here.   
- // **Throws**:  
- // *nothing*  
- // **Returns**:  
- // *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
- // **Example usage**:  
- //
-//      var stnblConn = new vie.StanbolConnector(opts);
-//      stnblConn.referenced(
-//                  function (res) { ... },
-//                  function (err) { ... });  
-     referenced: function(success, error, options) {
-     	options = (options)? options :  {};
-        var connector = this;
-     	
-        var successCB = function (sites) {
-        	if (_.isArray(sites)) {
-	        	var sitesStripped = [];
-	        	for (var s = 0, l = sites.length; s < l; s++) {
-	        		sitesStripped.push(sites[s].replace(/.+\/(.+?)\/?$/, "$1"));
-	        	}
-	        	return success(sitesStripped);
-        	} else {
-        		return success(sites);
-        	}
-        };
-        
-     	connector._iterate({
-         	method : connector._referenced,
-         	methodNode : connector._referencedNode,
-         	success : successCB,
-         	error : error,
-         	url : function (idx, opts) {
-                 var u = this.options.url[idx].replace(/\/$/, '');
-                 u += this.options.entityhub.urlPostfix + "/sites/referenced";
-                 
-         		return u;
-         	},
-         	args : {
-         		options : options
-         	},
-         	urlIndex : 0
-         });
-     },
-     
-     _referenced : function (url, args, success, error) {
-     	jQuery.ajax({
-             success: success,
-             error: error,
-             url: url,
-             type: "GET",
-             accepts: {"application/rdf+json": "application/rdf+json"}
-         });
-     },
-
-     _referencedNode: function(url, args, success, error) {
-         var request = require('request');
-         var r = request({
-             method: "GET",
-             uri: url,
-             headers: {
-                 Accept: args.format
-             }
-         }, function(err, response, body) {
-             try {
-                 success({results: JSON.parse(body)});
-             } catch (e) {
-                 error(e);
-             }
-         });
-         r.end();
-     },
-
-// ### sparql(query, success, error, options)
-// TODO.  
-// **Parameters**:  
-// TODO
-// *{function}* **success** The success callback.  
-// *{function}* **error** The error callback.  
-// *{object}* **options** Options, unused here.   
-// **Throws**:  
-// *nothing*  
-// **Returns**:  
-// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
-     sparql: function(query, success, error, options) {
-     	options = (options)? options :  {};
-         var connector = this;
-      	
-      	connector._iterate({
-          	method : connector._sparql,
-          	methodNode : connector._sparqlNode,
-          	success : success,
-          	error : error,
-          	url : function (idx, opts) {
-                var u = this.options.url[idx].replace(/\/$/, '');
-                u += this.options.sparql.urlPostfix.replace(/\/$/, '');
-              
-      		    return u;
-          	},
-          	args : {
-          		query : query,
-          		options : options
-          	},
-          	urlIndex : 0
-          });
-      },
-      
-      _sparql : function (url, args, success, error) {
-      	jQuery.ajax({
-              success: success,
-              error: error,
-              url: url,
-              type: "POST",
-              data : "query=" + args.query,
-              contentType : "application/x-www-form-urlencoded"
-          });
-      },
-
-      _sparqlNode: function(url, args, success, error) {
-          var request = require('request');
-          var r = request({
-              method: "POST",
-              uri: url,
-              body : JSON.stringify({query : args.query}),
-              headers: {
-                  Accept: args.format
-              }
-          }, function(err, response, body) {
-              try {
-                  success({results: JSON.parse(body)});
-              } catch (e) {
-                  error(e);
-              }
-          });
-          r.end();
-      },
-      
-// ### ldpath(query, success, error, options)
-// TODO.  
-// **Parameters**:  
-// TODO
-// *{function}* **success** The success callback.  
-// *{function}* **error** The error callback.  
-// *{object}* **options** Options, unused here.   
-// **Throws**:  
-// *nothing*  
-// **Returns**:  
-// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
-    ldpath: function(ldpath, context, success, error, options) {
-    	options = (options)? options :  {};
-        var connector = this;
-        
-        context = (_.isArray(context))? context : [ context ];
-        
-        var contextStr = "";
-    	for (var c = 0; c < context.length; c++) {
-    		contextStr += "&context=" + context[c];
-    	}
-     	
-     	connector._iterate({
-         	method : connector._ldpath,
-         	methodNode : connector._ldpathNode,
-         	success : success,
-         	error : error,
-         	url : function (idx, opts) {
-         		var site = (opts.site)? opts.site : this.options.entityhub.site;
-                site = (site)? "/" + site : "s";
-                
-                var isLocal = opts.local;
-                
-                var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
-                if (!isLocal)
-                	u += "/site" + site;
-                u += "/ldpath";
-             
-     		    return u;
-         	},
-         	args : {
-         		ldpath : ldpath,
-         		context : contextStr,
-        		format : options.format || "application/rdf+json",
-         		options : options
-         	},
-         	urlIndex : 0
-         });
-     },
-     
-     _ldpath : function (url, args, success, error) {
-    	jQuery.ajax({
-             success: success,
-             error: error,
-             url: url,
-             type: "POST",
-             data : "ldpath=" + args.ldpath + args.context,
-             contentType : "application/x-www-form-urlencoded",
-             dataType: args.format,
-             accepts: {"application/rdf+json": "application/rdf+json"}
-         });
-     },
-
-     _ldpathNode: function(url, args, success, error) {
-         var request = require('request');
-         var r = request({
-             method: "POST",
-             uri: url,
-             body : "ldpath=" + args.ldpath + context,
-             headers: {
-                 Accept: args.format
-             }
-         }, function(err, response, body) {
-             try {
-                 success({results: JSON.parse(body)});
-             } catch (e) {
-                 error(e);
-             }
-         });
-         r.end();
-     },
-         
-// ### uploadContent(content, success, error, options)
-// TODO.  
-// **Parameters**:  
-// TODO
-// *{function}* **success** The success callback.  
-// *{function}* **error** The error callback.  
-// *{object}* **options** Options, unused here.   
-// **Throws**:  
-// *nothing*  
-// **Returns**:  
-// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
-      uploadContent: function(content, success, error, options) {
-      	options = (options)? options :  {};
-        var connector = this;
-       	
-       	connector._iterate({
-           	method : connector._uploadContent,
-           	methodNode : connector._uploadContentNode,
-           	success : success,
-           	error : error,
-           	url : function (idx, opts) {
-                 var u = this.options.url[idx].replace(/\/$/, '');
-                 u += this.options.contenthub.urlPostfix.replace(/\/$/, '');
-                 
-                 var index = (opts.index)? opts.index : this.options.contenthub.index;
-                 
-                 u += "/" + index.replace(/\/$/, '');
-                 u += "/store";
-               
-       		     return u;
-           	},
-           	args : {
-           		content: content,
-           		options : options
-           	},
-           	urlIndex : 0
-           });
-       },
-       
-       _uploadContent : function (url, args, success, error) {
-       	   jQuery.ajax({
-               success: success,
-               error: error,
-               url: url,
-               type: "POST",
-               data : args.content,
-               contentType : "text/plain"
-           });
-       },
-
-       _uploadContentNode: function(url, args, success, error) {
-           var request = require('request');
-           var r = request({
-               method: "POST",
-               uri: url,
-               body : args.content,
-               headers: {
-                   Accept: "application/rdf+xml",
-                   "Content-Type" : "text/plain"
-               }
-           }, function(err, response, body) {
-               try {
-                   success({results: JSON.parse(body)});
-               } catch (e) {
-                   error(e);
-               }
-           });
-           r.end();
-       },
-
-//### createFactSchema(url, schema, success, error, options)
-//TODO.  
-//**Parameters**:  
-//TODO
-//*{function}* **success** The success callback.  
-//*{function}* **error** The error callback.  
-//*{object}* **options** Options, unused here.   
-//**Throws**:  
-//*nothing*  
-//**Returns**:  
-//*{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
-	  createFactSchema: function(url, schema, success, error, options) {
-		   	 options = (options)? options :  {};
-		     var connector = this;
-		     
-		     options.url = url;
-	    	
-	    	 connector._iterate({
-	        	method : connector._createFactSchema,
-	        	methodNode : connector._createFactSchemaNode,
-	        	success : success,
-	        	error : error,
-	        	url : function (idx, opts) {
-	              var u = this.options.url[idx].replace(/\/$/, '');
-	              u += this.options.factstore.urlPostfix.replace(/\/$/, '');
-	              
-	              u += "/facts/" + escape(opts.url);
-	            
-	    		  return u;
-	        	},
-	        	args : {
-	        		url : url,
-	        		schema : schema,
-	        		options : options
-	        	},
-	        	urlIndex : 0
-	        });
-	    },
-	    
-	    _createFactSchema : function (url, args, success, error) {
-	    	   jQuery.ajax({
-	            success: success,
-	            error: error,
-	            url: url,
-	            type: "PUT",
-	            data : args.schema,
-	            contentType : "application/json",
-	            dataType: "application/json"
-	        });
-	    },
-	
-	    _createFactSchemaNode: function(url, args, success, error) {
-	        var request = require('request');
-	        var r = request({
-	            method: "PUT",
-	            uri: url,
-	            body : args.schema,
-	            headers: {
-	                Accept: "application/json",
-	                "Content-Type" : "application/json"
-	            }
-	        }, function(err, response, body) {
-	            try {
-	                success({results: JSON.parse(body)});
-	            } catch (e) {
-	                error(e);
-	            }
-	        });
-	        r.end();
-	    },
-	    
-	    createFact: function(fact, success, error, options) {
-		   	 options = (options)? options :  {};
-		     var connector = this;
-		     
-		   	 connector._iterate({
-		       	method : connector._createFact,
-		       	methodNode : connector._createFactNode,
-		       	success : success,
-		       	error : error,
-		       	url : function (idx, opts) {
-		             var u = this.options.url[idx].replace(/\/$/, '');
-		             u += this.options.factstore.urlPostfix.replace(/\/$/, '');
-		             
-		             u += "/facts";
-		           
-		   		  return u;
-		       	},
-		       	args : {
-		       		fact : fact,
-		       		options : options
-		       	},
-		       	urlIndex : 0
-		       });
-	   },
-	   
-	   _createFact : function (url, args, success, error) {
-	   	   jQuery.ajax({
-	           success: success,
-	           error: error,
-	           url: url,
-	           type: "POST",
-	           data : args.fact,
-	           contentType : "application/json",
-	           dataType: "application/json"
-	       });
-	   },
-	
-	   _createFactNode: function(url, args, success, error) {
-	       var request = require('request');
-	       var r = request({
-	           method: "POST",
-	           uri: url,
-	           body : args.fact,
-	           headers: {
-	               Accept: "application/json",
-	               "Content-Type" : "application/json"
-	           }
-	       }, function(err, response, body) {
-	           try {
-	               success({results: JSON.parse(body)});
-	           } catch (e) {
-	               error(e);
-	           }
-	       });
-	       r.end();
-	   },
-	   
-	    queryFact: function(query, success, error, options) {
-		   	 options = (options)? options :  {};
-		     var connector = this;
-		     
-		   	 connector._iterate({
-		       	method : connector._queryFact,
-		       	methodNode : connector._queryFactNode,
-		       	success : success,
-		       	error : error,
-		       	url : function (idx, opts) {
-		             var u = this.options.url[idx].replace(/\/$/, '');
-		             u += this.options.factstore.urlPostfix.replace(/\/$/, '');
-		             
-		             u += "/query";
-		           
-		   		  return u;
-		       	},
-		       	args : {
-		       		query : query,
-		       		options : options
-		       	},
-		       	urlIndex : 0
-		       });
-	   },
-	   
-	   _queryFact : function (url, args, success, error) {
-	   	   jQuery.ajax({
-	           success: success,
-	           error: error,
-	           url: url,
-	           type: "POST",
-	           data : args.query,
-	           contentType : "application/json",
-	           dataType: "application/json"
-	       });
-	   },
-	
-	   _queryFactNode: function(url, args, success, error) {
-	       var request = require('request');
-	       var r = request({
-	           method: "POST",
-	           uri: url,
-	           body : args.query,
-	           headers: {
-	               Accept: "application/json",
-	               "Content-Type" : "application/json"
-	           }
-	       }, function(err, response, body) {
-	           try {
-	               success({results: JSON.parse(body)});
-	           } catch (e) {
-	               error(e);
-	           }
-	       });
-	       r.end();
-	   }
-};
 })();
 
 //     VIE - Vienna IKS Editables
@@ -5813,20 +5415,79 @@ VIE.prototype.ZemantaService = function(options) {
         url: ["http://api.zemanta.com/services/rest/0.0/"],
         timeout : 20000, /* 20 seconds timeout */
         namespaces : {
-        	zemanta: "http://s.zemanta.com/ns#"
+        	zemanta: "http://s.zemanta.com/ns#",
+			freebase:"http://rdf.freebase.com/ns/schema/"
         },
         /* default rules that are shipped with this service */
         rules : [
-                 {
+            {
                 'left' : [
                     '?subject a zemanta:Recognition',
                     '?subject zemanta:object ?object',
-                    '?object owl:sameAs ?entity'
-                ],
+					'?object zemanta:entity_type ?type',
+                    '?object owl:sameAs ?entity',
+					'?entity zemanta:title ?title'
+					],
                 'right' : [
-                    '?entity zemanta:hasEntityAnnotation ?subject'
-                ]
-            }
+                    '?entity zemanta:hasEntityAnnotation ?subject',
+					'?entity a ?type',
+					'?entity rdfs:label ?title'
+					]
+			},
+			
+			{
+                'left' : [
+                    '?subject a freebase:people/person',
+                 ],
+                 'right': [
+					'?subject a dbpedia:Person'
+				 ]
+             } ,
+			 
+			 {
+                'left' : [
+                    '?subject a freebase:location/location',
+                 ],
+                 'right': [
+					'?subject a dbpedia:Place'
+				 ]
+             },
+			 
+			 {
+                'left' : [
+                    '?subject a freebase:location/citytown',
+                 ],
+                 'right': [
+					'?subject a dbpedia:City'
+				 ]
+             },
+			 
+			 {
+                'left' : [
+                    '?subject a freebase:business/company',
+                 ],
+                 'right': [
+					'?subject a dbpedia:Company'
+				 ]
+             },
+			 
+			 {
+                'left' : [
+                    '?subject a freebase:location/country',
+                 ],
+                 'right': [
+					'?subject a dbpedia:Country'
+				 ]
+             },
+			 
+			 {
+                'left' : [
+                    '?subject a freebase:organization/organization',
+                 ],
+                 'right': [
+					'?subject a dbpedia:Organisation'
+				 ]
+             }
          ],
          "api_key" : undefined
     };
@@ -5901,7 +5562,7 @@ VIE.prototype.ZemantaService.prototype = {
 
         var text = service._extractText(element);
 
-        if (text.length > 0) {
+        if ($(element).text().length > 0) {
             var success = function (results) {
                 _.defer(function(){
                     var entities = VIE.Util.rdf2Entities(service, results);
@@ -6101,7 +5762,1951 @@ VIE.prototype.ZemantaConnector.prototype = {
 };
 })();
 
-if (!VIE.prototype.view) {
+//     VIE - Vienna IKS Editables
+//     (c) 2011 Henri Bergius, IKS Consortium
+//     (c) 2011 Sebastian Germesin, IKS Consortium
+//     (c) 2011 Szaby Grünwald, IKS Consortium
+//     VIE may be freely distributed under the MIT license.
+//     For all details and documentation:
+//     http://viejs.org/
+
+// ## VIE - DBPedia service
+// The DBPedia service allows a VIE developer to directly query
+// the DBPedia database for entities and their properties. Obviously,
+// the service does not allow for saving, removing or analyzing methods.
+(function(){
+	
+// ## VIE.StanbolConnector(options)
+// The StanbolConnector is the connection between the VIE Stanbol service
+// and the actual ajax calls.  
+// **Parameters**:  
+// *{object}* **options** The options.  
+// **Throws**:  
+// *nothing*  
+// **Returns**:  
+// *{VIE.StanbolConnector}* : The **new** VIE.StanbolConnector instance.  
+// **Example usage**:  
+//
+//     var stnblConn = new vie.StanbolConnector({<some-configuration>});
+VIE.prototype.StanbolConnector = function (options) {
+	
+	var defaults = {
+		/* you can pass an array of URLs which are then tried sequentially */
+		url: ["http://dev.iks-project.eu/stanbolfull"],
+		timeout : 20000 /* 20 seconds timeout */,
+
+        enhancer : {
+            urlPostfix : "/enhancer",
+            chain : "default"
+        },
+        contenthub : {
+            urlPostfix : "/contenthub",
+            index : "contenthub"
+        },
+        entityhub : {
+            /* if set to undefined, the Referenced Site Manager @ /entityhub/sites is used. */
+            /* if set to, e.g., dbpedia, referenced Site @ /entityhub/site/dbpedia is used. */
+            site : undefined,
+            urlPostfix : "/entityhub",
+            local : false
+        },
+        factstore : {
+            urlPostfix : "/factstore"
+        },
+        ontonet : {
+            urlPostfix : "/ontonet"
+        },
+        rules : {
+            urlPostfix : "/rules"
+        },
+        sparql : {
+            urlPostfix : "/sparql"
+        }
+	};
+	
+    /* the options are merged with the default options */
+    this.options = jQuery.extend(true, defaults, options ? options : {});
+    this.options.url = (_.isArray(this.options.url))? this.options.url : [ this.options.url ];
+    
+    this._init();
+};
+
+VIE.prototype.StanbolConnector.prototype = {
+
+		// ### _init()
+		// Basic setup of the stanbol connector.  This is called internally by the constructor!
+		// **Parameters**:  
+		// *nothing*
+		// **Throws**:  
+		// *nothing*  
+		// **Returns**:  
+		// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself. 
+		_init : function () {
+			var connector = this;
+
+			/* basic setup for the ajax connection */
+			jQuery.ajaxSetup({
+				converters: {"text application/rdf+json": function(s){return JSON.parse(s);}},
+				timeout: connector.options.timeout
+			});
+
+			return this;
+		},
+
+		_iterate : function (params) {
+			if (!params) { return; }
+
+			if (params.urlIndex >= this.options.url.length) {
+				params.error.call(this, "Could not connect to the given Stanbol endpoints! Please check for their setup!");
+				return;
+			}
+
+			var retryErrorCb = function (c, p) {
+				/* in case a Stanbol backend is not responding and
+				 * multiple URLs have been registered
+				 */
+				return function () {
+					console.log("Stanbol connection error", arguments);
+					p.urlIndex = p.urlIndex+1;
+					c._iterate(p);
+				};
+			}(this, params);
+
+			if (typeof exports !== "undefined" && typeof process !== "undefined") {
+				/* We're on Node.js, don't use jQuery.ajax */
+				return params.methodNode.call(
+						this, 
+						params.url.call(this, params.urlIndex, params.args.options),
+						params.args,
+						params.success,
+						retryErrorCb);
+			}
+
+			return params.method.call(
+					this, 
+					params.url.call(this, params.urlIndex, params.args.options),
+					params.args,
+					params.success,
+					retryErrorCb);
+		}
+
+};
+
+})();//     VIE - Vienna IKS Editables
+//     (c) 2011 Henri Bergius, IKS Consortium
+//     (c) 2011 Sebastian Germesin, IKS Consortium
+//     (c) 2011 Szaby Grünwald, IKS Consortium
+//     VIE may be freely distributed under the MIT license.
+//     For all details and documentation:
+//     http://viejs.org/
+
+// ## VIE - DBPedia service
+// The DBPedia service allows a VIE developer to directly query
+// the DBPedia database for entities and their properties. Obviously,
+// the service does not allow for saving, removing or analyzing methods.
+(function(){
+		
+	jQuery.extend(VIE.prototype.StanbolConnector.prototype, {
+		
+		
+		
+	});
+	
+})();//     VIE - Vienna IKS Editables
+//     (c) 2011 Henri Bergius, IKS Consortium
+//     (c) 2011 Sebastian Germesin, IKS Consortium
+//     (c) 2011 Szaby Grünwald, IKS Consortium
+//     VIE may be freely distributed under the MIT license.
+//     For all details and documentation:
+//     http://viejs.org/
+
+// ## VIE - DBPedia service
+// The DBPedia service allows a VIE developer to directly query
+// the DBPedia database for entities and their properties. Obviously,
+// the service does not allow for saving, removing or analyzing methods.
+(function(){
+
+    jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
+        
+		// ### uploadContent(content, success, error, options)
+		// TODO.  
+		// **Parameters**:  
+		// TODO
+		// *{function}* **success** The success callback.  
+		// *{function}* **error** The error callback.  
+		// *{object}* **options** Options: specify index: '<indexName>' to load up items to a specific index;
+        //		specify id: '<id>' as the ID under which your content item will be stored on the contenthub
+		// **Throws**:  
+		// *nothing*  
+		// **Returns**:  
+		// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+		uploadContent: function(content, success, error, options) {
+			options = (options)? options :  {};
+			var connector = this;
+
+			connector._iterate({
+				method : connector._uploadContent,
+				methodNode : connector._uploadContentNode,
+				success : success,
+				error : error,
+				url : function (idx, opts) {
+					var u = this.options.url[idx].replace(/\/$/, '');
+					u += this.options.contenthub.urlPostfix.replace(/\/$/, '');
+
+					var index = (opts.index)? opts.index : this.options.contenthub.index;
+
+					u += "/" + index.replace(/\/$/, '');
+					u += "/store";
+					
+					var id = (opts.id)? "/" + opts.id : '';
+					
+					u += id;
+					
+					return u;
+				},
+				args : {
+					content: content,
+					options : options
+				},
+				urlIndex : 0
+			});
+		},
+
+		_uploadContent : function (url, args, success, error) {
+			jQuery.ajax({
+				success: success,
+				error: error,
+				url: url,
+				type: "POST",
+				data : args.content,
+				contentType : "text/plain"
+			});
+		},
+
+		_uploadContentNode: function(url, args, success, error) {
+			var request = require('request');
+			var r = request({
+				method: "POST",
+				uri: url,
+				body : args.content,
+				headers: {
+					Accept: "application/rdf+xml",
+					"Content-Type" : "text/plain"
+				}
+			}, function(err, response, body) {
+				try {
+					success({results: JSON.parse(body)});
+				} catch (e) {
+					error(e);
+				}
+			});
+			r.end();
+		}, 
+		
+		    
+	// ### getTextContentByID(id, success, error, options)
+	// @author mere01
+	// This method queries the Apache Stanbol contenthub for the text content of a specific entity.
+	// **Parameters**:  
+	// *{string}* **id** The id of the content item to be retrieved.
+	// *{function}* **success** The success callback.  
+	// *{function}* **error** The error callback.
+	// *{object}* **options** The Options, specify e.g. index: '<indexName>' if the content item you want to
+	//		retrieve is stored on some contenthub index other than the default index.
+	// **Throws**:  
+	// *nothing*  
+	// **Returns**:  
+	// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+	// **Example usage**:  
+	//
+//	     var stnblConn = new vie.StanbolConnector(opts);
+//	     stnblConn.getTextContentByID('urn:content-item-sha1-37c8a8244041cf6113d4ee04b3a04d0a014f6e10',
+//	                 function (res) { ... },
+//	                 function (err) { ... },
+//					 {
+//						index: 'myIndex'
+//					});
+    getTextContentByID: function(id, success, error, options) {
+    	
+			options = (options)? options :  {};
+	
+			var connector = this;
+	    	
+	    	connector._iterate({
+	        	method : connector._getTextContentByID,
+	        	methodNode : connector._getTextContentByIDNode,
+	        	
+	        	url : function (idx, opts) {			
+		    		var u = this.options.url[idx].replace(/\/$/, '');
+					u += this.options.contenthub.urlPostfix.replace(/\/$/, '');
+	
+					var index = (opts.index)? opts.index : this.options.contenthub.index;
+	
+					u += "/" + index.replace(/\/$/, '');
+					u += "/store/raw";
+					
+					u += "/" + id;
+					
+					return u;
+	    		},
+	        	args : {
+	        		id : id,
+	        		format : "application/json",
+	        		options : options
+	        	},
+	        	success : success,
+	        	error : error,
+	        	urlIndex : 0
+	        });
+	    }, // end of getTextContentByID
+
+    _getTextContentByID : function (url, args, success, error) {
+	    	
+    	jQuery.ajax({
+    		
+    		success: success,            
+    		error: error,
+            url: url,
+            type: "GET", 
+            contentType: "text/plain",
+            accepts: "text/plain"
+        });
+    	
+    }, // end of _getTextContentByID
+
+    _getTextContentByIDNode: function(url, args, success, error) {
+        var request = require('request');
+        var r = request({
+            method: "POST",
+            uri: url,
+            body: args.text,
+            headers: {
+                Accept: args.format,
+                'Content-Type': 'text/plain'
+            }
+        }, function(err, response, body) {
+            try {
+                success({results: JSON.parse(body)});
+            } catch (e) {
+                error(e);
+            }
+        });
+        r.end();
+    }, // end of _getTextContentByIDNode 
+    
+	// ### getMetadataByID(id, success, error, options)
+	// @author mere01
+	// This method queries the Apache Stanbol contenthub for the metadata, i.e. enhancements of a 
+    // specific entity.
+    // **Parameters**:  
+	// *{string}* **id** The id of the content item to be retrieved.
+	// *{function}* **success** The success callback.  
+	// *{function}* **error** The error callback.  
+	// *{object}* **options** The Options, specify e.g. "index: '<indexName>'" if the content item you want to
+	//		retrieve is stored on some contenthub index other than the default index.
+	// **Throws**:  
+	// *nothing*  
+	// **Returns**:  
+	// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+	// **Example usage**:  
+	//
+//	     var stnblConn = new vie.StanbolConnector(opts);
+//	     stnblConn.getTextContentByID('urn:content-item-sha1-37c8a8244041cf6113d4ee04b3a04d0a014f6e10',
+//	                 function (res) { ... },
+//	                 function (err) { ... }, 
+//    				 {
+//						index: 'myIndex'
+//					 }	);
+    getMetadataByID: function(id, success, error, options) {
+    	
+			options = (options)? options :  {};
+	
+			var connector = this;
+	    	
+	    	connector._iterate({
+	        	method : connector._getMetadataByID,
+	        	methodNode : connector._getMetadataByIDNode,
+	        	
+	        	url : function (idx, opts) {			
+		    		var u = this.options.url[idx].replace(/\/$/, '');
+					u += this.options.contenthub.urlPostfix.replace(/\/$/, '');
+	
+					var index = (opts.index)? opts.index : this.options.contenthub.index;
+	
+					u += "/" + index.replace(/\/$/, '');
+					u += "/store/metadata";
+					
+					u += "/" + id;
+					
+					return u;
+	    		},
+	        	args : {
+	        		id : id,
+	        		format : "application/json",
+	        		options : options
+	        	},
+	        	success : success,
+	        	error : error,
+	        	urlIndex : 0
+	        });
+	    	
+	    }, // end of query
+
+    _getMetadataByID : function (url, args, success, error) {
+	    	
+    	jQuery.ajax({
+    		
+    		success: success,            
+    		error: error,
+            url: url,
+            type: "GET", 
+            contentType: "text/plain",
+            accepts: "text/plain"
+        });
+    	
+    }, // end of _getMetadataByID
+
+    _getMetadataByIDNode: function(url, args, success, error) {
+        var request = require('request');
+        var r = request({
+            method: "GET",
+            uri: url,
+            body: args.text,
+            headers: {
+                Accept: args.format,
+                'Content-Type': 'text/plain'
+            }
+        }, function(err, response, body) {
+            try {
+                success({results: JSON.parse(body)});
+            } catch (e) {
+                error(e);
+            }
+        });
+        r.end();
+    }, // end of _getMetadataByIDNode 
+
+	// ### createIndex(ldpathProgram, success, error)
+	// @author mere01
+	// This method creates a new index on the contenthub, using the specified ldpath program.
+    // To remove the index again, go to http://<stanbol>/contenthub/ldpath and click "Delete this
+    // program" next to your LD Path Program.
+	// **Parameters**:  
+    // *{string}* **ldpathProgram** The specification of the new index in ldpath Syntax
+    //		(see http://incubator.apache.org/stanbol/docs/trunk/contenthub/contenthub5min)
+	// *{function}* **success** The success callback.  
+	// *{function}* **error** The error callback.  
+	// **Throws**:  
+	// *nothing*  
+	// **Returns**:  
+	// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+	// **Example usage**:  
+	//
+//	     var stnblConn = new vie.StanbolConnector(opts);
+//	     stnblConn.createIndex(<ldpath>,
+//	                 function (res) { ... },
+//	                 function (err) { ... });    
+    createIndex: function(ldpath, success, error) {
+    
+		var connector = this;
+
+		connector._iterate({
+			method : connector._createIndex,
+			methodNode : connector._createIndexNode,
+			success : success,
+			error : error,
+			url : function (idx, opts) {
+				var u = this.options.url[idx].replace(/\/$/, '');
+				u += this.options.contenthub.urlPostfix.replace(/\/$/, '');
+				u += "/ldpath/program";
+				
+				return u;
+			},
+			args : {
+				content: ldpath
+			},
+			urlIndex : 0
+		});
+    }, // end of createIndex()
+    
+    _createIndex: function (url, args, success, error) {
+	    	
+    	jQuery.ajax({
+    		
+    		success: success,            
+    		error: error,
+            url: url,
+            type: "POST",
+            data: args.content
+        });
+    	
+    }, // end of _createIndex
+    
+    _createIndexNode: function(url, args, success, error) {
+        var request = require('request');
+        var r = request({
+            method: "POST",
+            uri: url,
+            body: args.content,
+            headers: {
+                Accept: args.format
+            }
+        }, function(err, response, body) {
+            try {
+                success({results: JSON.parse(body)});
+            } catch (e) {
+                error(e);
+            }
+        });
+        r.end();
+    }, // end of _createIndexNode 
+    
+	// ### deleteIndex(index, success, error)
+    // TODO access problems for method DELETE
+	// @author mere01
+	// This method deletes the specified index from the contenthub, using contenthub/ldpath/program/<indexID>
+    // TAKE CARE: This will not only delete a specific index, but also all the content items that were
+    //		stored to this specific index!
+	// **Parameters**:  
+    // *{string}* **index** The name of the index to be deleted permanently from the contenthub.
+	// *{function}* **success** The success callback.  
+	// *{function}* **error** The error callback.  
+	// **Throws**:  
+	// *nothing*  
+	// **Returns**:  
+	// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+	// **Example usage**:  
+	//
+//	     var stnblConn = new vie.StanbolConnector(opts);
+//	     stnblConn.createIndex(<index>,
+//	                 function (res) { ... },
+//	                 function (err) { ... });    
+    deleteIndex: function(index, success, error) {
+    
+		var connector = this;
+		connector._iterate({
+			method : connector._deleteIndex,
+			methodNode : connector._deleteIndexNode,
+			success : success,
+			error : error,
+			url : function (idx, opts) {
+				var u = this.options.url[idx].replace(/\/$/, '');
+				u += this.options.contenthub.urlPostfix.replace(/\/$/, '');
+				u += "/ldpath/program/" + index;
+				
+				return u;
+			},
+			args : {
+
+			},
+			urlIndex : 0
+		});
+    }, // end of deleteIndex()
+    
+    _deleteIndex: function (url, args, success, error) {
+	    	
+    	jQuery.ajax({
+    		
+    		success: success,            
+    		error: error,
+            url: url,
+            type: "DELETE"
+        });
+    	
+    }, // end of _deleteIndex
+    
+    _deleteIndexNode: function(url, args, success, error) {
+        var request = require('request');
+        var r = request({
+            method: "DELETE",
+            uri: url
+
+        }, function(err, response, body) {
+            try {
+                success({results: JSON.parse(body)});
+            } catch (e) {
+                error(e);
+            }
+        });
+        r.end();
+    }, // end of _deleteIndexNode 
+    
+    
+	// ### contenthubIndices(success, error, options)
+	// @author mere01
+	// This method returns a list of all indices that are currently being managed on the contenthub.  
+	// **Parameters**:  
+	// *{function}* **success** The success callback.  
+	// *{function}* **error** The error callback.  
+	// *{object}* **options** Options, unused here.   
+	// **Throws**:  
+	// *nothing*  
+	// **Returns**:  
+	// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+	// **Example usage**:  
+	//
+	//		var stnblConn = new vie.StanbolConnector(opts);
+	//		stnblConn.contenthubIndices(
+	//		function (res) { ... },
+	//		function (err) { ... });  
+    contenthubIndices: function(success, error, options) {
+		options = (options)? options :  {};
+		var connector = this;
+
+		var successCB = function (indices) {
+			var array = []
+			for (var program in indices) 
+			{
+				var ldpath = "name=";
+				console.log(program);
+				ldpath += program;
+				console.log(indices[program]);
+				ldpath += "&program=" + indices[program];
+				
+				array.push(ldpath);
+				}
+
+			return success(array);
+		};
+
+		connector._iterate({
+			method : connector._contenthubIndices,
+			methodNode : connector._contenthubIndicesNode,
+			success : successCB,
+			error : error,
+			url : function (idx, opts) {
+				var u = this.options.url[idx].replace(/\/$/, '');
+				u += this.options.contenthub.urlPostfix + "/ldpath";
+
+				return u;
+			},
+			args : {
+				options : options
+			},
+			urlIndex : 0
+		});
+	},
+
+	_contenthubIndices : function (url, args, success, error) {
+		jQuery.ajax({
+			success: success,
+			error: error,
+			url: url,
+			type: "GET",
+			accepts: {"application/rdf+json": "application/rdf+json"}
+		});
+	}, // end of _contenthubIndices
+
+	_contenthubIndicesNode: function(url, args, success, error) {
+		var request = require('request');
+		var r = request({
+			method: "GET",
+			uri: url,
+			headers: {
+				Accept: args.format
+			}
+		}, function(err, response, body) {
+			try {
+				success({results: JSON.parse(body)});
+			} catch (e) {
+				error(e);
+			}
+		});
+		r.end();
+	} // end of _contenthubIndicesNode
+	
+	});
+
+})();//     VIE - Vienna IKS Editables
+//     (c) 2011 Henri Bergius, IKS Consortium
+//     (c) 2011 Sebastian Germesin, IKS Consortium
+//     (c) 2011 Szaby Grünwald, IKS Consortium
+//     VIE may be freely distributed under the MIT license.
+//     For all details and documentation:
+//     http://viejs.org/
+
+// ## VIE - DBPedia service
+// The DBPedia service allows a VIE developer to directly query
+// the DBPedia database for entities and their properties. Obviously,
+// the service does not allow for saving, removing or analyzing methods.
+(function(){
+	
+	jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
+	    
+		// ### analyze(text, success, error, options)
+		// This method sends the given text to Apache Stanbol returns the result by the success callback.  
+		// **Parameters**:  
+		// *{string}* **text** The text to be analyzed.  
+		// *{function}* **success** The success callback.  
+		// *{function}* **error** The error callback.  
+		// *{object}* **options** Options, like the ```format```, or the ```chain``` to be used.  
+		// **Throws**:  
+		// *nothing*  
+		// **Returns**:  
+		// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+		// **Example usage**:  
+		//
+		//     var stnblConn = new vie.StanbolConnector(opts);
+		//     stnblConn.analyze("This is some text.",
+		//                 function (res) { ... },
+		//                 function (err) { ... });
+	    analyze: function(text, success, error, options) {
+	    	options = (options)? options :  {};
+	    	var connector = this;
+	        
+	    	connector._iterate({
+	        	method : connector._analyze,
+	        	methodNode : connector._analyzeNode,
+	        	url : function (idx, opts) {
+	        		var chain = (opts.chain)? opts.chain : this.options.enhancer.chain;
+	                
+	        		var u = this.options.url[idx].replace(/\/$/, '');
+	        		u += this.options.enhancer.urlPostfix + "/chain/" + chain.replace(/\/$/, '');
+	        		return u;
+	        	},
+	        	args : {
+	        		text : text,
+	        		format : options.format || "application/rdf+json",
+	        		options : options
+	        	},
+	        	success : success,
+	        	error : error,
+	        	urlIndex : 0
+	        });
+	    },
+	    
+	    _analyze : function (url, args, success, error) {
+	    	jQuery.ajax({
+	            success: success,
+	            error: error,
+	            url: url,
+	            type: "POST",
+	            data: args.text,
+	            dataType: args.format,
+	            contentType: "text/plain",
+	            accepts: {"application/rdf+json": "application/rdf+json"}
+	        });
+	    },
+	
+	    _analyzeNode: function(url, args, success, error) {
+	        var request = require('request');
+	        var r = request({
+	            method: "POST",
+	            uri: url,
+	            body: args.text,
+	            headers: {
+	                Accept: args.format,
+	                'Content-Type': 'text/plain'
+	            }
+	        }, function(err, response, body) {
+	            try {
+	                success({results: JSON.parse(body)});
+	            } catch (e) {
+	                error(e);
+	            }
+	        });
+	        r.end();
+	    }
+	    
+	});
+
+})();
+//     VIE - Vienna IKS Editables
+//     (c) 2011 Henri Bergius, IKS Consortium
+//     (c) 2011 Sebastian Germesin, IKS Consortium
+//     (c) 2011 Szaby Grünwald, IKS Consortium
+//     VIE may be freely distributed under the MIT license.
+//     For all details and documentation:
+//     http://viejs.org/
+
+// ## VIE - DBPedia service
+// The DBPedia service allows a VIE developer to directly query
+// the DBPedia database for entities and their properties. Obviously,
+// the service does not allow for saving, removing or analyzing methods.
+(function(){
+		
+    jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
+        
+		// ### find(term, limit, offset, success, error, options)
+		// This method finds entities given the term from the entity hub and returns the result by the success callback.  
+		// **Parameters**:  
+		// *{string}* **term** The term to be searched for. 
+		// *{int}* **limit** The limit of results to be returned. 
+		// *{int}* **offset** The offset to be search for.  
+		// *{function}* **success** The success callback.  
+		// *{function}* **error** The error callback.  
+		// *{object}* **options** Options, like the ```format```. If ```local``` is set, only the local entities are accessed.  
+		// **Throws**:  
+		// *nothing*  
+		// **Returns**:  
+		// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+		// **Example usage**:  
+		//
+		//		     var stnblConn = new vie.StanbolConnector(opts);
+		//		     stnblConn.find("Bishofsh", 10, 0,
+		//		                 function (res) { ... },
+		//		                 function (err) { ... });
+		find: function(term, limit, offset, success, error, options) {
+			options = (options)? options :  {};
+			/* curl -X POST -d "name=Bishofsh&limit=10&offset=0" http://localhost:8080/entityhub/sites/find */
+
+			var connector = this;
+
+			if (!term || term === "") {
+				error ("No term given!");
+				return;
+			}
+
+			offset = (offset)? offset : 0;
+			limit  = (limit)? limit : 10;
+
+			connector._iterate({
+				method : connector._find,
+				methodNode : connector._findNode,
+				success : success,
+				error : error,
+				url : function (idx, opts) {
+					var site = (opts.site)? opts.site : this.options.entityhub.site;
+					site = (site)? "/" + site : "s";
+
+					var isLocal = opts.local;
+
+					var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+					if (isLocal) {
+						u += "/sites/find";
+					} else {
+						u += "/site" + site + "/find";
+					}
+
+					return u;
+				},
+				args : {
+					term : term,
+					offset : offset,
+					limit : limit,
+					format : options.format || "application/rdf+json",
+					options : options
+				},
+				urlIndex : 0
+			});
+		},
+
+		_find : function (url, args, success, error) {
+			jQuery.ajax({
+				success: success,
+				error: error,
+				url: url,
+				type: "POST",
+				data: "name=" + args.term + "&limit=" + args.limit + "&offset=" + args.offset,
+				dataType: args.format,
+				contentType : "application/x-www-form-urlencoded",
+				accepts: {"application/rdf+json": "application/rdf+json"}
+			});
+		},
+
+		_findNode: function(url, args, success, error) {
+			var request = require('request');
+			var r = request({
+				method: "POST",
+				uri: url,
+				body : "name=" + args.term + "&limit=" + args.limit + "&offset=" + args.offset,
+				headers: {
+					Accept: args.format
+				}
+			}, function(err, response, body) {
+				try {
+					success({results: JSON.parse(body)});
+				} catch (e) {
+					error(e);
+				}
+			});
+			r.end();
+		},
+
+		
+
+		// ### lookup(uri, success, error, options)
+		// TODO: add description  
+		// **Parameters**:  
+		// *{string}* **uri** The URI of the entity to be loaded.  
+		// *{function}* **success** The success callback.  
+		// *{function}* **error** The error callback.  
+		// *{object}* **options** Options, ```create```.
+		//		    If the parsed ID is a URI of a Symbol, than the stored information of the Symbol are returned in the requested media type ('accept' header field).
+		//		    If the parsed ID is a URI of an already mapped entity, then the existing mapping is used to get the according Symbol.
+		//		    If "create" is enabled, and the parsed URI is not already mapped to a Symbol, than all the currently active referenced sites are searched for an Entity with the parsed URI.
+		//		    If the configuration of the referenced site allows to create new symbols, than a the entity is imported in the Entityhub, a new Symbol and EntityMapping is created and the newly created Symbol is returned.
+		//		    In case the entity is not found (this also includes if the entity would be available via a referenced site, but create=false) a 404 "Not Found" is returned.
+		//		    In case the entity is found on a referenced site, but the creation of a new Symbol is not allowed a 403 "Forbidden" is returned.   
+		// **Throws**:  
+		// *nothing*  
+		// **Returns**:  
+		// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+		lookup: function(uri, success, error, options) {
+			options = (options)? options :  {};
+			/*/lookup/?id=http://dbpedia.org/resource/Paris&create=false"*/
+			var connector = this;
+
+			uri = uri.replace(/^</, '').replace(/>$/, '');
+
+			options.uri = uri;
+			options.create = (options.create)? options.create : false;
+
+			connector._iterate({
+				method : connector._lookup,
+				methodNode : connector._lookupNode,
+				success : success,
+				error : error,
+				url : function (idx, opts) {
+
+					var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+					u += "/lookup?id=" + escape(opts.uri) + "&create=" + opts.create;
+					return u;
+				},
+				args : {
+					format : options.format || "application/rdf+json",
+					options : options
+				},
+				urlIndex : 0
+			});
+		},
+
+		_lookup : function (url, args, success, error) {
+			jQuery.ajax({
+				success: success,
+				error: error,
+				url: url,
+				type: "GET",
+				dataType: args.format,
+				contentType: "text/plain",
+				accepts: {"application/rdf+json": "application/rdf+json"}
+			});
+		},
+
+		_lookupNode: function(url, args, success, error) {
+			var request = require('request');
+			var r = request({
+				method: "GET",
+				uri: url,
+				body: args.text,
+				headers: {
+					Accept: args.format
+				}
+			}, function(err, response, body) {
+				try {
+					success({results: JSON.parse(body)});
+				} catch (e) {
+					error(e);
+				}
+			});
+			r.end();
+		},
+
+
+		// ### referenced(success, error, options)
+		// This method returns a list of all referenced sites that the entityhub comprises.  
+		// **Parameters**:  
+		// *{function}* **success** The success callback.  
+		// *{function}* **error** The error callback.  
+		// *{object}* **options** Options, unused here.   
+		// **Throws**:  
+		// *nothing*  
+		// **Returns**:  
+		// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+		// **Example usage**:  
+		//
+		//		var stnblConn = new vie.StanbolConnector(opts);
+		//		stnblConn.referenced(
+		//		function (res) { ... },
+		//		function (err) { ... });  
+		referenced: function(success, error, options) {
+			options = (options)? options :  {};
+			var connector = this;
+
+			var successCB = function (sites) {
+				if (_.isArray(sites)) {
+					var sitesStripped = [];
+					for (var s = 0, l = sites.length; s < l; s++) {
+						sitesStripped.push(sites[s].replace(/.+\/(.+?)\/?$/, "$1"));
+					}
+					return success(sitesStripped);
+				} else {
+					return success(sites);
+				}
+			};
+
+			connector._iterate({
+				method : connector._referenced,
+				methodNode : connector._referencedNode,
+				success : successCB,
+				error : error,
+				url : function (idx, opts) {
+					var u = this.options.url[idx].replace(/\/$/, '');
+					u += this.options.entityhub.urlPostfix + "/sites/referenced";
+
+					return u;
+				},
+				args : {
+					options : options
+				},
+				urlIndex : 0
+			});
+		},
+
+		_referenced : function (url, args, success, error) {
+			jQuery.ajax({
+				success: success,
+				error: error,
+				url: url,
+				type: "GET",
+				accepts: {"application/rdf+json": "application/rdf+json"}
+			});
+		},
+
+		_referencedNode: function(url, args, success, error) {
+			var request = require('request');
+			var r = request({
+				method: "GET",
+				uri: url,
+				headers: {
+					Accept: args.format
+				}
+			}, function(err, response, body) {
+				try {
+					success({results: JSON.parse(body)});
+				} catch (e) {
+					error(e);
+				}
+			});
+			r.end();
+		},
+
+        // ### ldpath(query, success, error, options)
+        // TODO.  
+        // **Parameters**:  
+        // TODO
+        // *{function}* **success** The success callback.  
+        // *{function}* **error** The error callback.  
+        // *{object}* **options** Options, unused here.   
+        // **Throws**:  
+        // *nothing*  
+        // **Returns**:  
+        // *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+        ldpath: function(ldpath, context, success, error, options) {
+            options = (options)? options :  {};
+            var connector = this;
+
+            context = (_.isArray(context))? context : [ context ];
+
+            var contextStr = "";
+            for (var c = 0; c < context.length; c++) {
+                contextStr += "&context=" + context[c];
+            }
+
+            connector._iterate({
+                method : connector._ldpath,
+                methodNode : connector._ldpathNode,
+                success : success,
+                error : error,
+                url : function (idx, opts) {
+                    var site = (opts.site)? opts.site : this.options.entityhub.site;
+                    site = (site)? "/" + site : "s";
+
+                    var isLocal = opts.local;
+
+                    var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+                    if (!isLocal)
+                        u += "/site" + site;
+                    u += "/ldpath";
+
+                    return u;
+                },
+                args : {
+                    ldpath : ldpath,
+                    context : contextStr,
+                    format : options.format || "application/rdf+json",
+                    options : options
+                },
+                urlIndex : 0
+            });
+        },
+
+        _ldpath : function (url, args, success, error) {
+            jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "POST",
+                data : "ldpath=" + args.ldpath + args.context,
+                contentType : "application/x-www-form-urlencoded",
+                dataType: args.format,
+                accepts: {"application/rdf+json": "application/rdf+json"}
+            });
+        },
+
+        _ldpathNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "POST",
+                uri: url,
+                body : "ldpath=" + args.ldpath + context,
+                headers: {
+                    Accept: args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        },
+
+        // ### query(query, success, error, options)
+        // TODO: add description
+        // **Parameters**:  
+        // TODO
+        // *{function}* **success** The success callback.  
+        // *{function}* **error** The error callback.  
+        // *{object}* **options** Options, unused here.   
+        // **Throws**:  
+        // *nothing*  
+        // **Returns**:  
+        // *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+        query: function(query, success, error, options) {
+            options = (options)? options :  {};
+            var connector = this;
+
+            connector._iterate({
+                method : connector._query,
+                methodNode : connector._queryNode,
+                success : success,
+                error : error,
+                url : function (idx, opts) {
+                    var site = (opts.site)? opts.site : this.options.entityhub.site;
+                    site = (site)? "/" + site : "s";
+
+                    var isLocal = opts.local;
+
+                    var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+                    if (!isLocal)
+                        u += "/site" + site;
+                    u += "/query";
+                    
+                    console.log("querying " + u)
+                    return u;
+                },
+                args : {
+                    query : JSON.stringify(query),
+                    format : "application/rdf+json",
+                    options : options
+                },
+                urlIndex : 0
+            });
+        },
+
+        _query : function (url, args, success, error) {
+            jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "POST",
+                data : args.query,
+                contentType : "application/json"
+            });
+        },
+
+        _queryNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "POST",
+                uri: url,
+                body : "ldpath=" + args.ldpath + context,
+                headers: {
+                    Accept: args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        },
+        
+                
+        // ### createEntity(entity, success, error, option)
+    	// @author mere01
+    	// This method creates a new local entity on the Apache Stanbol entityhub endpoint.
+        // If options.update is not set to true, the method fails if the entity is already existing in the entityhub.
+    	// **Parameters**:  
+    	// *{string}* **entity** the rdf xml formatted entity to be sent to the entityhub/entity/
+        // *{function}* **success** The success callback.  
+    	// *{function}* **error** The error callback.  
+        // *{object}* **options** the options to append to the URL request, e.g. "update: true" will 
+        // 						 enable updating an already existing entity.
+    	// **Example usage**:  
+    	//
+        //    	     var stnblConn = new vie.StanbolConnector(opts);
+        //    	     stnblConn.createEntity(<entity>,
+        //    	                 function (res) { ... },
+        //    	                 function (err) { ... },);	to create a new entity in the entityhub
+        createEntity: function(entity, success, error, options) {
+        	
+        	console.log("createEntity receives arguments:")
+        	console.log(entity)
+        	console.log(success)
+        	console.log(error)
+        	console.log(options)
+        	
+    			options = (options)? options :  {};
+
+    			var connector = this;
+    	
+    	    	connector._iterate({
+    	        	method : connector._createEntity,
+    	        	methodNode : connector._createEntityNode,
+    	        
+    	        	url : function (idx, opts) {
+    	        		
+    	                var update = options.update;
+    	                
+    	                var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+    	                
+    	                u += "/entity";
+    	                
+    	                if (update) {
+    	                	u += "?update=true";
+    	                }
+    	        		return u;
+    	        	},
+    	        	
+    	        	args : {
+    	        		entity : entity,
+    	        		format : "application/rdf+xml"
+    	        	},
+    	        	success : success,
+    	        	error : error,
+    	        	urlIndex : 0
+    	        });
+    	    },
+
+        _createEntity : function (url, args, success, error) {
+        	jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "POST",
+                data: args.entity,
+                contentType: args.format//,
+            });
+        }, 
+
+        _createEntityNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "POST",
+                uri: url,
+                body: args.entity,
+                headers: {
+                    Accept: args.format,
+                    'Content-Type': args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        },
+        // ### save(id, success, error, option)
+        // This is an alias to createEntity
+
+//        save: function () {
+//            return this.createEntity(arguments[0], arguments[1], arguments[2], arguments[3]);
+
+        save: function (entity, success, error, options) {
+            return this.createEntity.call(this, entity, success, error, options);
+
+        },
+
+        // ### readEntity(uri, success, error, options)
+        // This method loads all properties from an entity and returns the result by the success callback.  
+        // **Parameters**:  
+        // *{string}* **uri** The URI of the entity to be loaded.  
+        // *{function}* **success** The success callback.  
+        // *{function}* **error** The error callback.  
+        // *{object}* **options** Options, like the ```format```, the ```site```. If ```local``` is set, only the local entities are accessed.   
+        // **Throws**:  
+        // *nothing*  
+        // **Returns**:  
+        // *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+        // **Example usage**:  
+        //
+        //       var stnblConn = new vie.StanbolConnector(opts);
+        //       stnblConn.load("<http://dbpedia.org/resource/Barack_Obama>",
+        //                   function (res) { ... },
+        //                   function (err) { ... });
+
+        readEntity: function (uri, success, error, options) {
+            var connector = this;
+            options = (options)? options :  {};
+
+            console.log("uri:")
+            console.log(uri)
+            console.log(" is of type: " + typeof(uri));
+            
+            options.uri = uri.replace(/^</, '').replace(/>$/, '');
+
+            connector._iterate({
+                method : connector._readEntity,
+                methodNode : connector._readEntityNode,
+                success : success,
+                error : error,
+                url : function (idx, opts) {
+                    var site = (opts.site)? opts.site : this.options.entityhub.site;
+                    site = (site)? "/" + site : "s";
+
+                    var isLocal = opts.local;
+
+                    var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+                    if (isLocal) {
+                        u += "/entity?id=" + escape(opts.uri);
+                    } else {
+                        u += "/site" + site + "/entity?id=" + escape(opts.uri);
+                    }
+                    return u;
+                },
+                args : {
+                    format : options.format || "application/rdf+json",
+                    options : options
+                },
+                urlIndex : 0
+            });
+        },
+
+        _readEntity : function (url, args, success, error) {
+            jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "GET",
+                dataType: args.format,
+                contentType: "text/plain",
+                accepts: {"application/rdf+json": "application/rdf+json"}
+            });
+        },
+
+        _readEntityNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "GET",
+                uri: url,
+                body: args.text,
+                headers: {
+                    Accept: args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        },
+        // ### load(id, success, error, option)
+
+        // This is an alias to createEntity
+        load: function (uri, success, error, options) {
+            return this.readEntity.call(this, uri, success, error, options);
+
+        },
+        
+        
+        // ### udpateEntity(id, success, error, option)
+    	// @author mere01
+    	// This method updates a local entity on the Apache Stanbol entityhub/entity endpoint.
+    	// **Parameters**:  
+    	// *{string}* **entity** the rdf xml formatted entity to be sent to the entityhub/entity/
+        // *{function}* **success** The success callback.  
+    	// *{function}* **error** The error callback.  
+        // *{object}* **options** Options: if e.g. "create: 'true'" is specified, then the method will create
+        //		the entity on the entityhub, if it does not already exist.        		
+        // *{string}* **id** the ID of the entity which is to be updated (optional argument)
+    	// **Throws**:  
+    	// *nothing*  
+    	// **Returns**:  
+    	// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+    	// **Example usage**:  
+    	//
+//    	     var stnblConn = new vie.StanbolConnector(opts);
+//    	     stnblConn.updateEntity(<entity>,
+//    	                 function (res) { ... },
+//    	                 function (err) { ... }, id);	to update the entity referenced by the specified ID
+        updateEntity: function(entity, success, error, options, id) {
+        	// TODO access problem for method PUT
+    			id = (id)? (id) :  "";
+    		
+    			var connector = this;
+    	
+    	    	connector._iterate({
+    	        	method : connector._updateEntity,
+    	        	methodNode : connector._updateEntityNode,
+
+    	        	url : function (idx, opts) {
+    	        		
+    	                var isCreate = opts.create;
+    	                
+    	                var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+    	                
+    	                u += "/entity?id=" + escape(id);
+    	                
+    	                if (!isCreate) {
+    	                	u += "&create=false";
+    	                }
+    	        		return u;
+    	        	},
+    	        	args : {
+    	        		entity : entity,
+    	        		format : "application/rdf+xml",
+    	        		options: options
+    	        	},
+    	        	success : success,
+    	        	error : error,
+    	        	urlIndex : 0
+    	        });
+    	    }, // end of updateEntity
+
+        _updateEntity : function (url, args, success, error) {
+        	jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "PUT",
+                data: args.entity,
+                contentType: args.format,
+                accepts: "application/json"
+                
+            });
+        }, // end of _updateEntity
+
+        _updateEntityNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "PUT",
+                uri: url,
+                body: args.entity,
+                headers: {
+                    Accept: "application/json",
+                    'Content-Type': args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        }, // end of _updateEntityNode 
+
+        // ### deleteEntity(id, success, error, options)
+    	// @author mere01
+    	// This method deletes a local entity from the Apache Stanbol entityhub/entity endpoint.
+    	// **Parameters**:  
+        // *{string}* **id** the ID of the entity which is to be deleted from the entityhub.
+        // *{function}* **success** The success callback.  
+    	// *{function}* **error** The error callback.  
+        // *{object}* **options** Options. 
+    	// **Throws**:  
+    	// *nothing*  
+    	// **Returns**:  
+    	// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+    	// **Example usage**:  
+    	//
+        //    	     var stnblConn = new vie.StanbolConnector(opts);
+        //    	     stnblConn.deleteEntity(
+        //    					 id,
+        //    	                 function (res) { ... },
+        //    	                 function (err) { ... }, 
+        //        				 );						to delete the entity referenced by the specified ID
+        deleteEntity: function(id, success, error, options) {
+        	// TODO access problem for method DELETE
+
+    			var connector = this;
+    	
+    	    	connector._iterate({
+    	        	method : connector._deleteEntity,
+    	        	methodNode : connector._deleteEntityNode,
+
+    	        	url : function (idx, opts) {
+    	        		
+    	                var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+    	                
+    	                u += "/entity?id=" + escape(id);
+    	                
+    	        		return u;
+    	        	},
+    	        	args : {
+    	        		format : "application/rdf+xml",
+    	        		options: options
+    	        	},
+    	        	success : success,
+    	        	error : error,
+    	        	urlIndex : 0
+    	        });
+    	    }, // end of deleteEntity
+
+        _deleteEntity : function (url, args, success, error) {
+        	jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "DELETE",
+                contentType: args.format             
+            });
+        }, // end of _deleteEntity
+
+        _deleteEntityNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "DELETE",
+                uri: url,
+                headers: {
+                    Accept: "application/json",
+                    'Content-Type': args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        }, // end of _deleteEntityNode
+     
+     // ### getMapping(id, success, error, options)
+    	// @author mere01
+    	// This method looks up mappings from local Entities to Entities managed by a Referenced Site.
+    	// **Parameters**:  
+        // *{string}* **id** the ID of 	(a) the entity ID, when **options** specifies "entity: true"
+        //								(b) the symbol ID, when **options** specified "symbol: true"
+        //								(c) the mapping ID, otherwise
+        // *{function}* **success** The success callback.  
+    	// *{function}* **error** The error callback.  
+        // *{object}* **options** Options. 
+        //			If you want to look up the mappings for an entity, specify "entity: true".
+        //			If you want to look up the mappings for a symbol, specify "symbol: true".
+        //			If you want to look up the mappings by the mapping ID itself, specify nothing.
+    	// **Throws**:  
+    	// *nothing*  
+    	// **Returns**:  
+    	// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+    	// **Example usage**:  
+    	//
+        //    	     var stnblConn = new vie.StanbolConnector(opts);
+        //    	     stnblConn.deleteEntity(
+        //    					 "http://dbpedia.org/resource/Paris",
+        //    	                 function (res) { ... },
+        //    	                 function (err) { ... }, 
+        //        				 {
+        //							entity: true
+    	//							});						to retrieve the mapping for dbpedia entity Paris
+        getMapping: function(id, success, error, options) {
+
+    			var connector = this;
+    	
+    	    	connector._iterate({
+    	        	method : connector._getMapping,
+    	        	methodNode : connector._getMappingNode,
+
+    	        	url : function (idx, opts) {
+    	        		
+    	                var u = this.options.url[idx].replace(/\/$/, '') + this.options.entityhub.urlPostfix;
+    	                
+    	                u += "/mapping";
+    	                
+    	                var entity = options.entity;
+    	                if (entity) {
+    	                	u += "/entity";
+    	                }
+    	                
+    	                var symbol = options.symbol;
+    	                if (symbol) {
+    	                	u += "/symbol";
+    	                }
+    	                
+    	                u += "?id=" + escape(id);
+    	                
+    	        		return u;
+    	        	},
+    	        	args : {
+    	        		format : "application/json",
+    	        		options: options
+    	        	},
+    	        	success : success,
+    	        	error : error,
+    	        	urlIndex : 0
+    	        });
+    	    }, // end of getMapping
+
+        _getMapping : function (url, args, success, error) {
+        	jQuery.ajax({
+                success: success,
+                error: error,
+                url: url,
+                type: "GET",
+                contentType: args.format             
+            });
+        }, // end of _getMapping
+
+        _getMappingNode: function(url, args, success, error) {
+            var request = require('request');
+            var r = request({
+                method: "GET",
+                uri: url,
+                headers: {
+                    Accept: "application/json",
+                    'Content-Type': args.format
+                }
+            }, function(err, response, body) {
+                try {
+                    success({results: JSON.parse(body)});
+                } catch (e) {
+                    error(e);
+                }
+            });
+            r.end();
+        } // end of _getMappingNode
+     
+	});
+})();//     VIE - Vienna IKS Editables
+//     (c) 2011 Henri Bergius, IKS Consortium
+//     (c) 2011 Sebastian Germesin, IKS Consortium
+//     (c) 2011 Szaby Grünwald, IKS Consortium
+//     VIE may be freely distributed under the MIT license.
+//     For all details and documentation:
+//     http://viejs.org/
+
+// ## VIE - DBPedia service
+// The DBPedia service allows a VIE developer to directly query
+// the DBPedia database for entities and their properties. Obviously,
+// the service does not allow for saving, removing or analyzing methods.
+(function(){
+
+    jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
+        
+		//### createFactSchema(url, schema, success, error, options)
+		//TODO.  
+		//**Parameters**:  
+		//TODO
+		//*{function}* **success** The success callback.  
+		//*{function}* **error** The error callback.  
+		//*{object}* **options** Options, unused here.   
+		//**Throws**:  
+		//*nothing*  
+		//**Returns**:  
+		//*{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+		createFactSchema: function(url, schema, success, error, options) {
+			options = (options)? options :  {};
+			var connector = this;
+
+			options.url = url;
+
+			connector._iterate({
+				method : connector._createFactSchema,
+				methodNode : connector._createFactSchemaNode,
+				success : success,
+				error : error,
+				url : function (idx, opts) {
+					var u = this.options.url[idx].replace(/\/$/, '');
+					u += this.options.factstore.urlPostfix.replace(/\/$/, '');
+
+					u += "/facts/" + escape(opts.url);
+
+					return u;
+				},
+				args : {
+					url : url,
+					schema : schema,
+					options : options
+				},
+				urlIndex : 0
+			});
+		},
+
+		_createFactSchema : function (url, args, success, error) {
+			jQuery.ajax({
+				success: success,
+				error: error,
+				url: url,
+				type: "PUT",
+				data : args.schema,
+				contentType : "application/json",
+				dataType: "application/json"
+			});
+		},
+
+		_createFactSchemaNode: function(url, args, success, error) {
+			var request = require('request');
+			var r = request({
+				method: "PUT",
+				uri: url,
+				body : args.schema,
+				headers: {
+					Accept: "application/json",
+					"Content-Type" : "application/json"
+				}
+			}, function(err, response, body) {
+				try {
+					success({results: JSON.parse(body)});
+				} catch (e) {
+					error(e);
+				}
+			});
+			r.end();
+		},
+
+		createFact: function(fact, success, error, options) {
+			options = (options)? options :  {};
+			var connector = this;
+
+			connector._iterate({
+				method : connector._createFact,
+				methodNode : connector._createFactNode,
+				success : success,
+				error : error,
+				url : function (idx, opts) {
+					var u = this.options.url[idx].replace(/\/$/, '');
+					u += this.options.factstore.urlPostfix.replace(/\/$/, '');
+
+					u += "/facts";
+
+					return u;
+				},
+				args : {
+					fact : fact,
+					options : options
+				},
+				urlIndex : 0
+			});
+		},
+
+		_createFact : function (url, args, success, error) {
+			jQuery.ajax({
+				success: success,
+				error: error,
+				url: url,
+				type: "POST",
+				data : args.fact,
+				contentType : "application/json",
+				dataType: "application/json"
+			});
+		},
+
+		_createFactNode: function(url, args, success, error) {
+			var request = require('request');
+			var r = request({
+				method: "POST",
+				uri: url,
+				body : args.fact,
+				headers: {
+					Accept: "application/json",
+					"Content-Type" : "application/json"
+				}
+			}, function(err, response, body) {
+				try {
+					success({results: JSON.parse(body)});
+				} catch (e) {
+					error(e);
+				}
+			});
+			r.end();
+		},
+
+		queryFact: function(query, success, error, options) {
+			options = (options)? options :  {};
+			var connector = this;
+
+			connector._iterate({
+				method : connector._queryFact,
+				methodNode : connector._queryFactNode,
+				success : success,
+				error : error,
+				url : function (idx, opts) {
+					var u = this.options.url[idx].replace(/\/$/, '');
+					u += this.options.factstore.urlPostfix.replace(/\/$/, '');
+
+					u += "/query";
+
+					return u;
+				},
+				args : {
+					query : query,
+					options : options
+				},
+				urlIndex : 0
+			});
+		},
+
+		_queryFact : function (url, args, success, error) {
+			jQuery.ajax({
+				success: success,
+				error: error,
+				url: url,
+				type: "POST",
+				data : args.query,
+				contentType : "application/json",
+				dataType: "application/json"
+			});
+		},
+
+		_queryFactNode: function(url, args, success, error) {
+			var request = require('request');
+			var r = request({
+				method: "POST",
+				uri: url,
+				body : args.query,
+				headers: {
+					Accept: "application/json",
+					"Content-Type" : "application/json"
+				}
+			}, function(err, response, body) {
+				try {
+					success({results: JSON.parse(body)});
+				} catch (e) {
+					error(e);
+				}
+			});
+			r.end();
+		}
+	});
+
+})();//     VIE - Vienna IKS Editables
+//     (c) 2011 Henri Bergius, IKS Consortium
+//     (c) 2011 Sebastian Germesin, IKS Consortium
+//     (c) 2011 Szaby Grünwald, IKS Consortium
+//     VIE may be freely distributed under the MIT license.
+//     For all details and documentation:
+//     http://viejs.org/
+
+// ## VIE - DBPedia service
+// The DBPedia service allows a VIE developer to directly query
+// the DBPedia database for entities and their properties. Obviously,
+// the service does not allow for saving, removing or analyzing methods.
+(function(){
+
+    jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
+        
+		
+	});
+	
+})();//     VIE - Vienna IKS Editables
+//     (c) 2011 Henri Bergius, IKS Consortium
+//     (c) 2011 Sebastian Germesin, IKS Consortium
+//     (c) 2011 Szaby Grünwald, IKS Consortium
+//     VIE may be freely distributed under the MIT license.
+//     For all details and documentation:
+//     http://viejs.org/
+
+// ## VIE - DBPedia service
+// The DBPedia service allows a VIE developer to directly query
+// the DBPedia database for entities and their properties. Obviously,
+// the service does not allow for saving, removing or analyzing methods.
+(function(){
+
+    jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
+        		
+	});
+	
+})();//     VIE - Vienna IKS Editables
+//     (c) 2011 Henri Bergius, IKS Consortium
+//     (c) 2011 Sebastian Germesin, IKS Consortium
+//     (c) 2011 Szaby Grünwald, IKS Consortium
+//     VIE may be freely distributed under the MIT license.
+//     For all details and documentation:
+//     http://viejs.org/
+
+// ## VIE - DBPedia service
+// The DBPedia service allows a VIE developer to directly query
+// the DBPedia database for entities and their properties. Obviously,
+// the service does not allow for saving, removing or analyzing methods.
+(function(){
+
+    jQuery.extend(true, VIE.prototype.StanbolConnector.prototype, {
+                
+		// ### sparql(query, success, error, options)
+		// TODO.  
+		// **Parameters**:  
+		// TODO
+		// *{function}* **success** The success callback.  
+		// *{function}* **error** The error callback.  
+		// *{object}* **options** Options, unused here.   
+		// **Throws**:  
+		// *nothing*  
+		// **Returns**:  
+		// *{VIE.StanbolConnector}* : The VIE.StanbolConnector instance itself.  
+	     sparql: function(query, success, error, options) {
+	     	options = (options)? options :  {};
+	         var connector = this;
+	      	
+	      	connector._iterate({
+	          	method : connector._sparql,
+	          	methodNode : connector._sparqlNode,
+	          	success : success,
+	          	error : error,
+	          	url : function (idx, opts) {
+	                var u = this.options.url[idx].replace(/\/$/, '');
+	                u += this.options.sparql.urlPostfix.replace(/\/$/, '');
+	              
+	      		    return u;
+	          	},
+	          	args : {
+	          		query : query,
+	          		options : options
+	          	},
+	          	urlIndex : 0
+	          });
+	      },
+	      
+	      _sparql : function (url, args, success, error) {
+	      	jQuery.ajax({
+	              success: success,
+	              error: error,
+	              url: url,
+	              type: "POST",
+	              data : "query=" + args.query,
+	              contentType : "application/x-www-form-urlencoded"
+	          });
+	      },
+
+	      _sparqlNode: function(url, args, success, error) {
+	          var request = require('request');
+	          var r = request({
+	              method: "POST",
+	              uri: url,
+	              body : JSON.stringify({query : args.query}),
+	              headers: {
+	                  Accept: args.format
+	              }
+	          }, function(err, response, body) {
+	              try {
+	                  success({results: JSON.parse(body)});
+	              } catch (e) {
+	                  error(e);
+	              }
+	          });
+	          r.end();
+	      }
+	});
+
+})();if (!VIE.prototype.view) {
     VIE.prototype.view = {};
 }
 
@@ -6118,6 +7723,7 @@ VIE.prototype.view.Collection = Backbone.View.extend({
         _.bindAll(this, 'addItem', 'removeItem', 'refreshItems');
         this.collection.bind('add', this.addItem);
         this.collection.bind('remove', this.removeItem);
+        this.collection.bind('reset', this.refreshItems);
 
         // Make the view aware of existing entities in collection
         var view = this;
@@ -6141,8 +7747,18 @@ VIE.prototype.view.Collection = Backbone.View.extend({
             this.service.setElementSubject(entity.getSubjectUri(), entityElement);
         }
 
-        // TODO: Ordering
-        jQuery(this.el).append(entityElement);
+        var entityIndex = collection.indexOf(entity);
+        if (entityIndex === 0) {
+          jQuery(this.el).prepend(entityElement);
+        } else {
+          var previousEntity = collection.at(entityIndex - 1);
+          var previousView = this.entityViews[previousEntity.cid];
+          if (previousView) {
+            jQuery(previousView.el).after(entityElement);
+          } else {
+            jQuery(this.el).append(entityElement);
+          }
+        }
 
         // Ensure we catch all inferred predicates. We add these via JSONLD
         // so the references get properly Collectionized.
@@ -6151,6 +7767,7 @@ VIE.prototype.view.Collection = Backbone.View.extend({
             var predicate = jQuery(this).attr('rev');
             var relations = {};
             relations[predicate] = new service.vie.Collection();
+            relations[predicate].vie = service.vie;
             var model = service.vie.entities.get(service.getElementSubject(this));
             if (model) {
                 relations[predicate].addOrUpdate(model);
@@ -6184,7 +7801,10 @@ VIE.prototype.view.Collection = Backbone.View.extend({
 
     refreshItems: function(collection) {
         var view = this;
-        jQuery(this.el).empty();
+        _.each(this.entityViews, function(view, cid) {
+          jQuery(view.el).remove();
+        });
+        this.entityViews = {};
         collection.forEach(function(entity) {
             view.addItem(entity, collection);
         });
