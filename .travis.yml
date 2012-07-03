@@ -11,6 +11,5 @@ notifications:
   email: 
     recipients:
       - viejs@googlegroups.com
-      - sebastian.germesin@dfki.de
     on_success: change
     on_failure: always
