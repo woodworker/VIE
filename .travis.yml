@@ -9,4 +9,4 @@ script: npm test
 
 notifications:
     irc: "irc.freenode.org#iks"
-    email: "viejs@googlegroups.com"
+    email: "sebastian.germesi@dfki.de"

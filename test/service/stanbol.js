@@ -1115,7 +1115,8 @@ test("VIE.js StanbolConnector - CRUD on local entities", function() {
 	stanbol.connector.updateEntity(
 				modifEntity,
 				function(response) {
-                    ok(response);
+                    debugger;
+ok(response);
                     if (response && response.id)
                         ok(false, "E5: non-existing entity  " + response.id + " was updated successfully in the entityhub.");
 					start();
