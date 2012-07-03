@@ -1,13 +1,16 @@
 language: node_js
 node_js:
   - 0.6
-  - 0.7
-  - 0.8
 before_script:
   - ./utils/travis.sh
 
 script: npm test
 
 notifications:
-    irc: "irc.freenode.org#iks"
-    email: "sebastian.germesi@dfki.de"
+  irc: "irc.freenode.org#iks"
+  email: 
+    recipients:
+      - viejs@googlegroups.com
+      - sebastian.germesin@dfki.de
+    on_success: change
+    on_failure: change
