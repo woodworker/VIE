@@ -102,6 +102,20 @@ test("vie.js Entities API -  id/getSubject()", function () {
     
 });
 
+test('vie.js Entities API - forceChanged', function () {
+    var z = new VIE();
+
+    var entity = new z.Entity();
+    equal(entity.hasChanged(), false);
+    equal(entity.isNew(), true);
+
+    entity.forceChanged(true);
+    equal(entity.hasChanged(), true);
+
+    entity.forceChanged(false);
+    equal(entity.hasChanged(), false);
+});
+
 test("vie.js Entities API - addOrUpdate", function () {
     var z = new VIE();
     z.namespaces.add('dc', 'http://purl.org/dc/elements/1.1/');
@@ -227,7 +241,16 @@ test("vie.js Entities API - set()", function () {
     ok(madonna.get("knows").isCollection);
     equal(madonna.get("knows").size(), 1);
     equal(madonna.get("knows").at(0).getSubject(), courtney.getSubject());
-    
+
+    // Set with array of subject URIs, should still be a collection
+    var originalCollection = madonna.get("knows");
+    madonna.set({
+      knows: [courtney.getSubject()]
+    });
+    ok(madonna.get("knows").isCollection);
+    equal(madonna.get("knows").size(), 1);
+    equal(madonna.get("knows").at(0).getSubject(), courtney.getSubject());
+    equal(madonna.get("knows"), originalCollection);
 });
 
 test("vie.js Entities API - setOrUpdate with entities", function () {

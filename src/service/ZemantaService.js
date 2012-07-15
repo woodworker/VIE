@@ -177,7 +177,7 @@ VIE.prototype.ZemantaService.prototype = {
 
         var text = service._extractText(element);
 
-        if ($(element).text() > 0) {
+        if ($(element).text().length > 0) {
             var success = function (results) {
                 _.defer(function(){
                     var entities = VIE.Util.rdf2Entities(service, results);

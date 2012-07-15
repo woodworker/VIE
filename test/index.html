@@ -5,7 +5,7 @@
     xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>VIE browser tests</title>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="../lib/jquery/1.7/jquery-1.7.2.min.js"></script>
 
         <link rel="stylesheet" href="qunit.css" type="text/css" media="screen" />
         <script type="text/javascript" src="qunit.js"></script>
@@ -37,6 +37,7 @@
         <script type="text/javascript" src="core/type.js"></script>
         <script type="text/javascript" src="core/attribute.js"></script>
         <script type="text/javascript" src="core/namespaces.js"></script>
+        <script type="text/javascript" src="core/literals.js"></script>
         <script type="text/javascript" src="core/classic.js"></script>
         <script type="text/javascript" src="core/util.js"></script>
 
@@ -44,6 +45,7 @@
         <script type="text/javascript" src="service/rdfa.js"></script>
         <script type="text/javascript" src="service/stanbol.js"></script>
         <script type="text/javascript" src="service/dbpedia.js"></script>
+        <script type="text/javascript" src="service/sameas.js"></script>
         <script type="text/javascript" src="service/zemanta.js"></script>
 		<!-- <script type="text/javascript" src="service/opencalais.js"></script>-->
 		
@@ -109,6 +111,13 @@
              </div>
              <div class="rdfa11-1">
                  <p>This photo was taken by <span class="author" about="photo1.jpg" property="dc:creator">Mark Birbeck</span>.</p>'
+             </div>
+             <div class="rdfa-collection-reset">
+                  <div about="http://example.net/collectionreset">
+                      <ul rel="collection">
+                          <li about="http://example.net/collectionreset/item"><span property="title">Title</span></li>
+                      </ul>
+                  </div>
              </div>
         </div>
     </body>

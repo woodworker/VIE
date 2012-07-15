@@ -1,5 +1,5 @@
 /**
- * QUnit v1.7.0pre - A JavaScript Unit Testing Framework
+ * QUnit v1.8.0 - A JavaScript Unit Testing Framework
  *
  * http://docs.jquery.com/QUnit
  *
@@ -12,7 +12,9 @@
 
 var QUnit,
 	config,
+	onErrorFnPrev,
 	testId = 0,
+	fileName = (sourceFromStacktrace( 0 ) || "" ).replace(/(:\d+)+\)?/, "").replace(/.+\//, ""),
 	toString = Object.prototype.toString,
 	hasOwn = Object.prototype.hasOwnProperty,
 	defined = {
@@ -131,7 +133,7 @@ Test.prototype = {
 		try {
 			this.callback.call( this.testEnvironment, QUnit.assert );
 		} catch( e ) {
-			QUnit.pushFailure( "Died on test #" + (this.assertions.length + 1) + ": " + e.message, extractStacktrace( e, 1 ) );
+			QUnit.pushFailure( "Died on test #" + (this.assertions.length + 1) + " " + this.stack + ": " + e.message, extractStacktrace( e, 0 ) );
 			// else next test will carry the responsibility
 			saveGlobal();
 
@@ -157,7 +159,9 @@ Test.prototype = {
 	},
 	finish: function() {
 		config.current = this;
-		if ( this.expected != null && this.expected != this.assertions.length ) {
+		if ( config.requireExpects && this.expected == null ) {
+			QUnit.pushFailure( "Expected number of assertions to be defined, but expect() was not called.", this.stack );
+		} else if ( this.expected != null && this.expected != this.assertions.length ) {
 			QUnit.pushFailure( "Expected " + this.expected + " assertions, but " + this.assertions.length + " were run", this.stack );
 		} else if ( this.expected == null && !this.assertions.length ) {
 			QUnit.pushFailure( "Expected at least one assertion, but none were run - call expect(0) to accept zero assertions.", this.stack );
@@ -253,6 +257,8 @@ Test.prototype = {
 		});
 
 		QUnit.reset();
+
+		config.current = undefined;
 	},
 
 	queue: function() {
@@ -466,11 +472,13 @@ QUnit.assert = {
 			expected = null;
 		}
 
+		config.current.ignoreGlobalErrors = true;
 		try {
 			block.call( config.current.testEnvironment );
 		} catch (e) {
 			actual = e;
 		}
+		config.current.ignoreGlobalErrors = false;
 
 		if ( actual ) {
 			// we don't want to validate thrown error
@@ -538,6 +546,9 @@ config = {
 	// by default, modify document.title when suite is done
 	altertitle: true,
 
+	// when enabled, all tests must call expect()
+	requireExpects: false,
+
 	urlConfig: [ "noglobals", "notrycatch" ],
 
 	// logging callback queues
@@ -570,7 +581,13 @@ config = {
 	}
 
 	QUnit.urlParams = urlParams;
+
+	// String search anywhere in moduleName+testName
 	config.filter = urlParams.filter;
+
+	// Exact match of the module name
+	config.module = urlParams.module;
+
 	config.testNumber = parseInt( urlParams.testNumber, 10 ) || null;
 
 	// Figure out if we're running the tests from a server or not
@@ -754,6 +771,10 @@ extend( QUnit, {
 	},
 
 	pushFailure: function( message, source ) {
+		if ( !config.current ) {
+			throw new Error( "pushFailure() assertion outside test context, was " + sourceFromStacktrace(2) );
+		}
+
 		var output,
 			details = {
 				result: false,
@@ -927,15 +948,36 @@ QUnit.load = function() {
 
 addEvent( window, "load", QUnit.load );
 
-// addEvent(window, "error" ) gives us a useless event object
-window.onerror = function( message, file, line ) {
-	if ( QUnit.config.current ) {
-		QUnit.pushFailure( message, file + ":" + line );
-	} else {
-		QUnit.test( "global failure", function() {
-			QUnit.pushFailure( message, file + ":" + line );
-		});
+// `onErrorFnPrev` initialized at top of scope
+// Preserve other handlers
+onErrorFnPrev = window.onerror;
+
+// Cover uncaught exceptions
+// Returning true will surpress the default browser handler,
+// returning false will let it run.
+window.onerror = function ( error, filePath, linerNr ) {
+	var ret = false;
+	if ( onErrorFnPrev ) {
+		ret = onErrorFnPrev( error, filePath, linerNr );
 	}
+
+	// Treat return value as window.onerror itself does,
+	// Only do our handling if not surpressed.
+	if ( ret !== true ) {
+		if ( QUnit.config.current ) {
+			if ( QUnit.config.current.ignoreGlobalErrors ) {
+				return true;
+			}
+			QUnit.pushFailure( error, filePath + ":" + linerNr );
+		} else {
+			QUnit.test( "global failure", function() {
+				QUnit.pushFailure( error, filePath + ":" + linerNr );
+			});
+		}
+		return false;
+	}
+
+	return ret;
 };
 
 function done() {
@@ -1005,13 +1047,19 @@ function done() {
 	});
 }
 
+/** @return Boolean: true if this test should be ran */
 function validTest( test ) {
 	var include,
-		filter = config.filter,
-		fullName = test.module + ": " + test.testName;
+		filter = config.filter && config.filter.toLowerCase(),
+		module = config.module,
+		fullName = (test.module + ": " + test.testName).toLowerCase();
 
 	if ( config.testNumber ) {
 		return test.testNumber === config.testNumber;
+	}
+
+	if ( module && test.module !== module ) {
+		return false;
 	}
 
 	if ( !filter ) {
@@ -1036,9 +1084,9 @@ function validTest( test ) {
 // Later Safari and IE10 are supposed to support error.stack as well
 // See also https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error/Stack
 function extractStacktrace( e, offset ) {
-	offset = offset || 3;
+	offset = offset === undefined ? 3 : offset;
 
-	var stack;
+	var stack, include, i, regex;
 
 	if ( e.stacktrace ) {
 		// Opera
@@ -1048,6 +1096,18 @@ function extractStacktrace( e, offset ) {
 		stack = e.stack.split( "\n" );
 		if (/^error$/i.test( stack[0] ) ) {
 			stack.shift();
+		}
+		if ( fileName ) {
+			include = [];
+			for ( i = offset; i < stack.length; i++ ) {
+				if ( stack[ i ].indexOf( fileName ) != -1 ) {
+					break;
+				}
+				include.push( stack[ i ] );
+			}
+			if ( include.length ) {
+				return include.join( "\n" );
+			}
 		}
 		return stack[ offset ];
 	} else if ( e.sourceURL ) {
@@ -1463,11 +1523,11 @@ QUnit.jsDump = (function() {
 					type = "null";
 				} else if ( typeof obj === "undefined" ) {
 					type = "undefined";
-				} else if ( QUnit.is( "RegExp", obj) ) {
+				} else if ( QUnit.is( "regexp", obj) ) {
 					type = "regexp";
-				} else if ( QUnit.is( "Date", obj) ) {
+				} else if ( QUnit.is( "date", obj) ) {
 					type = "date";
-				} else if ( QUnit.is( "Function", obj) ) {
+				} else if ( QUnit.is( "function", obj) ) {
 					type = "function";
 				} else if ( typeof obj.setInterval !== undefined && typeof obj.document !== "undefined" && typeof obj.nodeType === "undefined" ) {
 					type = "window";

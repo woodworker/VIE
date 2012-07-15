@@ -1265,7 +1265,7 @@ test(
 				start();
 			});
 
-		}); // end of test for entityhub/entity
+		}); // end of test for CRUD entityhub/entity
 
 // ### test for the /contenthub/contenthub/store/raw/<contentId>, the service to
 // retrieve raw text content from content items via the item's id

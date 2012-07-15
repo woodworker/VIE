@@ -120,6 +120,10 @@ VIE.prototype.Entity = function(attrs, opts) {
                 return this;
             }
 
+            if (attrs['@subject']) {
+                attrs['@subject'] = this.toReference(attrs['@subject']);
+            }
+
             // Use **`.set(attrName, value, options)`** for setting or changing exactly one 
             // entity attribute.
             if (typeof attrs === "string") {
@@ -154,10 +158,15 @@ VIE.prototype.Entity = function(attrs, opts) {
                    } else if (value.isEntity) {
                        self.vie.entities.addOrUpdate(value);
                        var coll = new self.vie.Collection();
+                       coll.vie = self.vie;
                        coll.add(value);
                        attrs[key] = coll;
                    } else if (_.isArray(value)) {
-                       // The value is an array, ignore
+                       if (this.attributes[key] && this.attributes[key].isCollection) {
+                         var newEntities = this.attributes[key].addOrUpdate(value);
+                         attrs[key] = this.attributes[key];
+                         attrs[key].reset(newEntities);
+                       }
                    } else if (value["@value"]) {
                        // The value is a literal object, ignore
                    } else if (typeof value == "object") {
@@ -167,6 +176,7 @@ VIE.prototype.Entity = function(attrs, opts) {
                        self.vie.entities.addOrUpdate(child);
                        // and set as VIE Collection attribute on the original entity 
                        var coll = new self.vie.Collection();
+                       coll.vie = self.vie;
                        coll.add(value);
                        attrs[key] = coll;
                    } else {
@@ -188,6 +198,19 @@ VIE.prototype.Entity = function(attrs, opts) {
                 return true;
             }
             return false;
+        },
+
+        hasChanged: function(attr) {
+            if (this.markedChanged) {
+                return true;
+            }
+
+            return Backbone.Model.prototype.hasChanged.call(this, attr);
+        },
+
+        // Force hasChanged to return true
+        forceChanged: function(changed) {
+            this.markedChanged = changed ? true : false;
         },
 
         // **`getSubject()`** is the getter for the entity identifier.
@@ -417,6 +440,7 @@ VIE.prototype.Entity = function(attrs, opts) {
             }
             return false;
         },
+        
         // TODO describe
         addTo : function (collection, update) {
             var self = this;
@@ -430,7 +454,46 @@ VIE.prototype.Entity = function(attrs, opts) {
             }
             throw new Error("Please provide a proper collection of type VIE.Collection as argument!");
         },
+        
 
+// ### toString(options)  
+// This method converts an entity into a string representation.  
+// If no options are set, it tries to guess the "name" of  
+// entity with a preference on the default given attributes:  
+// `["rdfs:label", "name", "schema:name", "foaf:name", "dcterms:identifier"]`  
+// and it tries to guess the language from the browser. However,  
+// you can also specify these options to be used directly (see  
+// code example below).  
+// **Parameters**:  
+// *{object}* **options** The options to be set. (optional)  
+// *{String|object}* **options.prop** Either a string or an array of strings. (optional) 
+// *{String|object}* **options.lang** Either a string or an array of strings. (optional)  
+// **Throws**:  
+// *nothing*  
+// **Returns**:  
+// *{string}* : The string representation of the entity, 
+//              based on the options/default values.    
+// **Example usage**:  
+//
+//    var entity = vie.entities.add({"name" : "Barack Obama"});
+//    entity.toString(); // <-- "Barack Obama"
+//    entity.toString({prop : ["name"], prop : ["en"]}); // <-- "Barack Obama"
+        toString: function (options) {
+            options = (options)? options : {};
+            options.prop = (options.prop)? 
+                    options.prop : 
+                    ["rdfs:label", "name", "schema:name", "foaf:name", "dcterms:identifier"];
+            var browserLang = "en";
+            if (navigator.userLanguage) // IE
+                browserLang = navigator.userLanguage;
+            else if (navigator.language) // FF
+                browserLang = navigator.language;
+            options.lang = (options.lang)? 
+                    options.lang : 
+                    [browserLang, "en", "de", "fi", "fr", "es", "ja", "zh-tw"];
+            return VIE.Util.getPreferredLangForPreferredProperty(this, options.prop, options.lang);
+        },
+        
         isEntity: true,
 
         vie: self.vie
