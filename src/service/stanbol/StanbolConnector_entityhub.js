@@ -113,7 +113,10 @@
 		
 
 		// ### lookup(uri, success, error, options)
-		// TODO: add description  
+		// checks if an entity (specified by **uri**) is available on the local
+		// entityhub. If 'create : true' is specified in the **options** object,
+		// then the entity will be reference on the local entityhub in case it
+		// is doesn't live there already.
 		// **Parameters**:  
 		// *{string}* **uri** The URI of the entity to be loaded.  
 		// *{function}* **success** The success callback.  
@@ -156,6 +159,7 @@
 				},
 				urlIndex : 0
 			});
+			
 		},
 
 		_lookup : function (url, args, success, error) {
@@ -442,11 +446,11 @@
         //    	                 function (err) { ... },);	to create a new entity in the entityhub
         createEntity: function(entity, success, error, options) {
         	
-        	console.log("createEntity receives arguments:")
-        	console.log(entity)
-        	console.log(success)
-        	console.log(error)
-        	console.log(options)
+//        	console.log("createEntity receives arguments:")
+//        	console.log(entity)
+//        	console.log(success)
+//        	console.log(error)
+//        	console.log(options)
         	
     			options = (options)? options :  {};
 
@@ -608,7 +612,7 @@
         },
         // ### load(id, success, error, option)
 
-        // This is an alias to createEntity
+        // This is an alias to readEntity
         load: function (uri, success, error, options) {
             return this.readEntity.call(this, uri, success, error, options);
 
@@ -636,7 +640,6 @@
 //    	                 function (res) { ... },
 //    	                 function (err) { ... }, id);	to update the entity referenced by the specified ID
         updateEntity: function(entity, success, error, options, id) {
-        	// TODO access problem for method PUT
     			id = (id)? (id) :  "";
     		
     			var connector = this;
@@ -723,8 +726,6 @@
         //    	                 function (err) { ... }, 
         //        				 );						to delete the entity referenced by the specified ID
         deleteEntity: function(id, success, error, options) {
-        	// TODO access problem for method DELETE
-
     			var connector = this;
     	
     	    	connector._iterate({
@@ -798,7 +799,7 @@
     	// **Example usage**:  
     	//
         //    	     var stnblConn = new vie.StanbolConnector(opts);
-        //    	     stnblConn.deleteEntity(
+        //    	     stnblConn.getMapping(
         //    					 "http://dbpedia.org/resource/Paris",
         //    	                 function (res) { ... },
         //    	                 function (err) { ... }, 
