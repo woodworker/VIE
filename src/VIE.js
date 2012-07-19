@@ -57,7 +57,6 @@ var root = this,
 //     vie.RDFaEntities.getInstances();
 var VIE = root.VIE = function(config) {
     this.config = (config) ? config : {};
-    this.config.lang = (this.config.lang)? this.config.lang : "en";
     
     this.id = VIE.Util.UUIDGenerator();
     this.services = {};
@@ -461,16 +460,30 @@ VIE.prototype.setLang = function (lang) {
 //**Throws**:  
 //*nothing*.  
 //**Returns**:  
-//*{String}* : The default language that has been  
-//set.
+//*{String}* : The default language that has been set.
 //**Example usage**:  
 //
 //var v = new VIE();
 //v.getLang ();    // the language of the document OR "en"
 //v.setLang("de"); // accepts language codes only in ISO 639-1 format
 //v.getLang();     // "de"
-VIE.prototype.getLang = function (lang) {
-  return this.config.lang;
+VIE.prototype.getLang = function () {
+  var browserLang;
+
+  try {
+    if (this.config.lang)
+      browserLang = this.config.lang;
+    if (navigator.userLanguage) // IE
+      browserLang = navigator.userLanguage;
+    else if (navigator.language) // FF + Webkit
+      browserLang = navigator.language;
+
+    browserLang = browserLang.substring(0,2).toLowerCase();
+  } catch (exc) {
+    browserLang = "en";
+  }
+
+  return browserLang;
 };
 
 // IE per default doesn't have a console API. For making sure this doesn't break

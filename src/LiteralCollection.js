@@ -12,17 +12,21 @@
 VIE.prototype.LiteralCollection = Backbone.Collection.extend({
     model: VIE.prototype.Literal,
     
+    isLiteralCollection: true,
     
     toString: function (langs) {
         var browserLang = "en";
-        if (navigator.userLanguage) // IE
-            browserLang = navigator.userLanguage;
-        else if (navigator.language) // FF
-            browserLang = navigator.language;
-        options.lang = (options.lang)? 
-                options.lang : 
+
+        if (this.vie.getLang()) {
+
+        }
+        
+
+        var lang = (langs)? 
+                ((_.isArray(langs))? langs : [ langs ]) : 
                 [browserLang, "en", "de", "fi", "fr", "es", "ja", "zh-tw"];
-        return VIE.Util.getPreferredLangForPreferredProperty(this, options.prop, options.lang);
+
+        return VIE.Util.getPreferredLangForPreferredProperty(this, options.prop, lang);
     },
     
 });

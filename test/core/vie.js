@@ -24,6 +24,10 @@ test("vie.js API", function () {
     equal(typeof v.analyze, 'function');
     ok(v.equals);
     equal(typeof v.equals, 'function');
+    ok(v.getLang);
+    equal(typeof v.getLang, 'function');
+    ok(v.setLang);
+    equal(typeof v.setLang, 'function');
     ok(v.id);
     equal(typeof v.id, 'string');
 
@@ -557,6 +561,20 @@ test("vie.js Analyzable API - fail", 1, function () {
 });
 
 test("vie.js Analyzable API - always", 1, function () {
+    var z = new VIE();
+    z.use(new z.MockService());
+
+    stop();
+    z.analyze({mockresult: "fail"}).using("mock")
+    .always(function(result){
+        ok(true);
+        start();
+    }).execute();
+});
+
+
+
+test("vie.js Language Setter/Getter", function () {
     var z = new VIE();
     z.use(new z.MockService());
 

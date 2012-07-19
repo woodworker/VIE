@@ -80,14 +80,86 @@ test("NumberLiteral API", function () {
     equal(negIntLit.toTurtle(), "-15");
 });
 
-/*
 
 test("LiteralCollection API", function () {
     var v = new VIE();
     
     ok(v.LiteralCollection);
     equal(typeof v.LiteralCollection.toString, "function");
+
+    ok(v.isLiteralCollection);
+    equal(typeof v.isLiteralCollection, "boolean");
 });
+
+/*
+var vie = new VIE();
+vie.setLang("de-DE");
+vie.getLang();
+
+vie.entities.add(new Entity({
+    firstname: "Sebastian",
+    lastname: {value: "Germesin", lang: [undefined, "", "*", false]},
+    age: 29,
+    name: [
+        {value: "Sebastian G.", lang: "de"},
+        {value: "S. Germesin", lang: "en"},
+        {value: "S. Germesin", lang: vie.getLang()}
+        ],
+    "foaf:friend": ["<http://something.de/YourFriend>"]
+    birthDay : new Date(),
+    someIntStringValue : "123",
+    someIntegerValue : 123e10,
+    typedValue : [
+        {value: "foo", type: "http://example.org/my/datatype"},
+        {value: "bar", type: "http://example.org/my/other-datatype"}
+    ]
+));
+
+var name = vie.entities.at(0).get("name") ; <<-- LiteralCollection
+
+//name.copyValue("en", "de");
+//name.moveValue("en", "de");
+
+var friends = vie.entities.at(0).get("foaf:friend") ; <<-- Collection
+
+name.toTurtle(); <-- "\"\"\"Sebastian\"\"\"@en"
+name.toString(); <-- "Sebastian"
+
+
+
+name.availableLanguages(); <-- ["de-DE", "en-GB"];
+name.toString("fr"); <-- undefined
+name.toString("de"); <-- "de-DE"
+name.toString("en-US"); <-- undefined
+name.toString("en"); <-- "en-GB"
+
+name.availableLanguages(); <-- ["de-DE", "en-GB", "en"];
+name.toString("en-US"); <-- "en"
+name.toString("en-GB"); <-- "en-GB"
+
+name.at(0).toString();
+name.at(0).getLang(); <-- undefined, "en"
+
+name.isLiteralCollection; <<-- true
+name.at(0).isLiteral; <<-- true
+
+var firstname = vie.entities.at(0).get("firstname");
+
+firstname.add("Sebastian");
+firstname.add({value: "Sebastian", lang: "en"});
+
+firstname.availableLanguages(); ["", "en"]
+firstname.availLangs();
+
+firstname.closestLanguage("en");
+firstname.closestLang("en");
+
+firstname.get("en").set("lang", "de");
+firstname.get("en").setLang("de");
+
+*/
+
+/*
 
 test("Typed Literals", function () {
     var v = new VIE();

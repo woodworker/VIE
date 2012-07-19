@@ -47,6 +47,18 @@ VIE.prototype.Literal = function(attrs, opts) {
     return new Model(attrs, opts);
 };
 
+VIE.prototype.TypedLiteral = function(attrs, opts) {
+    var Model = new this.vie.Literal();
+    //TODO: implement me
+    return new Model(attrs, opts);
+};
+
+VIE.prototype.PlainLiteral = function(attrs, opts) {
+    var Model = new this.vie.Literal();
+    //TODO: implement me
+    return new Model(attrs, opts);
+};
+
 VIE.prototype.BooleanLiteral = function (value) {
     
     value = (value === true)? true : false;
