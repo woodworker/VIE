@@ -88,30 +88,35 @@ test("NumberLiteral - direct Instanciation", function () {
     var intLit = new v.NumberLiteral(3);
     var intLit2 = new v.NumberLiteral(3.0);
     var intLit3 = new v.NumberLiteral(3e0);
+    var intLit4 = new v.NumberLiteral({value: 3});
     var doubLit = new v.NumberLiteral(17.12);
     var negIntLit = new v.NumberLiteral(-15);
 
     ok(intLit);
     ok(intLit2);
     ok(intLit3);
+    ok(intLit4);
     ok(doubLit);
     ok(negIntLit);
 
     var inte = intLit.get();
     var inte2 = intLit2.get();
-    var inte3 = intLit2.get();
+    var inte3 = intLit3.get();
+    var inte3 = intLit4.get();
     var doub = doubLit.get();
     var negInt = negIntLit.get();
 
     equal (typeof inte, "number");
     equal (typeof inte2, "number");
     equal (typeof inte3, "number");
+    equal (typeof inte4, "number");
     equal (typeof doub, "number");
     equal (typeof negInt, "number");
     
     equal(inte, 3);
     equal(inte2, 3.0);
     equal(inte3, 3.0);
+    equal(inte4, 3.0);
     equal(inte, inte2);
     equal(inte, inte3);
     equal(doub, 17.12);
@@ -123,6 +128,8 @@ test("NumberLiteral - direct Instanciation", function () {
     equal(intLit2.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
     equal(intLit3.toString(), 3e0.toLocaleString());
     equal(intLit3.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
+    equal(intLit4.toString(), 3e0.toLocaleString());
+    equal(intLit4.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
     equal(doubLit.toString(), 17.12.toLocaleString());
     equal(doubLit.toTurtle(), "\"17.12e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
     equal(negIntLit.toString(), -15.0.toLocaleString());
@@ -162,18 +169,86 @@ test("PlainLiteral API", function () {
     ok(literal instanceof Backbone.Model);
 });
 
-test("PlainLiteral - direct Instanciation", function () {
+test("PlainLiteral - direct Instanciation / setter&getter", function () {
     var v = new VIE();
 
     var strLit1a = new v.PlainLiteral("foo");
     var strLit1b = new v.PlainLiteral({value: "foo"});
     var strLit1c = new v.PlainLiteral({value: "foo", lang : ""});
-    var strLit1d = new v.PlainLiteral({value: "foo", lang : false});
+    var strLit1d = new v.PlainLiteral({value: "foo", lang : "*"});
+    var strLit1e = new v.PlainLiteral({value: "foo", lang : false});
 
-    var strLit2 = new v.PlainLiteral({value: "foo", lang: "en"});
-    var strLit3 = new v.PlainLiteral({value: "foo", lang: "en-US"});
+    var strLit2 = new v.PlainLiteral({value: "bar", lang: "en"});
+    var strLit3 = new v.PlainLiteral({value: "baz", lang: "en-US"});
 
-    ok(false, "To be implemented!");
+    ok(strLit1a);
+    ok(strLit1b);
+    ok(strLit1c);
+    ok(strLit1d);
+    ok(strLit1e);
+    ok(strLit2);
+    ok(strLit3);
+
+    equal(strLit1a.get(), "foo");
+    equal(strLit1a.get("value"), "foo");
+    equal(strLit1a.value(), "foo");
+
+    equal(strLit1b.get(), "foo");
+    equal(strLit1b.get("value"), "foo");
+    equal(strLit1b.value(), "foo");
+
+    equal(strLit1c.get(), "foo");
+    equal(strLit1c.get("value"), "foo");
+    equal(strLit1c.value(), "foo");
+
+    equal(strLit1d.get(), "foo");
+    equal(strLit1d.get("value"), "foo");
+    equal(strLit1d.value(), "foo");
+
+    equal(strLit1e.get(), "foo");
+    equal(strLit1e.get("value"), "foo");
+    equal(strLit1e.value(), "foo");
+
+    equal(strLit1a.getLang(), undefined);
+    equal(strLit1a.get("lang"), undefined);
+    equal(strLit1b.getLang(), undefined);
+    equal(strLit1b.get("lang"), undefined);
+    equal(strLit1c.getLang(), undefined);
+    equal(strLit1c.get("lang"), undefined);
+    equal(strLit1d.getLang(), undefined);
+    equal(strLit1d.get("lang"), undefined);
+    equal(strLit1e.getLang(), undefined);
+    equal(strLit1e.get("lang"), undefined);
+
+    equal(strLit2.get(), "bar");
+    equal(strLit2.get("value"), "bar");
+    equal(strLit2.value(), "bar");
+
+    equal(strLit2.getLang(), "en");
+    equal(strLit2.get("lang"), "en");
+
+    equal(strLit3.get(), "baz");
+    equal(strLit3.get("value"), "baz");
+    equal(strLit3.value(), "baz");
+
+    equal(strLit2.getLang(), "en-US");
+    equal(strLit2.get("lang"), "en-US");
+
+    strLit2.setLang("de");
+    equal(strLit2.get("lang"), "de");
+
+    strLit2.set("lang", "fr");
+    equal(strLit2.get("lang"), "fr");
+
+    //unset language
+    strLit2.unset("lang");
+    equal(strLit2.get("lang"), undefined);
+    strLit2.set("lang", "");
+    equal(strLit2.get("lang"), undefined);
+    strLit2.set("lang", "*");
+    equal(strLit2.get("lang"), undefined);
+    strLit2.set("lang", false);
+    equal(strLit2.get("lang"), undefined);
 }); 
 
 test("LiteralCollection API", function () {
