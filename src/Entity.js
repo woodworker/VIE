@@ -194,6 +194,96 @@ VIE.prototype.Entity = function(attrs, opts) {
             }
         },
 
+        // **`.setOrAdd(arg1, arg2)`** similar to `.set(..)`, `.setOrAdd(..)` can
+        // be used for setting one or more attributes of an entity, but in
+        // this case it's a collection of values, not just one. That means, if the
+        // entity already has the attribute set, make the value to a VIE Collection
+        // and use the collection as value. The collection can contain entities
+        // or literals, but not both at the same time.
+        setOrAdd:function (arg1, arg2, option) {
+            var entity = this;
+            if (typeof arg1 === "string" && arg2) {
+                // calling entity.setOrAdd("rdfs:type", "example:Musician")
+                entity._setOrAddOne(arg1, arg2, option);
+            }
+            else if (typeof arg1 === "object") {
+                // calling entity.setOrAdd({"rdfs:type": "example:Musician", ...})
+                _(arg1).each(function (val, key) {
+                    entity._setOrAddOne(key, val, arg2);
+                });
+            }
+            return this;
+        },
+
+
+        /* attr is always of type string */
+        /* value can be of type: string,int,double,object,VIE.Entity,VIE.Collection */
+        /*  val can be of type: undefined,string,int,double,array,VIE.Collection */
+
+        /* depending on the type of value and the type of val, different actions need to be made */
+        _setOrAddOne:function (attr, value, options) {
+            if (!attr || !value)
+                return;
+            options = (options) ? options : {};
+
+            attr = VIE.Util.mapAttributeNS(attr, self.vie.namespaces);
+
+            if (_.isArray(value)) {
+                for (var v = 0; v < value.length; v++) {
+                    this._setOrAddOne(attr, value[v], options);
+                }
+                return;
+            }
+
+            if (attr === "@type" && value instanceof self.vie.Type) {
+                value = value.id;
+            }
+
+            var obj = {};
+            var existing = Backbone.Model.prototype.get.call(this, attr);
+
+            if (!existing) {
+                obj[attr] = value;
+                this.set(obj, options);
+            } else if (existing.isCollection) {
+                if (value.isCollection) {
+                    value.each(function (model) {
+                        existing.add(model);
+                    });
+                } else if (value.isEntity) {
+                    existing.add(value);
+                } else if (typeof value === "object") {
+                    value = new this.vie.Entity(value);
+                    existing.add(value);
+                } else {
+                    throw new Error("you cannot add a literal to a collection of entities!");
+                }
+                this.trigger('change:' + attr, this, value, {});
+                this.change({});
+            } else if (_.isArray(existing)) {
+                if (value.isCollection) {
+                    for (var v = 0; v < value.size(); v++) {
+                        this._setOrAddOne(attr, value.at(v).getSubject(), options);
+                    }
+                } else if (value.isEntity) {
+                    this._setOrAddOne(attr, value.getSubject(), options);
+                } else if (typeof value === "object") {
+                    value = new this.vie.Entity(value);
+                    this._setOrAddOne(attr, value, options);
+                } else {
+                    /* yes, we (have to) allow multiple equal values */
+                    existing.push(value);
+                    obj[attr] = existing;
+                    this.set(obj);
+                }
+            } else {
+                var arr = [ existing ];
+                arr.push(value);
+                obj[attr] = arr;
+                return this.set(obj, options);
+            }
+        },
+
         // **`.unset(attr, opts)` ** removes an attribute from the entity.
         unset: function (attr, opts) {
             attr = VIE.Util.mapAttributeNS(attr, self.vie.namespaces);
@@ -308,97 +398,6 @@ VIE.prototype.Entity = function(attrs, opts) {
             instanceLD['@subject'] = instance.getSubject();
 
             return instanceLD;
-        },
-
-        // **`.setOrAdd(arg1, arg2)`** similar to `.set(..)`, `.setOrAdd(..)` can 
-        // be used for setting one or more attributes of an entity, but in
-        // this case it's a collection of values, not just one. That means, if the
-        // entity already has the attribute set, make the value to a VIE Collection
-        // and use the collection as value. The collection can contain entities 
-        // or literals, but not both at the same time.
-        setOrAdd: function (arg1, arg2, option) {
-            var entity = this;
-            if (typeof arg1 === "string" && arg2) {
-                // calling entity.setOrAdd("rdfs:type", "example:Musician")
-                entity._setOrAddOne(arg1, arg2, option);
-            }
-            else
-                if (typeof arg1 === "object") {
-                    // calling entity.setOrAdd({"rdfs:type": "example:Musician", ...})
-                    _(arg1).each(function(val, key){
-                        entity._setOrAddOne(key, val, arg2);
-                    });
-                }
-            return this;
-        },
-
-
-        /* attr is always of type string */
-        /* value can be of type: string,int,double,object,VIE.Entity,VIE.Collection */
-       /*  val can be of type: undefined,string,int,double,array,VIE.Collection */
-       
-        /* depending on the type of value and the type of val, different actions need to be made */
-        _setOrAddOne: function (attr, value, options) {
-            if (!attr || !value)
-                return;
-            options = (options)? options : {};
-                
-            attr = VIE.Util.mapAttributeNS(attr, self.vie.namespaces);
-            
-            if (_.isArray(value)) {
-                for (var v = 0; v < value.length; v++) {
-                    this._setOrAddOne(attr, value[v], options);
-                }
-                return;
-            }
-            
-            if (attr === "@type" && value instanceof self.vie.Type) {
-            	value = value.id;
-            }
-            
-            var obj = {};
-            var existing = Backbone.Model.prototype.get.call(this, attr);
-            
-            if (!existing) {
-                obj[attr] = value;
-                this.set(obj, options);
-            } else if (existing.isCollection) {
-                if (value.isCollection) {
-                    value.each(function (model) {
-                        existing.add(model);
-                    });
-                } else if (value.isEntity) {
-                    existing.add(value);
-                } else if (typeof value === "object") {
-                    value = new this.vie.Entity(value);
-                    existing.add(value);
-                } else {
-                    throw new Error("you cannot add a literal to a collection of entities!");
-                }
-                this.trigger('change:' + attr, this, value, {});
-                this.change({});
-            } else if (_.isArray(existing)) {
-                if (value.isCollection) {
-                	for (var v = 0; v < value.size(); v++) {
-                		this._setOrAddOne(attr, value.at(v).getSubject(), options);
-                	}
-                } else if (value.isEntity) {
-                	this._setOrAddOne(attr, value.getSubject(), options);
-                } else if (typeof value === "object") {
-                	value = new this.vie.Entity(value);
-                	this._setOrAddOne(attr, value, options);
-                } else {
-                    /* yes, we (have to) allow multiple equal values */
-                    existing.push(value);
-                    obj[attr] = existing;
-                    this.set(obj);
-                }
-            } else {
-                var arr = [ existing ];
-                arr.push(value);
-                obj[attr] = arr;
-                return this.set(obj, options);
-            }
         },
 
         // **`.hasType(type)`** determines if the entity has the explicit `type` set.
