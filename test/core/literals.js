@@ -89,32 +89,37 @@ test("NumberLiteral - direct Instanciation", function () {
     var intLit2 = new v.NumberLiteral(3.0);
     var intLit3 = new v.NumberLiteral(3e0);
     var doubLit = new v.NumberLiteral(17.12);
+    var thouLit = new v.NumberLiteral(3200);
     var negIntLit = new v.NumberLiteral(-15);
 
     ok(intLit);
     ok(intLit2);
     ok(intLit3);
     ok(doubLit);
+    ok(thouLit);
     ok(negIntLit);
 
     var inte = intLit.get();
     var inte2 = intLit2.get();
     var inte3 = intLit2.get();
     var doub = doubLit.get();
+    var thou = thouLit.get();
     var negInt = negIntLit.get();
 
     equal (typeof inte, "number");
     equal (typeof inte2, "number");
     equal (typeof inte3, "number");
     equal (typeof doub, "number");
+    equal (typeof thou, "number");
     equal (typeof negInt, "number");
-    
+
     equal(inte, 3);
     equal(inte2, 3.0);
     equal(inte3, 3.0);
     equal(inte, inte2);
     equal(inte, inte3);
     equal(doub, 17.12);
+    equal(thou, 3200);
     equal(negInt, -15);
 
     equal(intLit.toString(), 3.0.toLocaleString());
@@ -125,6 +130,8 @@ test("NumberLiteral - direct Instanciation", function () {
     equal(intLit3.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
     equal(doubLit.toString(), 17.12.toLocaleString());
     equal(doubLit.toTurtle(), "\"17.12e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
+    equal(thouLit.toString(), (3200).toLocaleString());
+    equal(thouLit.toTurtle(), "\"3200e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
     equal(negIntLit.toString(), -15.0.toLocaleString());
     equal(negIntLit.toTurtle(), "\"-15e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
 });
@@ -178,7 +185,7 @@ test("PlainLiteral - direct Instanciation", function () {
 
 test("LiteralCollection API", function () {
     var v = new VIE();
-    
+
     ok(v.LiteralCollection);
     equal(typeof v.LiteralCollection, "function");
 
