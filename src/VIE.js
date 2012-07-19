@@ -71,6 +71,9 @@ var VIE = root.VIE = function(config) {
     this.Literal.prototype.vie = this;
     this.PlainLiteral.prototype.vie = this;
     this.TypedLiteral.prototype.vie = this;
+    this.BooleanLiteral.prototype.vie = this;
+    this.NumberLiteral.prototype.vie = this;
+    this.DateLiteral.prototype.vie = this;
     
     this.Namespaces.prototype.vie = this;
 // ### Namespaces in VIE

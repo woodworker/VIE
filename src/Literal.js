@@ -67,7 +67,7 @@ VIE.prototype.BooleanLiteral = function (value) {
     
     value = (value === true)? true : false;
     
-    var model = new this.vie.Literal();
+    var model = new this.vie.TypedLiteral();
     
     _.extend(model, {
         
@@ -141,7 +141,9 @@ VIE.prototype.StringLiteral = function (value) {
 
 VIE.prototype.DateLiteral = function (value) {
     
-    if (value instanceof Date ||
+    if (!value) {
+        value = new Date();
+    } else if (value instanceof Date ||
         value instanceof String) {
         value = new Date(value);
     } else {

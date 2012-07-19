@@ -13,21 +13,30 @@ VIE.prototype.LiteralCollection = Backbone.Collection.extend({
     model: VIE.prototype.Literal,
     
     isLiteralCollection: true,
-    
-    toString: function (langs) {
-        var browserLang = "en";
 
-        if (this.vie.getLang()) {
-
-        }
-        
-
-        var lang = (langs)? 
-                ((_.isArray(langs))? langs : [ langs ]) : 
-                [browserLang, "en", "de", "fi", "fr", "es", "ja", "zh-tw"];
-
-        return VIE.Util.getPreferredLangForPreferredProperty(this, options.prop, lang);
+    add: function (obj) {
+        Backbone.Collection.prototype.add.call(this, obj);
     },
+
+    availableLanguages : function () {
+        throw new Error("Not Yet Implemented!");
+    },
+
+    closestLanguage : function (lang) {
+        throw new Error("Not Yet Implemented!");
+    },
+
+    get: function (param) {
+        throw new Error("Not Yet Implemented!");
+    },
+
+    toString: function (lang) {
+        throw new Error("Not Yet Implemented!");
+    },
+
+    toTurtle: function (lang) {
+        throw new Error("Not Yet Implemented!");
+    }
     
 });
     

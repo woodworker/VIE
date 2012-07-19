@@ -11,18 +11,6 @@ test("Literal API", function () {
     ok(literal instanceof Backbone.Model);
 });
 
-test("PlainLiteral API", function () {
-    var v = new VIE();
-    ok(v.PlainLiteral);
-    
-    var literal = new v.PlainLiteral();
-    equal(typeof literal.toString, "function");
-    equal(typeof literal.toTurtle, "function");
-    equal(typeof literal.isLiteral, "boolean");
-    equal(typeof literal.isPlainLiteral, "boolean");
-    ok(literal instanceof Backbone.Model);
-});
-
 test("TypedLiteral API", function () {
     var v = new VIE();
     ok(v.TypedLiteral);
@@ -31,7 +19,7 @@ test("TypedLiteral API", function () {
     equal(typeof literal.toString, "function");
     equal(typeof literal.toTurtle, "function");
     equal(typeof literal.isLiteral, "boolean");
-    equal(typeof literal.isTypedLiteral, "boolean");
+    ok(literal.isTypedLiteral);
     
     ok(literal instanceof Backbone.Model);
 });
@@ -44,13 +32,13 @@ test("BooleanLiteral API", function () {
     equal(typeof literal.toString, "function");
     equal(typeof literal.toTurtle, "function");
     equal(typeof literal.isLiteral, "boolean");
-    equal(typeof literal.isTypedLiteral, "boolean");
-    equal(typeof literal.isBooleanLiteral, "boolean");
+    ok(literal.isTypedLiteral);
+    ok(literal.isBoolean);
     
     ok(literal instanceof Backbone.Model);
 });
 
-test("Boolean Literal - Instanceation", function () {
+test("Boolean Literal - direct Instanciation", function () {
     var v = new VIE();
 
     ok(v.BooleanLiteral);
@@ -73,59 +61,185 @@ test("Boolean Literal - Instanceation", function () {
     equal(fa2, false);
 
     equal(trueLit.toString(), "true");
-    equal(trueLit.toTurtle(), "true");
+    equal(trueLit.toTurtle(), "\"true\"^^<http://www.w3.org/2001/XMLSchema#boolean>");
     equal(falseLit.toString(), "false");
-    equal(falseLit.toTurtle(), "false");
+    equal(falseLit.toTurtle(), "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>");
     equal(falseNosetLit.toString(), "false");
-    equal(falseNosetLit.toTurtle(), "false");
+    equal(falseNosetLit.toTurtle(), "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>");
 });
-
 
 test("NumberLiteral API", function () {
     var v = new VIE();
-
     ok(v.NumberLiteral);
-    var numberliteral = new v.NumberLiteral();
-    ok(numberliteral.isLiteral);
-    ok(numberliteral instanceof Backbone.Model);
-    equal(typeof numberliteral.toString, "function");
-    equal(typeof numberliteral.toTurtle, "function");
+    
+    var literal = new v.NumberLiteral();
+    equal(typeof literal.toString, "function");
+    equal(typeof literal.toTurtle, "function");
+    equal(typeof literal.isLiteral, "boolean");
+    ok(literal.isTypedLiteral);
+    ok(literal.isNumberLiteral);
+    
+    ok(literal instanceof Backbone.Model);
+});
+
+test("NumberLiteral - direct Instanciation", function () {
+    var v = new VIE();
+
     var intLit = new v.NumberLiteral(3);
+    var intLit2 = new v.NumberLiteral(3.0);
+    var intLit3 = new v.NumberLiteral(3e0);
     var doubLit = new v.NumberLiteral(17.12);
     var negIntLit = new v.NumberLiteral(-15);
 
     ok(intLit);
+    ok(intLit2);
+    ok(intLit3);
     ok(doubLit);
     ok(negIntLit);
+
     var inte = intLit.get();
+    var inte2 = intLit2.get();
+    var inte3 = intLit2.get();
     var doub = doubLit.get();
     var negInt = negIntLit.get();
 
     equal (typeof inte, "number");
+    equal (typeof inte2, "number");
+    equal (typeof inte3, "number");
     equal (typeof doub, "number");
     equal (typeof negInt, "number");
     
     equal(inte, 3);
+    equal(inte2, 3.0);
+    equal(inte3, 3.0);
+    equal(inte, inte2);
+    equal(inte, inte3);
     equal(doub, 17.12);
     equal(negInt, -15);
 
-    equal(intLit.toString(), "3");
-    equal(intLit.toTurtle(), "3");
+    equal(intLit.toString(), 3.0.toLocaleString());
+    equal(intLit.toTurtle(),  "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
+    equal(intLit2.toString(), 3.0.toLocaleString());
+    equal(intLit2.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
+    equal(intLit3.toString(), 3e0.toLocaleString());
+    equal(intLit3.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
     equal(doubLit.toString(), 17.12.toLocaleString());
-    equal(doubLit.toTurtle(), "17.12");
-    equal(negIntLit.toString(), "-15");
-    equal(negIntLit.toTurtle(), "-15");
+    equal(doubLit.toTurtle(), "\"17.12e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
+    equal(negIntLit.toString(), -15.0.toLocaleString());
+    equal(negIntLit.toTurtle(), "\"-15e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
 });
 
+test("DateLiteral API", function () {
+    var v = new VIE();
+    ok(v.DateLiteral);
+    
+    var literal = new v.DateLiteral();
+    equal(typeof literal.toString, "function");
+    equal(typeof literal.toTurtle, "function");
+    equal(typeof literal.isLiteral, "boolean");
+    ok(literal.isTypedLiteral);
+    ok(literal.isDateLiteral);
+    
+    ok(literal instanceof Backbone.Model);
+});
+
+test("DateLiteral - direct Instanciation", function () {
+    var v = new VIE();
+
+    ok(false, "To be implemented!");
+}); 
+
+test("PlainLiteral API", function () {
+    var v = new VIE();
+    ok(v.PlainLiteral);
+    
+    var literal = new v.PlainLiteral();
+    equal(typeof literal.toString, "function");
+    equal(typeof literal.toTurtle, "function");
+    equal(typeof literal.isLiteral, "boolean");
+    ok(literal.isPlainLiteral);
+
+    ok(literal instanceof Backbone.Model);
+});
+
+test("PlainLiteral - direct Instanciation", function () {
+    var v = new VIE();
+
+    var strLit1a = new v.PlainLiteral("foo");
+    var strLit1b = new v.PlainLiteral({value: "foo"});
+    var strLit1c = new v.PlainLiteral({value: "foo", lang : ""});
+    var strLit1d = new v.PlainLiteral({value: "foo", lang : false});
+
+    var strLit2 = new v.PlainLiteral({value: "foo", lang: "en"});
+    var strLit3 = new v.PlainLiteral({value: "foo", lang: "en-US"});
+
+    ok(false, "To be implemented!");
+}); 
 
 test("LiteralCollection API", function () {
     var v = new VIE();
     
     ok(v.LiteralCollection);
-    equal(typeof v.LiteralCollection.toString, "function");
+    equal(typeof v.LiteralCollection, "function");
 
-    //ok(v.isLiteralCollection);
-    //equal(typeof v.isLiteralCollection, "boolean");
+    var collection = new v.LiteralCollection();
+    ok(collection);
+    ok(collection.isLiteralCollection);
+    equal(typeof collection.isLiteralCollection, "boolean");
+    equal(typeof collection.availableLanguages, "function");
+    equal(typeof collection.closestLanguage, "function");
+    equal(typeof collection.toString, "function");
+    equal(typeof collection.toTurtle, "function");
+});
+
+
+test("LiteralCollection - TypedLiteral - Adding & Removing", function () {
+
+    var v = new VIE();
+
+    var collection = new v.LiteralCollection();
+
+    var intLit = new v.NumberLiteral(3);
+    var intLit2 = new v.NumberLiteral(5);
+
+    collection.add(intLit);
+    equal(collection.size(), 1);
+
+    collection.add(intLit2);
+    equal(collection.size(), 2);
+
+    collection.remove(intLit);
+    equal(collection.size(), 1);
+
+    collection.add(3); //should internally create a NumberLiteral
+    equal(collection.size(), 2);
+    ok(collection.at(1).isNumberLiteral);
+
+});
+
+test("LiteralCollection - PlainLiteral - Adding & Removing", function () {
+
+    var v = new VIE();
+
+    var collection = new v.LiteralCollection();
+
+    var strLit = new v.PlainLiteral("foo");
+    var strLit2 = new v.PlainLiteral("bar");
+    var strLit3 = new v.PlainLiteral({value : "baz", lang: "de-DE"});
+
+    collection.add(intLit);
+    equal(collection.size(), 1);
+
+    collection.add(intLit2);
+    equal(collection.size(), 2);
+
+    collection.remove(intLit);
+    equal(collection.size(), 1);
+
+    collection.add(3); //should internally create a NumberLiteral
+    equal(collection.size(), 2);
+    ok(collection.at(1).isNumberLiteral);
+
 });
 /*
 
@@ -213,22 +327,3 @@ firstname.get("en").set("lang", "de");
 firstname.get("en").setLang("de");
 
 */
-
-/*
-
-test("Typed Literals", function () {
-    var v = new VIE();
-    
-    var intLit = new v.IntegerLiteral(3);
-    ok(intLit);
-    equ(intLit.toString)
-    
-    ok(v.Literal);
-    ok(v.IntegerLiteral);
-    ok(v.DoubleLiteral);
-    ok(v.DatatypeLiteral);
-    ok(v.StringLiteral);
-    
-    ok(v.LiteralCollection);    
-});
- */
