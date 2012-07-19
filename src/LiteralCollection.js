@@ -19,7 +19,16 @@ VIE.prototype.LiteralCollection = Backbone.Collection.extend({
     },
 
     availableLanguages : function () {
-        throw new Error("Not Yet Implemented!");
+
+        this.models.reduce(function (memo, literal) {
+            var lang = literal.getLang();
+            lang = (lang)? lang : "";
+
+            if (_.indexOf(memo, lang) === -1)
+                memo.push(lang);
+
+            return memo;
+        }, []);
     },
 
     closestLanguage : function (lang) {

@@ -33,7 +33,7 @@ test("BooleanLiteral API", function () {
     equal(typeof literal.toTurtle, "function");
     equal(typeof literal.isLiteral, "boolean");
     ok(literal.isTypedLiteral);
-    ok(literal.isBoolean);
+    equal(literal.type, "<http://www.w3.org/2001/XMLSchema#boolean>");
     
     ok(literal instanceof Backbone.Model);
 });
@@ -77,7 +77,7 @@ test("NumberLiteral API", function () {
     equal(typeof literal.toTurtle, "function");
     equal(typeof literal.isLiteral, "boolean");
     ok(literal.isTypedLiteral);
-    ok(literal.isNumberLiteral);
+    equal(literal.type, "<http://www.w3.org/2001/XMLSchema#number>");
     
     ok(literal instanceof Backbone.Model);
 });
@@ -128,19 +128,19 @@ test("NumberLiteral - direct Instanciation", function () {
     equal(negInt, -15);
 
     equal(intLit.toString(), (3).toLocaleString());
-    equal(intLit.toTurtle(),  "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
+    equal(intLit.toTurtle(),  "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#number>");
     equal(intLit2.toString(), 3.0.toLocaleString());
-    equal(intLit2.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
+    equal(intLit2.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#number>");
     equal(intLit3.toString(), 3e0.toLocaleString());
-    equal(intLit3.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
+    equal(intLit3.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#number>");
     equal(intLit4.toString(), 3e0.toLocaleString());
-    equal(intLit4.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
+    equal(intLit4.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#number>");
     equal(doubLit.toString(), 17.12.toLocaleString());
-    equal(doubLit.toTurtle(), "\"17.12e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
+    equal(doubLit.toTurtle(), "\"17.12e0\"^^<http://www.w3.org/2001/XMLSchema#number>");
     equal(thouLit.toString(), (3200).toLocaleString());
-    equal(thouLit.toTurtle(), "\"3200e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
+    equal(thouLit.toTurtle(), "\"3200e0\"^^<http://www.w3.org/2001/XMLSchema#number>");
     equal(negIntLit.toString(), (-15).toLocaleString());
-    equal(negIntLit.toTurtle(), "\"-15e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
+    equal(negIntLit.toTurtle(), "\"-15e0\"^^<http://www.w3.org/2001/XMLSchema#number>");
 });
 
 test("DateLiteral API", function () {
@@ -152,7 +152,7 @@ test("DateLiteral API", function () {
     equal(typeof literal.toTurtle, "function");
     equal(typeof literal.isLiteral, "boolean");
     ok(literal.isTypedLiteral);
-    ok(literal.isDateLiteral);
+    equal(literal.type, "<http://www.w3.org/2001/XMLSchema#dateTime>");
     
     ok(literal instanceof Backbone.Model);
 });
@@ -308,21 +308,60 @@ test("LiteralCollection - PlainLiteral - Adding & Removing", function () {
     var strLit = new v.PlainLiteral("foo");
     var strLit2 = new v.PlainLiteral("bar");
     var strLit3 = new v.PlainLiteral({value : "baz", lang: "de-DE"});
+    var strLit4 = new v.PlainLiteral({value : "baz", lang: "fr"});
 
-    collection.add(intLit);
-    equal(collection.size(), 1);
+    collection.add(strLit3);
+    collection.add(strLit4);
 
-    collection.add(intLit2);
-    equal(collection.size(), 2);
+    equal(colleciton.availableLanguages, ["de-DE", "fr"];
 
-    collection.remove(intLit);
-    equal(collection.size(), 1);
+    collection.add(strLit);
 
-    collection.add(3); //should internally create a NumberLiteral
-    equal(collection.size(), 2);
-    ok(collection.at(1).isNumberLiteral);
+    equal(colleciton.availableLanguages, ["", "de-DE", "fr"];
+
+    collection.add(strLit2);
+
+    equal(colleciton.availableLanguages, ["", "de-DE", "fr"];
+
+    strLit4.setLang("es");
+    equal(colleciton.availableLanguages, ["", "de-DE", "es"];
 
 });
+
+test("Literals - Entity set/get", function () {
+    var v = new VIE();
+
+    var entity = new vie.Entity({
+        firstname: "Sebastian",
+        lastname: {value: "Germesin", lang: false},
+        age: 29,
+        today: new Date(),
+        someNumber : new vie.NumberLiteral(42),
+        name: [
+            {value: "Sebastian G.", lang: "de"},
+            {value: "S. Germesin", lang: "en"},
+            {value: "S. Germesin", lang: vie.getLang()}
+        ],
+        "foaf:friend": ["<http://something.de/YourFriend>"]
+        birthDay : new Date(),
+        someIntStringValue : "123",
+        someIntegerValue : 123e10,
+        typedValue : [
+            {value: "foo", type: "http://example.org/my/datatype"},
+            {value: "bar", type: "http://example.org/my/other-datatype"}
+        ]
+    });
+
+    equal(entity.get("name"), undefined);
+
+    entity.set("name", "Sebastian");
+    var name = entity.get("name");
+    ok(name);
+    ok(name.isLiteralCollection);
+
+
+});
+
 /*
 
 var entity = ...;
@@ -340,31 +379,6 @@ entity.setOrAdd("friend", {name: "Szaby", age: 35});
 var entity = new vie.Entity({name: "Szaby", age: 35});
 vie.entities.add(entity);
 
-
-enity.get("name"); <-- LiteralCollection (Szaby);
-
-var vie = new VIE();
-vie.setLang("de-DE");
-vie.getLang();
-
-vie.entities.add(new Entity({
-    firstname: "Sebastian",
-    lastname: {value: "Germesin", lang: [undefined, "", "*", false]},
-    age: 29,
-    name: [
-        {value: "Sebastian G.", lang: "de"},
-        {value: "S. Germesin", lang: "en"},
-        {value: "S. Germesin", lang: vie.getLang()}
-        ],
-    "foaf:friend": ["<http://something.de/YourFriend>"]
-    birthDay : new Date(),
-    someIntStringValue : "123",
-    someIntegerValue : 123e10,
-    typedValue : [
-        {value: "foo", type: "http://example.org/my/datatype"},
-        {value: "bar", type: "http://example.org/my/other-datatype"}
-    ]
-));
 
 var name = vie.entities.at(0).get("name") ; <<-- LiteralCollection
 
