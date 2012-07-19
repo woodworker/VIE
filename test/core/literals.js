@@ -313,36 +313,69 @@ test("LiteralCollection - PlainLiteral - Adding & Removing", function () {
     collection.add(strLit3);
     collection.add(strLit4);
 
-    equal(colleciton.availableLanguages, ["de-DE", "fr"];
+    equal(collection.availableLanguages, ["de-DE", "fr"]);
 
     collection.add(strLit);
 
-    equal(colleciton.availableLanguages, ["", "de-DE", "fr"];
+    equal(collection.availableLanguages, ["", "de-DE", "fr"]);
 
     collection.add(strLit2);
 
-    equal(colleciton.availableLanguages, ["", "de-DE", "fr"];
+    equal(collection.availableLanguages, ["", "de-DE", "fr"]);
 
     strLit4.setLang("es");
-    equal(colleciton.availableLanguages, ["", "de-DE", "es"];
+    equal(collection.availableLanguages, ["", "de-DE", "es"]);
 
 });
 
 test("Literals - Entity set/get", function () {
     var v = new VIE();
 
+    var p = new vie.Entity( {
+        "@subject" : "_:bnode0",
+
+        text : "lorem",
+        position: 1
+    });
+
+    var p2 = new vie.Entity( {
+        "@subject" : "_:bnode1",
+
+        text : "ipsum",
+        position: 2
+    });
+
+    vie.entities.add(p);
+    vie.entities.add(p2);
+
     var entity = new vie.Entity({
+        "@type": "Post",
+
+        paragraphs : ["_:bnode0", "_:bnode1"]
+    });
+
+    ok(entity.get("paragraphs").isCollection);
+    ok(entity.get("paragraphs").size(), 2);
+    equal(entity.get("paragraphs").at(0).getSubjectUri(), "_:bnode0");
+    ok(entity.get("paragraphs").at(0).get("text").isLiteralCollection);
+    equal(entity.get("paragraphs").at(0).get("text").at(0).toString(), "lorem");
+
+});
+    
+test("Literals - Entity set/get (cont.d)", function () {
+    var v = new VIE();
+
+    var entity = new v.Entity({
         firstname: "Sebastian",
         lastname: {value: "Germesin", lang: false},
         age: 29,
         today: new Date(),
         someNumber : new vie.NumberLiteral(42),
         name: [
-            {value: "Sebastian G.", lang: "de"},
-            {value: "S. Germesin", lang: "en"},
-            {value: "S. Germesin", lang: vie.getLang()}
+            {value: "Sebastian G.", lang: "de-DE"},
+            {value: "S. Germesin", lang: "fr"},
+            {value: "S. Germesin", lang: v.getLang()}
         ],
-        "foaf:friend": ["<http://something.de/YourFriend>"]
         birthDay : new Date(),
         someIntStringValue : "123",
         someIntegerValue : 123e10,
@@ -352,14 +385,32 @@ test("Literals - Entity set/get", function () {
         ]
     });
 
-    equal(entity.get("name"), undefined);
+    var firstname = entity.get("firstname");
+    var lastname = entity.get("lastname");
+    var age = entity.get("age");
+    var today = entity.get("today");
+    var someNumber = entity.get("someNumber");
 
-    entity.set("name", "Sebastian");
     var name = entity.get("name");
-    ok(name);
+    var birthDay = entity.get("birthDay");
+
+    var someIntStringValue = entity.get("someIntStringValue");
+    var someIntegerValue = entity.get("someIntegerValue");
+
+    var typedValue = entity.get("typedValue");
+
+    ok(firstname.isLiteralCollection);
+    ok(lastname.isLiteralCollection);
+    ok(age.isLiteralCollection);
+    ok(today.isLiteralCollection);
+    ok(someNumber.isLiteralCollection);
     ok(name.isLiteralCollection);
+    ok(birthDay.isLiteralCollection);
+    ok(someIntStringValue.isLiteralCollection);
+    ok(someIntegerValue.isLiteralCollection);
+    ok(typedValue.isLiteralCollection);
 
-
+    //TODO!
 });
 
 /*
@@ -389,7 +440,6 @@ var friends = vie.entities.at(0).get("foaf:friend") ; <<-- Collection
 
 name.toTurtle(); <-- "\"\"\"Sebastian\"\"\"@en"
 name.toString(); <-- "Sebastian"
-
 
 
 name.availableLanguages(); <-- ["de-DE", "en-GB"];
