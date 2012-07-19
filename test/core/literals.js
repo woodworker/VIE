@@ -127,7 +127,7 @@ test("NumberLiteral - direct Instanciation", function () {
     equal(thou, 3200);
     equal(negInt, -15);
 
-    equal(intLit.toString(), 3.0.toLocaleString());
+    equal(intLit.toString(), (3).toLocaleString());
     equal(intLit.toTurtle(),  "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
     equal(intLit2.toString(), 3.0.toLocaleString());
     equal(intLit2.toTurtle(), "\"3e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
@@ -139,7 +139,7 @@ test("NumberLiteral - direct Instanciation", function () {
     equal(doubLit.toTurtle(), "\"17.12e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
     equal(thouLit.toString(), (3200).toLocaleString());
     equal(thouLit.toTurtle(), "\"3200e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
-    equal(negIntLit.toString(), -15.0.toLocaleString());
+    equal(negIntLit.toString(), (-15).toLocaleString());
     equal(negIntLit.toTurtle(), "\"-15e0\"^^<http://www.w3.org/2001/XMLSchema#double>");
 });
 
