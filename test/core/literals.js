@@ -11,15 +11,51 @@ test("Literal API", function () {
     ok(literal instanceof Backbone.Model);
 });
 
-test("Boolean Literal API", function () {
+test("PlainLiteral API", function () {
+    var v = new VIE();
+    ok(v.PlainLiteral);
+    
+    var literal = new v.PlainLiteral();
+    equal(typeof literal.toString, "function");
+    equal(typeof literal.toTurtle, "function");
+    equal(typeof literal.isLiteral, "boolean");
+    equal(typeof literal.isPlainLiteral, "boolean");
+    ok(literal instanceof Backbone.Model);
+});
+
+test("TypedLiteral API", function () {
+    var v = new VIE();
+    ok(v.TypedLiteral);
+    
+    var literal = new v.TypedLiteral();
+    equal(typeof literal.toString, "function");
+    equal(typeof literal.toTurtle, "function");
+    equal(typeof literal.isLiteral, "boolean");
+    equal(typeof literal.isTypedLiteral, "boolean");
+    
+    ok(literal instanceof Backbone.Model);
+});
+
+test("BooleanLiteral API", function () {
+    var v = new VIE();
+    ok(v.BooleanLiteral);
+    
+    var literal = new v.BooleanLiteral();
+    equal(typeof literal.toString, "function");
+    equal(typeof literal.toTurtle, "function");
+    equal(typeof literal.isLiteral, "boolean");
+    equal(typeof literal.isTypedLiteral, "boolean");
+    equal(typeof literal.isBooleanLiteral, "boolean");
+    
+    ok(literal instanceof Backbone.Model);
+});
+
+test("Boolean Literal - Instanceation", function () {
     var v = new VIE();
 
     ok(v.BooleanLiteral);
     var booleanliteral = new v.BooleanLiteral();
-    ok(booleanliteral.isLiteral);
-    ok(booleanliteral instanceof Backbone.Model);
-    equal(typeof booleanliteral.toString, "function");
-    equal(typeof booleanliteral.toTurtle, "function");
+    
     var trueLit = new v.BooleanLiteral(true);
     var falseLit = new v.BooleanLiteral(false);
     var falseNosetLit = new v.BooleanLiteral();
@@ -27,6 +63,7 @@ test("Boolean Literal API", function () {
     ok(trueLit);
     ok(falseLit);
     ok(falseNosetLit);
+    
     var tr = trueLit.get();
     var fa = falseLit.get();
     var fa2 = falseNosetLit.get();
@@ -74,7 +111,7 @@ test("NumberLiteral API", function () {
 
     equal(intLit.toString(), "3");
     equal(intLit.toTurtle(), "3");
-    equal(doubLit.toString(), "17.12");
+    equal(doubLit.toString(), 17.12.toLocaleString());
     equal(doubLit.toTurtle(), "17.12");
     equal(negIntLit.toString(), "-15");
     equal(negIntLit.toTurtle(), "-15");

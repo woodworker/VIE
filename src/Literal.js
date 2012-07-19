@@ -48,15 +48,19 @@ VIE.prototype.Literal = function(attrs, opts) {
 };
 
 VIE.prototype.TypedLiteral = function(attrs, opts) {
-    var Model = new this.vie.Literal();
+    var model = new this.vie.Literal();
+
+    _.extend(model, {});
     //TODO: implement me
-    return new Model(attrs, opts);
+    return model.set(attrs);
 };
 
 VIE.prototype.PlainLiteral = function(attrs, opts) {
-    var Model = new this.vie.Literal();
+    var model = new this.vie.Literal();
+
+    _.extend(model, {});
     //TODO: implement me
-    return new Model(attrs, opts);
+    return model.set(attrs);
 };
 
 VIE.prototype.BooleanLiteral = function (value) {
