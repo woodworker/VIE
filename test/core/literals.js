@@ -90,8 +90,26 @@ test("LiteralCollection API", function () {
     ok(v.isLiteralCollection);
     equal(typeof v.isLiteralCollection, "boolean");
 });
-
 /*
+
+var entity = ...;
+
+entity.set("name", "Sebastian");
+entity.setOrAdd("name", {value: "Szaby", lang: "fr"});
+entity.setOrAdd("name", 3010201);
+entity.setOrAdd("name", new Date());
+entity.setOrAdd("name", true);
+
+entity.setOrAdd("friend", vie.entities.at(0));
+entity.setOrAdd("friend", vie.entities.at(0).id);
+entity.setOrAdd("friend", {name: "Szaby", age: 35});
+
+var entity = new vie.Entity({name: "Szaby", age: 35});
+vie.entities.add(entity);
+
+
+enity.get("name"); <-- LiteralCollection (Szaby);
+
 var vie = new VIE();
 vie.setLang("de-DE");
 vie.getLang();
