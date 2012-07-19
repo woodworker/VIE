@@ -41,21 +41,48 @@ VIE.prototype.Literal = function(attrs, opts) {
         },
         
         isLiteral : true,
+        isTypedLiteral: false,
+        isPlainLiteral: false,
         vie : self.vie
     });
     
     return new Model(attrs, opts);
 };
 
-VIE.prototype.TypedLiteral = function(attrs, opts) {
-    var Model = new this.vie.Literal();
-    //TODO: implement me
-    return new Model(attrs, opts);
+VIE.prototype.PlainLiteral = function (value) {
+
+    value = (value)? value : "";
+
+    var model = new this.vie.Literal();
+
+    _.extend(model, {
+
+        toString : function (lang) {
+            return this.get(lang);
+        },
+
+        toTurtle : function (lang) {
+            lang = (lang)? lang : this.vie.getLang();
+            return "\"\"\"" + this.toString(lang) + "\"\"\"" + "@" + lang;
+        },
+        isPlainLiteral: true
+    });
+
+    model.set(value);
+
+    return model;
 };
 
-VIE.prototype.PlainLiteral = function(attrs, opts) {
+VIE.prototype.TypedLiteral = function(attrs, opts) {
     var Model = new this.vie.Literal();
-    //TODO: implement me
+
+    _.extend(Model, {
+        _buildTurtleString : function(lang , type) {
+            return this.toString() + "^^<"+type+">";
+        },
+        isTypedLiteral: false
+    });
+
     return new Model(attrs, opts);
 };
 
@@ -112,29 +139,6 @@ VIE.prototype.NumberLiteral = function (value) {
     return model;
 };
 
-VIE.prototype.StringLiteral = function (value) {
-    
-    value = (value)? value : "";
-    
-    var model = new this.vie.Literal();
-    
-    _.extend(model, {
-        
-        toString : function (lang) { 
-            return this.get(lang);
-        },
-        
-        toTurtle : function (lang) {
-            lang = (lang)? lang : this.vie.getLang();
-            return "\"\"\"" + this.toString(lang) + "\"\"\"" + "@" + lang;
-        }
-    });
-    
-    model.set(value);
-    
-    return model;
-};
-
 VIE.prototype.DateLiteral = function (value) {
     
     if (value instanceof Date ||
@@ -144,16 +148,15 @@ VIE.prototype.DateLiteral = function (value) {
         throw new Error ("Invalid dateformat '" + value + "'");
     }
     
-    var model = new this.vie.Literal();
+    var model = new this.vie.TypedLiteral();
     
     _.extend(model, {
-        
         toString : function (lang) { 
             return this.get(lang).toISOString();
         },
         
         toTurtle : function (lang) {
-            return this.toString(lang) + "^^<http://www.w3.org/2001/XMLSchema#dateTime>";
+            return this.buildTurtleString(lang, "http://www.w3.org/2001/XMLSchema#dateTime");
         }
     });
     
