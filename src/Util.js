@@ -142,7 +142,7 @@ VIE.Util = {
 //     VIE.Util.isUri(uri);  // --> true
 //     VIE.Util.isUri(curie);// --> false
     isUri : function (something) {
-        return (typeof something === "string" && something.search(/^<.+>$/) === 0);
+        return (_.isString( something ) && (something.search(/^<.+>$/) === 0 || something.search(/^_:.+$/) === 0));
     },
 
 // ### VIE.Util.mapAttributeNS(attr, ns)

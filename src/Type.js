@@ -234,7 +234,11 @@ VIE.prototype.Type = function (id, attrs) {
         }
         return obj;
     };
-    
+ 
+var PersonModel = v.getTypedEntityClass("Person");
+
+var Person = new PersonModel({"name" : "Sebastian"});
+
 // ### instance()
 // This method creates a ```VIE.Entity``` instance from this type.
 // **Parameters**:  
