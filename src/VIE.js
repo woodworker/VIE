@@ -442,13 +442,17 @@ VIE.prototype.equals = function(vieInstance) {
 //
 //var v = new VIE();
 //v.getLang ();    // the language of the document OR "en"
-//v.setLang("de"); // accepts language codes only in ISO 639-1 format
+//v.setLang("de"); // accepts language codes in ISO 639-1 format 
 //v.getLang();     // "de"
+//v.setLang("de-DE"); // OR in format ISO 639-1 + '-' ISO 3166-1 alpha-2
+//v.getLang();     // "de-DE"
 VIE.prototype.setLang = function (lang) {
     /* [a-z]+ ('-' [a-z0-9]+ )* */
     if (lang && 
-        lang.match(/[a-z]{2}/) !== null && 
-        lang.length === 2)
+        (lang.match(/[a-z]{2}/) !== null && 
+        lang.length === 2) ||
+        (lang.match(/[a-z]{2}\-[A-Z]{2}/) !== null && 
+        lang.length === 5)) 
         this.config.lang = lang;
     
     return this.config.lang;
@@ -471,20 +475,17 @@ VIE.prototype.setLang = function (lang) {
 //v.getLang();     // "de"
 VIE.prototype.getLang = function () {
   var browserLang;
-
+  
   try {
     if (this.config.lang)
       browserLang = this.config.lang;
-    if (navigator.userLanguage) // IE
+    else if (navigator.userLanguage) // IE
       browserLang = navigator.userLanguage;
     else if (navigator.language) // FF + Webkit
       browserLang = navigator.language;
-
-    browserLang = browserLang.substring(0,2).toLowerCase();
   } catch (exc) {
     browserLang = "en";
   }
-
   return browserLang;
 };
 
