@@ -376,7 +376,7 @@ test("Literals - Entity set/get (cont.d)", function () {
         lastname: {value: "Germesin", lang: false},
         age: 29,
         today: new Date(),
-        someNumber : new vie.NumberLiteral(42),
+        someNumber : new v.NumberLiteral(42),
         name: [
             {value: "Sebastian G.", lang: "de-DE"},
             {value: "S. Germesin", lang: "fr"},
