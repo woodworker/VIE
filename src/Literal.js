@@ -41,43 +41,79 @@ VIE.prototype.Literal = function(attrs, opts) {
         },
         
         isLiteral : true,
+        isTypedLiteral: false,
+        isPlainLiteral: false,
         vie : self.vie
     });
     
     return new Model(attrs, opts);
 };
 
+VIE.prototype.PlainLiteral = function (attrs, opts) {
+
+    if(_.isString(attrs)) {
+        var string = attrs;
+        attrs = {
+	        type: string,
+	        lang: ""
+	    };
+    }
+
+    var model = new this.vie.Literal({}, opts);
+
+    _.extend(model, {
+
+        toString : function (lang) {
+            return this.get(lang);
+        },
+
+        toTurtle : function (lang) {
+            lang = (lang)? lang : this.vie.getLang();
+            return "\"\"\"" + this.toString(lang) + "\"\"\"" + "@" + lang;
+        },
+
+        isPlainLiteral: true
+    });
+
+    model.set(attrs);
+
+    return model;
+};
+
 VIE.prototype.TypedLiteral = function(attrs, opts) {
-    var model = new this.vie.Literal();
+    var model = new this.vie.Literal({}, opts);
 
-    _.extend(model, {});
-    //TODO: implement me
-    return model.set(attrs);
+    _.extend(model, {
+
+        toTurtle : function(lang) {
+            return '"'+this.getTurtleValue(lang) + '"^^'+this.type;
+        },
+
+        getTurtleValue : function(lang) {
+            return this.toString(lang);
+        },
+
+        isTypedLiteral: true,
+        type: null
+    });
+
+    model.set (attrs);
+    return model;
 };
 
-VIE.prototype.PlainLiteral = function(attrs, opts) {
-    var model = new this.vie.Literal();
-
-    _.extend(model, {});
-    //TODO: implement me
-    return model.set(attrs);
-};
-
-VIE.prototype.BooleanLiteral = function (value) {
+VIE.prototype.BooleanLiteral = function (value, opts) {
     
     value = (value === true)? true : false;
     
-    var model = new this.vie.TypedLiteral();
+    var model = new this.vie.TypedLiteral({}, opts);
     
     _.extend(model, {
         
         toString : function (lang) { 
             return this.get(lang).toString();
         },
-        
-        toTurtle : function (lang) {
-            return this.toString(lang);
-        }
+
+        type: "<http://www.w3.org/2001/XMLSchema#boolean>"
     });
     
     model.set(value);
@@ -85,11 +121,11 @@ VIE.prototype.BooleanLiteral = function (value) {
     return model;
 };
 
-VIE.prototype.NumberLiteral = function (value) {
+VIE.prototype.NumberLiteral = function (value, opts) {
     
     value = (value)? value : 0;
-    
-    var model = new this.vie.Literal();
+
+    var model = new this.vie.TypedLiteral({}, opts);
     
     _.extend(model, {
         /* language-specific storage does not make sense for numbers */
@@ -105,33 +141,13 @@ VIE.prototype.NumberLiteral = function (value) {
         toString : function (lang) { 
             return this.get().toLocaleString();
         },
-        
-        toTurtle : function (lang) {
-            return this.toString(lang);
-        }
-    });
-    
-    model.set(value);
-    
-    return model;
-};
 
-VIE.prototype.StringLiteral = function (value) {
-    
-    value = (value)? value : "";
-    
-    var model = new this.vie.Literal();
-    
-    _.extend(model, {
-        
-        toString : function (lang) { 
-            return this.get(lang);
+        getTurtleValue : function(lang) {
+            return this.get().toExponential();
         },
-        
-        toTurtle : function (lang) {
-            lang = (lang)? lang : this.vie.getLang();
-            return "\"\"\"" + this.toString(lang) + "\"\"\"" + "@" + lang;
-        }
+
+        isExponetial: false,
+        type: "<http://www.w3.org/2001/XMLSchema#number>"
     });
     
     model.set(value);
@@ -139,28 +155,25 @@ VIE.prototype.StringLiteral = function (value) {
     return model;
 };
 
-VIE.prototype.DateLiteral = function (value) {
+VIE.prototype.DateLiteral = function (value, opts) {
     
     if (!value) {
         value = new Date();
-    } else if (value instanceof Date ||
-        value instanceof String) {
+    } else if (_.isDate(value) ||
+        _.isString(value)) {
         value = new Date(value);
     } else {
         throw new Error ("Invalid dateformat '" + value + "'");
     }
     
-    var model = new this.vie.Literal();
+    var model = new this.vie.TypedLiteral({}, opts);
     
     _.extend(model, {
-        
         toString : function (lang) { 
             return this.get(lang).toISOString();
         },
         
-        toTurtle : function (lang) {
-            return this.toString(lang) + "^^<http://www.w3.org/2001/XMLSchema#dateTime>";
-        }
+        type: "<http://www.w3.org/2001/XMLSchema#dateTime>"
     });
     
     model.set(value);
