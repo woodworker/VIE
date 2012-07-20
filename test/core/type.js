@@ -31,6 +31,9 @@ test("VIE - Type API", function() {
     
     ok(v.types.sort);
     ok(typeof v.types.sort === 'function');
+
+    ok(v.types.size);
+    ok(typeof v.types.size === 'function');
     
     // Type
     var thingy = v.types.add("TestTypeWithSillyName");
@@ -179,7 +182,7 @@ test("VIE - Instantiation of types", function() {
     ok(type2Instance);
     ok(type1Instance.isEntity);
     ok(type2Instance.isEntity);
-    equal(type2Instance.get("attr0"), "This is a test.");
+    equal(type2Instance.get("attr0").toString(), "This is a test.");
     
     raises(function () {
     	tt1.instance({"attr1" : "This should fail."});
@@ -268,27 +271,4 @@ test("VIE - Locking mechanism of types", function() {
       }, "The type is locked and no inherit shall work!");
     
 });
-/*
-
-var entity = new v.Entity();
-
-entity.setOrAdd("plays": [
-    {name: "guitar"}, 
-    {name: [
-        {"@value": "vocals", "@lang": "en"}, 
-        {"@value": "Gesang", "@lang": "de"}
-        ]
-    }
-]);
-
-entity.setOrAdd({name: [
-        {"@value": "Thomas", "@lang": "en"}, 
-        {"@value": "Thomas", "@lang": "de"}
-]);
-
-
-entity.get("plays").at(1); << EntityCollection
-entity.get("plays").at(1).get("name"); << LiteralCollection
-entity.get("plays").at(1).get("name").toString("de"); // Gesang
-*/
 

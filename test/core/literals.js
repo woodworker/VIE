@@ -473,3 +473,28 @@ firstname.get("en").set("lang", "de");
 firstname.get("en").setLang("de");
 
 */
+
+
+/*
+
+var entity = new v.Entity();
+
+entity.setOrAdd("plays": [
+    {name: "guitar"}, 
+    {name: [
+        {"@value": "vocals", "@lang": "en"}, 
+        {"@value": "Gesang", "@lang": "de"}
+        ]
+    }
+]);
+
+entity.setOrAdd({name: [
+        {"@value": "Thomas", "@lang": "en"}, 
+        {"@value": "Thomas", "@lang": "de"}
+]);
+
+
+entity.get("plays").at(1); << EntityCollection
+entity.get("plays").at(1).get("name"); << LiteralCollection
+entity.get("plays").at(1).get("name").toString("de"); // Gesang
+*/
