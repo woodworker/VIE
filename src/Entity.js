@@ -128,9 +128,9 @@ VIE.prototype.Entity = function(attrs, opts) {
             // Use **`.set(attrName, value, options)`** for setting or changing exactly one 
             // entity attribute.
             if (typeof arg1 === "string") {
-                args[arg1] = arg2;
+                attrs[arg1] = arg2;
                 options = arg3;
-                return this.set(args, options);
+                return this.set(attrs, options);
             } else if(typeof arg1 === "object") {
                 options = arg2;
                 // **`.set(entity)`**: In case you'd pass a VIE entity,
@@ -200,11 +200,11 @@ VIE.prototype.Entity = function(attrs, opts) {
         // entity already has the attribute set, make the value to a VIE Collection
         // and use the collection as value. The collection can contain entities
         // or literals, but not both at the same time.
-        setOrAdd:function (arg1, arg2, option) {
+        setOrAdd:function (arg1, arg2, options) {
             var entity = this;
             if (typeof arg1 === "string" && arg2) {
                 // calling entity.setOrAdd("rdfs:type", "example:Musician")
-                entity._setOrAddOne(arg1, arg2, option);
+                entity._setOrAddOne(arg1, arg2, options);
             }
             else if (typeof arg1 === "object") {
                 // calling entity.setOrAdd({"rdfs:type": "example:Musician", ...})
@@ -217,71 +217,88 @@ VIE.prototype.Entity = function(attrs, opts) {
 
 
         /* attr is always of type string */
-        /* value can be of type: string,int,double,object,VIE.Entity,VIE.Collection */
-        /*  val can be of type: undefined,string,int,double,array,VIE.Collection */
-
-        /* depending on the type of value and the type of val, different actions need to be made */
+        /* value can be of type: undefined,string,int,double,object,VIE.Entity,VIE.Collection */
+        /* depending on the type of value, different actions need to be made */
         _setOrAddOne:function (attr, value, options) {
+            // attr or value not given, don't do anything
             if (!attr || !value)
                 return;
             options = (options) ? options : {};
-
+            // dereference attribute namespaces
             attr = VIE.Util.mapAttributeNS(attr, self.vie.namespaces);
 
+            // if the value is an array, add them one by one using the same method (recursion)
             if (_.isArray(value)) {
                 for (var v = 0; v < value.length; v++) {
                     this._setOrAddOne(attr, value[v], options);
                 }
-                return;
-            }
-
-            if (attr === "@type" && value instanceof self.vie.Type) {
-                value = value.id;
-            }
-
-            var obj = {};
-            var existing = Backbone.Model.prototype.get.call(this, attr);
-
-            if (!existing) {
-                obj[attr] = value;
-                this.set(obj, options);
-            } else if (existing.isCollection) {
-                if (value.isCollection) {
-                    value.each(function (model) {
-                        existing.add(model);
-                    });
-                } else if (value.isEntity) {
-                    existing.add(value);
-                } else if (typeof value === "object") {
-                    value = new this.vie.Entity(value);
-                    existing.add(value);
-                } else {
-                    throw new Error("you cannot add a literal to a collection of entities!");
-                }
-                this.trigger('change:' + attr, this, value, {});
-                this.change({});
-            } else if (_.isArray(existing)) {
-                if (value.isCollection) {
-                    for (var v = 0; v < value.size(); v++) {
-                        this._setOrAddOne(attr, value.at(v).getSubject(), options);
-                    }
-                } else if (value.isEntity) {
-                    this._setOrAddOne(attr, value.getSubject(), options);
-                } else if (typeof value === "object") {
-                    value = new this.vie.Entity(value);
-                    this._setOrAddOne(attr, value, options);
-                } else {
-                    /* yes, we (have to) allow multiple equal values */
-                    existing.push(value);
-                    obj[attr] = existing;
-                    this.set(obj);
-                }
             } else {
-                var arr = [ existing ];
-                arr.push(value);
-                obj[attr] = arr;
-                return this.set(obj, options);
+                // in case of type definition, make sure we set the type id as value, not the type object.
+                if (attr === "@type" && value instanceof self.vie.Type) {
+                    value = value.id;
+                }
+
+                var obj = {};
+                // Lookup existing value for the attribute to make sure not to overwrite existing values here
+                var existing = Backbone.Model.prototype.get.call(this, attr);
+
+                if (!existing) {
+                    obj[attr] = value;
+                    // If there's no value set, simply set it.
+                    this.set(obj, options);
+                } else if (existing.isCollection) {
+                    // if the existing value is a Backbone collection, there are three cases: The new value can be a
+                    // - Backbone Collection
+                    // - Backbone Entity
+                    // - plain object
+                    if (value.isCollection) {
+                        // if it's a VIE (Backbone) Collection, use the .add() method for each new value models.
+                        value.each(function (model) {
+                            existing.add(model, options);
+                        });
+                    } else if (value.isEntity) {
+                        // if the value is a Backbone Entity, add it to the existing value collection
+                        existing.add(value);
+                    } else if (typeof value === "object") {
+                        // if the value is a plain object, create an Entity out of it and add it to the existing collection
+                        value = new this.vie.Entity(value);
+                        existing.add(value);
+                    } else {
+                        throw new Error("you cannot add a literal to a collection of entities!");
+                    }
+                    this.trigger('change:' + attr, this, value, {});
+                    this.change({});
+                // if the existing value is an array (with the new Literal API this should be impossible, get would always give back a Collection.)
+                } else if (_.isArray(existing)) {
+                    if (value.isCollection) {
+                        // ... and the newly added value is a Collection, use _setOrAddOne recursively to add the Model IDs
+                        for (var v = 0; v < value.size(); v++) {
+                            this._setOrAddOne(attr, value.at(v).getSubject(), options);
+                        }
+                    } else if (value.isEntity) {
+                        // ... and the new value is an Entity, use _setOrAddOne with the model's subject
+                        this._setOrAddOne(attr, value.getSubject(), options);
+                    } else if (typeof value === "object") {
+                        // ... and the new value is a plain object, create an Entity out of it and use _setOrAdd to add it.
+                        value = new this.vie.Entity(value);
+                        this._setOrAddOne(attr, value, options);
+                    } else {
+                        if(existing.indexOf(value) === -1){
+                            existing.push(value);
+                            obj[attr] = existing;
+                            this.set(obj, options);
+                        }
+                    }
+                } else {
+                    if(existing !== value){
+                        var arr = [ existing ];
+                        arr.push(value);
+                        obj[attr] = arr;
+                        this.set(obj, options);
+                    }
+                }
             }
+            return this;
         },
 
         // **`.unset(attr, opts)` ** removes an attribute from the entity.

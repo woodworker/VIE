@@ -184,7 +184,7 @@ test("vie.js Entity API - setOrAdd", function () {
     equal(clapton.get('plays').length, 2);
 
     clapton.setOrAdd({'plays': 'vocals'});
-    equal(clapton.get('plays').length, 3, "Same value twice is the same value and needs to be added twice.");
+    equal(clapton.get('plays').length, 2, "In the RDF sense, two triples with the same Subject, Property and Object, are the same triple..");
 });
 
 test("vie.js Entities API - set()", function () {
