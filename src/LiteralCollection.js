@@ -15,7 +15,7 @@ VIE.prototype.LiteralCollection = Backbone.Collection.extend({
     isLiteralCollection: true,
 
     add: function (obj) {
-        Backbone.Collection.prototype.add.call(this, obj);
+        return Backbone.Collection.prototype.add.call(this, obj);
     },
 
     availableLanguages : function () {
@@ -36,6 +36,10 @@ VIE.prototype.LiteralCollection = Backbone.Collection.extend({
     },
 
     get: function (param) {
+        throw new Error("Not Yet Implemented!");
+    },
+
+    getLang: function (param) {
         throw new Error("Not Yet Implemented!");
     },
 

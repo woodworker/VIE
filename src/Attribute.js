@@ -373,6 +373,21 @@ VIE.prototype.Attributes = function (domain, attrs) {
         return this;
     };
 
+// ### size(id)
+// This method returns the number of attributes.  
+// **Parameters**:  
+// *{nothing}*  
+// **Throws**:  
+// *{nothing}*  
+// **Returns**:  
+// *{int}* : The number of attributes.  
+// **Example usage**:  
+//
+//     personAttrs.size();
+    this.size = function () {
+        return this.list().length;
+    };
+
 // ### toArray() === list()
 // This method return an array of ```VIE.Attribute```s from the attributes instance.  
 // **Parameters**:  
