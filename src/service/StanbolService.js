@@ -148,8 +148,6 @@ VIE.prototype.StanbolService.prototype = {
 //      new vie.Analyzable({element : jQuery("#foo")})
 //      );
         analyze: function(analyzable) {
-        	console.log("analyzable passed to me:")
-        	console.log(analyzable)
             var service = this;
 
             var correct = analyzable instanceof this.vie.Analyzable;
@@ -195,12 +193,12 @@ VIE.prototype.StanbolService.prototype = {
 //      **Example usage**:  
 
 //      var stnblService = new vie.StanbolService({<some-configuration>});
-//      stnblService.load(new vie.Findable({
-//      term : "Bischofsh", 
-//      limit : 10, 
-//      offset: 0,
-//      field: "skos:prefLabel", // used for the term lookup, default: "rdfs:label"
-//      properties: ["skos:prefLabel", "rdfs:label"] // are going to be loaded with the result entities
+//      stnblService.find(new vie.Findable({
+//          term : "Bischofsh", 
+//          limit : 10, 
+//          offset: 0,
+//          field: "skos:prefLabel", // used for the term lookup, default: "rdfs:label"
+//          properties: ["skos:prefLabel", "rdfs:label"] // are going to be loaded with the result entities
 //      }));
         find: function (findable) {        
             var correct = findable instanceof this.vie.Findable;

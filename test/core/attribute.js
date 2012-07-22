@@ -32,7 +32,9 @@ test("VIE - Attribute API", function() {
 
     ok(attributes.remove);
     ok(typeof attributes.remove === 'function');
-    
+
+    ok(attributes.size);
+    ok(typeof attributes.size === 'function');
     
     var name = attributes.get('name');
 

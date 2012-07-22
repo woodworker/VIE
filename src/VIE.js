@@ -68,6 +68,13 @@ var VIE = root.VIE = function(config) {
     this.Entity.prototype.entityCollection = this.Collection;
     this.Entity.prototype.vie = this;
     
+    this.Literal.prototype.vie = this;
+    this.PlainLiteral.prototype.vie = this;
+    this.TypedLiteral.prototype.vie = this;
+    this.BooleanLiteral.prototype.vie = this;
+    this.NumberLiteral.prototype.vie = this;
+    this.DateLiteral.prototype.vie = this;
+    
     this.Namespaces.prototype.vie = this;
 // ### Namespaces in VIE
 // VIE supports different ontologies and an easy use of them.
@@ -417,6 +424,69 @@ VIE.prototype.equals = function(vieInstance) {
 		return vieInstance.id === this.id;
 	}
 	return false;
+};
+
+
+//### setLang(lang)
+//This method sets the default language that is  
+//used internally in this VIE instance.  
+//**Parameters**:  
+//*{String}* **lang** The languag code (using ISO 639-1).  
+//**Throws**:  
+//*nothing*.  
+//**Returns**:  
+//*{String}* : The default language that has been  
+// set OR the former default language if `lang` was  
+// not properly set.
+//**Example usage**:  
+//
+//var v = new VIE();
+//v.getLang ();    // the language of the document OR "en"
+//v.setLang("de"); // accepts language codes in ISO 639-1 format 
+//v.getLang();     // "de"
+//v.setLang("de-DE"); // OR in format ISO 639-1 + '-' ISO 3166-1 alpha-2
+//v.getLang();     // "de-DE"
+VIE.prototype.setLang = function (lang) {
+    /* [a-z]+ ('-' [a-z0-9]+ )* */
+    if (lang && 
+        (lang.match(/[a-z]{2}/) !== null && 
+        lang.length === 2) ||
+        (lang.match(/[a-z]{2}\-[A-Z]{2}/) !== null && 
+        lang.length === 5)) 
+        this.config.lang = lang;
+    
+    return this.config.lang;
+};
+
+//### getLang()
+//This method gets the default language that is  
+//used internally in this VIE instance.  
+//**Parameters**:  
+//*nothing*  
+//**Throws**:  
+//*nothing*.  
+//**Returns**:  
+//*{String}* : The default language that has been set.
+//**Example usage**:  
+//
+//var v = new VIE();
+//v.getLang ();    // the language of the document OR "en"
+//v.setLang("de"); // accepts language codes only in ISO 639-1 format
+//v.getLang();     // "de"
+VIE.prototype.getLang = function () {
+  var browserLang;
+  
+  try {
+    if (this.config.lang)
+      browserLang = this.config.lang;
+    else if (navigator.userLanguage) // IE
+      browserLang = navigator.userLanguage;
+    else if (navigator.language) // FF + Webkit
+      browserLang = navigator.language;
+  } catch (exc) {
+    browserLang = "en";
+  }
+  return browserLang;
 };
 
 // IE per default doesn't have a console API. For making sure this doesn't break

@@ -428,6 +428,23 @@ VIE.prototype.Types = function () {
         }
         return t;
     };
+
+// ### size(id)
+// This method returns the number of types.  
+// **Parameters**:  
+// *{nothing}*  
+// **Throws**:  
+// *{nothing}*  
+// **Returns**:  
+// *{int}* : The number of types.  
+// **Example usage**:  
+//
+//     var types = new vie.Types();
+//     types.addOrOverwrite("Person", ["name", "knows"]);
+//     types.size(); // <-- returns 1;
+    this.size = function () {
+        return this.list().length;
+    };
     
 // ### toArray() === list()
 // This method returns an array of all types.  

@@ -15,6 +15,7 @@ VIE.prototype.view.Collection = Backbone.View.extend({
         _.bindAll(this, 'addItem', 'removeItem', 'refreshItems');
         this.collection.bind('add', this.addItem);
         this.collection.bind('remove', this.removeItem);
+        this.collection.bind('reset', this.refreshItems);
 
         // Make the view aware of existing entities in collection
         var view = this;
@@ -38,8 +39,18 @@ VIE.prototype.view.Collection = Backbone.View.extend({
             this.service.setElementSubject(entity.getSubjectUri(), entityElement);
         }
 
-        // TODO: Ordering
-        jQuery(this.el).append(entityElement);
+        var entityIndex = collection.indexOf(entity);
+        if (entityIndex === 0) {
+          jQuery(this.el).prepend(entityElement);
+        } else {
+          var previousEntity = collection.at(entityIndex - 1);
+          var previousView = this.entityViews[previousEntity.cid];
+          if (previousView) {
+            jQuery(previousView.el).after(entityElement);
+          } else {
+            jQuery(this.el).append(entityElement);
+          }
+        }
 
         // Ensure we catch all inferred predicates. We add these via JSONLD
         // so the references get properly Collectionized.
@@ -48,6 +59,7 @@ VIE.prototype.view.Collection = Backbone.View.extend({
             var predicate = jQuery(this).attr('rev');
             var relations = {};
             relations[predicate] = new service.vie.Collection();
+            relations[predicate].vie = service.vie;
             var model = service.vie.entities.get(service.getElementSubject(this));
             if (model) {
                 relations[predicate].addOrUpdate(model);
@@ -81,7 +93,10 @@ VIE.prototype.view.Collection = Backbone.View.extend({
 
     refreshItems: function(collection) {
         var view = this;
-        jQuery(this.el).empty();
+        _.each(this.entityViews, function(view, cid) {
+          jQuery(view.el).remove();
+        });
+        this.entityViews = {};
         collection.forEach(function(entity) {
             view.addItem(entity, collection);
         });

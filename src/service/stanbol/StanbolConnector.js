@@ -50,10 +50,16 @@ VIE.prototype.StanbolConnector = function (options) {
             urlPostfix : "/factstore"
         },
         ontonet : {
-            urlPostfix : "/ontonet"
+            urlPostfix : "/ontonet",
+            scope: "/ontology",
+            session: "/session",
+            registry: "/registry"
         },
         rules : {
-            urlPostfix : "/rules"
+            urlPostfix : "/rules",
+            recipe : "/recipe",
+            findRule : "/find/rules",
+            findRecipe : "/find/recipes"
         },
         sparql : {
             urlPostfix : "/sparql"
@@ -115,15 +121,27 @@ VIE.prototype.StanbolConnector.prototype = {
 						params.url.call(this, params.urlIndex, params.args.options),
 						params.args,
 						params.success,
-						retryErrorCb);
+						retryErrorCb,
+						params.complete);
 			}
 
+			
+			if (params.complete) {
 			return params.method.call(
 					this, 
 					params.url.call(this, params.urlIndex, params.args.options),
 					params.args,
 					params.success,
-					retryErrorCb);
+					retryErrorCb,
+					params.complete);
+			} else {
+				return params.method.call(
+						this, 
+						params.url.call(this, params.urlIndex, params.args.options),
+						params.args,
+						params.success,
+						retryErrorCb);
+			}
 		}
 
 };
