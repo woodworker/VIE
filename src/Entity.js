@@ -116,121 +116,83 @@ VIE.prototype.Entity = function(attrs, opts) {
         // `.set()` method. In this case the `attributes` object is a map of all
         // attributes to be changed.
         set : function(arg1, arg2, arg3){ // (
-          var attrs = {}, options;
-          if (!arg1) {
-            return this;
-          }
+         var attrs = {}, options;
+         if (!arg1) {
+          return this;
+        }
 
-          if (arg1['@subject']) {
-            arg1['@subject'] = this.toReference(arg1['@subject']);
-          }
+        if (arg1['@subject']) {
+          arg1['@subject'] = this.toReference(arg1['@subject']);
+        }
 
-          // Use **`.set(attrName, value, options)`** for setting or changing exactly one 
-          // entity attribute.
-          if (typeof arg1 === "string") {
-            attrs[arg1] = arg2;
-            options = arg3;
-            return this.set(attrs, options);
-          } else if (_.isObject( arg1 )) {
-            options = arg2;
-              // **`.set(entity)`**: In case you'd pass a VIE entity,
-              // the passed entities attributes are being set for the entity.
-              if (arg1.attributes) {
-                attrs = arg1.attributes;
-              } else {
-                attrs = arg1;
-              }
-              var self = this;
-              // resolve shortened URIs like rdfs:label..
-              _.each(attrs, function (value, key) {
-                var newKey = VIE.Util.mapAttributeNS(key, self.vie.namespaces);
-                if (key !== newKey) {
-                  delete attrs[key];
-                  attrs[newKey] = value;
+            // Use **`.set(attrName, value, options)`** for setting or changing exactly one 
+            // entity attribute.
+            if (typeof arg1 === "string") {
+              attrs[arg1] = arg2;
+              options = arg3;
+              return this.set(attrs, options);
+            } else if(typeof arg1 === "object") {
+              options = arg2;
+                // **`.set(entity)`**: In case you'd pass a VIE entity,
+                // the passed entities attributes are being set for the entity.
+                if (arg1.attributes) {
+                  attrs = arg1.attributes;
+                } else {
+                  attrs = arg1;
                 }
-              }, this);
-
-              var sanitizeValue = function (value, key, self) {
-                  if (_.isString(value) || (_.isObject(value) && value["@value"])) {
-                    if (VIE.Util.isUri(value)) {
-                      var model = self.vie.entities.get(value);
-                      if (!model) {
-                        model = new self.vie.Entity({"@subject" : value});
-                      }
-                      var coll = new self.vie.LiteralCollection();
-                      coll.vie = self.vie;
-                      coll.add(model);
-                      return coll;
-                    } else {
-                      // PlainLiteral
-                      var coll = new self.vie.LiteralCollection();
-                      coll.vie = self.vie;
-                      coll.add(new self.vie.PlainLiteral(value));
-                      return coll;
-                    }
-                  } else if (_.isNumber(value)) {
-                    var coll = new self.vie.LiteralCollection();
-                    coll.vie = self.vie;
-                    coll.add(new self.vie.NumberLiteral(value));
-                    return coll;
-                  } else if (_.isDate(value)) {
-                    var coll = new self.vie.LiteralCollection();
-                    coll.vie = self.vie;
-                    coll.add(new self.vie.DateLiteral(value));
-                    return coll;
-                  } else if (_.isBoolean(value)) {
-                    var coll = new self.vie.LiteralCollection();
-                    coll.vie = self.vie;
-                    coll.add(new self.vie.BooleanLiteral(value));
-                    return coll;
-                  } else if (value.isCollection) {
-                    value.each(function (child) {
-                      this.vie.entities.addOrUpdate(child);
-                    }, this);
-                  } else if (value.isEntity) {
-                    self.vie.entities.addOrUpdate(value);
-                    var coll = new self.vie.Collection();
-                    coll.vie = self.vie;
-                    coll.add(value);
-                    return coll;
-                  } else if (value.isLiteralCollection) {
-                    return value;
-                  } else if (value.isLiteral) {
-                    var coll = new self.vie.LiteralCollection();
-                    coll.vie = self.vie;
-                    coll.add(value);
-                    return coll;
-                  } else if (_.isObject(value)) {
-                    value = new self.vie.Entity(value);
-                    self.vie.entities.addOrUpdate(value);
-                    var coll = new self.vie.Collection();
-                    coll.vie = self.vie;
-                    coll.add(value);
-                    return coll;
+                var self = this;
+                // resolve shortened URIs like rdfs:label..
+                _.each(attrs, function (value, key) {
+                  var newKey = VIE.Util.mapAttributeNS(key, self.vie.namespaces);
+                  if (key !== newKey) {
+                    delete attrs[key];
+                    attrs[newKey] = value;
                   }
-                  throw new Error("To be looked at! debugger;", key, value);
-              };
-
-              // Finally iterate through the *attributes* to be set and 
-              // prepare/sanitze them for the Backbone.Model.set method.
-              _.each(attrs, function (value, key) {
-                if (!value) {
-                  return;
-                }
-                if (key.indexOf('@') === -1) {
-                  if (_.isArray(value)) {
-                    attrs[key] = 
-                      _.map(value, function (v) {
-                        return sanitizeValue(v, key, self);
-                      });
-                  } else {
-                    attrs[key] = sanitizeValue(value, key, self);
+                }, this);
+                // Finally iterate through the *attributes* to be set and prepare
+                // them for the Backbone.Model.set method.
+                _.each(attrs, function (value, key) {
+                  if (!value) {
+                    return;
                   }
-                }
-              }, this);
-            return Backbone.Model.prototype.set.call(this, attrs, options);
-          }
-        },
+                  if (key.indexOf('@') === -1) {
+                    if (value.isCollection) {
+                            // ignore
+                            value.each(function (child) {
+                              self.vie.entities.addOrUpdate(child);
+                            });
+                          } else if (value.isEntity) {
+                            self.vie.entities.addOrUpdate(value);
+                            var coll = new self.vie.Collection();
+                            coll.vie = self.vie;
+                            coll.add(value);
+                            attrs[key] = coll;
+                          } else if (_.isArray(value)) {
+                            if (this.attributes[key] && this.attributes[key].isCollection) {
+                              var newEntities = this.attributes[key].addOrUpdate(value);
+                              attrs[key] = this.attributes[key];
+                              attrs[key].reset(newEntities);
+                            }
+                          } else if (value["@value"]) {
+                            // The value is a literal object, ignore
+                          } else if (typeof value == "object") {
+                            // The value is another VIE Entity
+                            var child = new self.vie.Entity(value, options);
+                            // which is being stored in `v.entities`
+                            self.vie.entities.addOrUpdate(child);
+                            // and set as VIE Collection attribute on the original entity
+                            var coll = new self.vie.Collection();
+                            coll.vie = self.vie;
+                            coll.add(value);
+                            attrs[key] = coll;
+                          } else {
+                            // ignore
+                          }
+                        }
+                      }, this);
+return Backbone.Model.prototype.set.call(this, attrs, options);
+}
+},
 
         // **`.setOrAdd(arg1, arg2)`** similar to `.set(..)`, `.setOrAdd(..)` can
         // be used for setting one or more attributes of an entity, but in
@@ -241,17 +203,17 @@ VIE.prototype.Entity = function(attrs, opts) {
         setOrAdd:function (arg1, arg2, options) {
           var entity = this;
           if (typeof arg1 === "string" && arg2) {
-            // calling entity.setOrAdd("rdfs:type", "example:Musician")
-            entity._setOrAddOne(arg1, arg2, options);
-          }
-          else if (typeof arg1 === "object") {
-            // calling entity.setOrAdd({"rdfs:type": "example:Musician", ...})
-            _(arg1).each(function (val, key) {
-              entity._setOrAddOne(key, val, arg2);
-            });
-          }
-          return this;
-        },
+                // calling entity.setOrAdd("rdfs:type", "example:Musician")
+                entity._setOrAddOne(arg1, arg2, options);
+              }
+              else if (typeof arg1 === "object") {
+                // calling entity.setOrAdd({"rdfs:type": "example:Musician", ...})
+                _(arg1).each(function (val, key) {
+                  entity._setOrAddOne(key, val, arg2);
+                });
+              }
+              return this;
+            },
 
 
             /* attr is always of type string */
@@ -480,12 +442,12 @@ VIE.prototype.Entity = function(attrs, opts) {
         // explicitly set type Employee, e.isof(Person) will evaluate to true.
         isof: function (type) {
           var types = this.get('@type');
-
+          
           if (types === undefined) {
             return false;
           }
           types = (_.isArray(types))? types : [ types ];
-
+          
           type = (self.vie.types.get(type))? self.vie.types.get(type) : new self.vie.Type(type);
           for (var t = 0; t < types.length; t++) {
             if (self.vie.types.get(types[t])) {
@@ -554,7 +516,7 @@ toString: function (options) {
             [browserLang, "en", "de", "fi", "fr", "es", "ja", "zh-tw"];
             return VIE.Util.getPreferredLangForPreferredProperty(this, options.prop, options.lang);
           },
-
+          
           isEntity: true,
 
           vie: self.vie

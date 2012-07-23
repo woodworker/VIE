@@ -487,32 +487,6 @@ VIE.prototype.getLang = function () {
     browserLang = "en";
   }
   return browserLang;
-  
-// ### getTypedEntityClass(type)
-// This method generates a special type of `Entity` based on the given type.  
-// **Parameters**:  
-// *{string}* **type** The type.  
-// **Throws**:  
-// *{Error}* if the type is unknown to VIE.  
-// **Returns**:  
-// *{VIE.Entity}* : A subclass of `VIE.Entity`.  
-// **Example usage**:  
-//
-//     var vie = new VIE();
-//     vie.types.add("Person");
-//     var PersonClass = vie.getTypedEntityClass("Person");
-//     var Person = new PersonClass({"name", "Sebastian"});
-VIE.prototype.getTypedEntityClass = function (type) {
-  if (!this.types.get(type))
-    throw new Error("unknown type");
-
-  var TypedEntityClass = function (attrs, opts) {
-    attrs["@type"] = "Person";
-    this.set(attrs, opts);
-  };
-  TypedEntityClass.prototype = new this.Entity();
-
-  return TypedEntityClass;
 };
 
 // IE per default doesn't have a console API. For making sure this doesn't break
