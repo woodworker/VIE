@@ -159,8 +159,7 @@ VIE.prototype.DateLiteral = function (value, opts) {
     
     if (!value) {
         value = new Date();
-    } else if (_.isDate(value) ||
-        _.isString(value)) {
+    } else if (_.isDate(value) || _.isString(value)) {
         value = new Date(value);
     } else {
         throw new Error ("Invalid dateformat '" + value + "'");
@@ -180,11 +179,3 @@ VIE.prototype.DateLiteral = function (value, opts) {
     
     return model;
 };
-
-
-
-/*
-
-'"2009-07-13"^^xsd:date'
-
-*/

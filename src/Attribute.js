@@ -110,7 +110,7 @@ VIE.prototype.Attribute = function (id, range, domain, minCount, maxCount) {
 //      // --> 1
     maxCount = maxCount ? (maxCount === -1 ? Number.MAX_VALUE : maxCount) : 1;
     this.max = (maxCount >= this.min)? maxCount : this.min;
-    
+
 // ### applies(range)
 // This method checks, whether the current attribute applies in the given range.
 // If ```range``` is a string and cannot be transformed into a ```VIE.Type```, 
@@ -188,8 +188,8 @@ VIE.prototype.Attributes = function (domain, attrs) {
 // ### add(id, range)
 // This method adds a ```VIE.Attribute``` to the attributes instance.
 // **Parameters**:  
-// *{string|VIE.Attribute}* **id** The string representation of an attribute, or a proper
-// instance of a ```VIE.Attribute```.  
+// *{string|VIE.Attribute|array}* **id** The string representation of an attribute, or a proper
+// instance of a ```VIE.Attribute``` or an array of string representations.  
 // *{string|array}* **range** An array representing the target range of the attribute.  
 // *{number}* **mmin** The minimal amount this attribute can appear.  
 // instance of a ```VIE.Attribute```.  
@@ -198,25 +198,22 @@ VIE.prototype.Attributes = function (domain, attrs) {
 // *{Error}* If an atribute with the given id is already registered.  
 // *{Error}* If the ```id``` parameter is not a string, nor a ```VIE.Type``` instance.  
 // **Returns**:  
-// *{VIE.Attribute}* : The generated or passed attribute.  
+// *{VIE.Attribute|array}* : The generated or passed attribute or array of attributes.  
 // **Example usage**:  
 //
 //     personAttrs.add("name", "Text", 0, 1);
+//     personAttrs.add(["name", "age"]);
     this.add = function (id, range, min, max) {
-<<<<<<< HEAD
         if (this.domain.locked) {
             throw new Error("The type " + domain.id + " has been imported from an external ontology and must not " + 
                     "be altered! Please create a new type that inherits from the current type!");
         }
-=======
+
         if (_.isArray(id)) {
-          _.each(id, function (attribute) {
-            this.add(attribute);
+          return _.map(id, function (attribute) {
+            return this.add(attribute);
           }, this);
-          return this;
         }
-        
->>>>>>> bergie/master
         if (this.get(id)) {
             throw new Error("Attribute '" + id + "' already registered for domain " + this.domain.id + "!");
         } 

@@ -487,7 +487,19 @@ VIE.prototype.getLang = function () {
     browserLang = "en";
   }
   return browserLang;
+};
 
+//### getTypedEntityClass()
+//TODO  
+//**Parameters**:  
+//*{TODO}*  
+//**Throws**:  
+//*{TODO}*.  
+//**Returns**:  
+//*{TODO}* : TODO.
+//**Example usage**:  
+//
+//TODO
 VIE.prototype.getTypedEntityClass = function (type) {
   var typeType = this.types.get(type);
   if (!typeType) {
@@ -504,6 +516,7 @@ VIE.prototype.getTypedEntityClass = function (type) {
   TypedEntityClass.prototype.schema = function () {
     return VIE.Util.getFormSchemaForType(typeType);
   };
+
   return TypedEntityClass;
 };
 
