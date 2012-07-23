@@ -26,7 +26,7 @@ if (VIE.prototype.Attributes) {
 // the attribute.  
 // *{string}* **domain** The domain of the attribute.  
 // *{number}* **minCount** The minimal number this attribute can occur. (needs to be >= 0)  
-// *{number}* **maxCount** The maximal number this attribute can occur. (needs to be >= minCount)  
+// *{number}* **maxCount** The maximal number this attribute can occur. (needs to be >= minCount, use `-1` for unlimited)
 // **Throws**:  
 // *{Error}* if one of the given paramenters is missing.  
 // **Returns**:  
@@ -107,9 +107,10 @@ VIE.prototype.Attribute = function (id, range, domain, minCount, maxCount) {
 // **Example usage**:  
 //
 //     console.log(person.max);
-//      // --> 1.7976931348623157e+308
-    maxCount = maxCount ? maxCount : Number.MAX_VALUE;
+//      // --> 1
+    maxCount = maxCount ? (maxCount === -1 ? Number.MAX_VALUE : maxCount) : 1;
     this.max = (maxCount >= this.min)? maxCount : this.min;
+    
 // ### applies(range)
 // This method checks, whether the current attribute applies in the given range.
 // If ```range``` is a string and cannot be transformed into a ```VIE.Type```, 
@@ -202,10 +203,20 @@ VIE.prototype.Attributes = function (domain, attrs) {
 //
 //     personAttrs.add("name", "Text", 0, 1);
     this.add = function (id, range, min, max) {
+<<<<<<< HEAD
         if (this.domain.locked) {
             throw new Error("The type " + domain.id + " has been imported from an external ontology and must not " + 
                     "be altered! Please create a new type that inherits from the current type!");
         }
+=======
+        if (_.isArray(id)) {
+          _.each(id, function (attribute) {
+            this.add(attribute);
+          }, this);
+          return this;
+        }
+        
+>>>>>>> bergie/master
         if (this.get(id)) {
             throw new Error("Attribute '" + id + "' already registered for domain " + this.domain.id + "!");
         } 
