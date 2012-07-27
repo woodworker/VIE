@@ -32,7 +32,23 @@ VIE.prototype.LocalStorageService.prototype = {
         this.connector = new this.vie.LocalStorageConnector(this.options);
         return this;
     },
-
+	
+	clear: function(){
+		this.connector.clear();
+	},
+	
+	remove: function(removable){
+		var correct = removable instanceof this.vie.Removable;
+        if (!correct) {
+            throw new Error("Invalid Removable passed");
+        }
+		var entitySubjects = (removable.options.entity)? removable.options.entity : removable.options.entities;
+		if (entitySubjects) {
+			entitySubjects = (_.isArray(entitySubjects))? entitySubjects : [ entitySubjects ];
+		};
+		this.connector.remove(entitySubjects);
+	},
+	
     load: function(loadable){
         var service = this;
         var loadAll = loadable.options.all;/*boolean. if true, then load all enitities*/
@@ -60,7 +76,7 @@ VIE.prototype.LocalStorageService.prototype = {
 		});
 		/*Add results to VIE*/
 		service.vie.entities.addOrUpdate(entities);
-		console.log(entities.length + ' enitities have been loaded: ',entities);
+		console.log(entities.length + ' entities have been loaded: ',entities);
 		return entities;
     },
 	
@@ -73,6 +89,7 @@ VIE.prototype.LocalStorageService.prototype = {
 		if (!entities) {
             savable.reject([]);
         } else {
+			entities = (_.isArray(entities))? entities : [ entities ];
 			this.connector.save(entities);
         }
 
@@ -84,7 +101,35 @@ VIE.prototype.LocalStorageConnector = function (options) {
 };
 
 VIE.prototype.LocalStorageConnector.prototype = {
-
+	clear: function(){
+		var key = this.options.keyName;
+		localStorage.removeItem(key);
+	},
+	
+	remove: function(Subjects){
+		var key = this.options.keyName;
+		var saveString = "";
+		/*Get the already saved data*/
+		var savedData = localStorage.getItem(key);
+		var savedEntityObjects = [];
+		if(savedData && savedData != ""){
+			try{
+				savedEntityObjects = JSON.parse(savedData);
+				savedEntityObjects = savedEntityObjects.filter(function(e){
+					var b = true;
+					for(var i in Subjects){
+						b = b && (Subjects[i] != e['@subject']);
+					}
+					return b;
+				});
+				var saveString = JSON.stringify(savedEntityObjects);
+				localStorage.setItem(key, saveString);
+			}
+			catch(e){
+				console.log('Failed to parse data from ' + key,e);
+			}
+		}
+	},
 	load: function(){
 		var key = this.options.keyName;
 		var entityObjects = [];
