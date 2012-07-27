@@ -489,6 +489,37 @@ VIE.prototype.getLang = function () {
   return browserLang;
 };
 
+//### getTypedEntityClass()
+//TODO  
+//**Parameters**:  
+//*{TODO}*  
+//**Throws**:  
+//*{TODO}*.  
+//**Returns**:  
+//*{TODO}* : TODO.
+//**Example usage**:  
+//
+//TODO
+VIE.prototype.getTypedEntityClass = function (type) {
+  var typeType = this.types.get(type);
+  if (!typeType) {
+    throw new Error("Unknown type " + type);
+  }
+  var TypedEntityClass = function (attrs, opts) {
+    if (!attrs) {
+      attrs = {};
+    }
+    attrs["@type"] = type;
+    this.set(attrs, opts);
+  };
+  TypedEntityClass.prototype = new this.Entity();
+  TypedEntityClass.prototype.schema = function () {
+    return VIE.Util.getFormSchemaForType(typeType);
+  };
+
+  return TypedEntityClass;
+};
+
 // IE per default doesn't have a console API. For making sure this doesn't break
 // anything we define it here to not do anything.
 console = console || {

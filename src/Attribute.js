@@ -26,7 +26,7 @@ if (VIE.prototype.Attributes) {
 // the attribute.  
 // *{string}* **domain** The domain of the attribute.  
 // *{number}* **minCount** The minimal number this attribute can occur. (needs to be >= 0)  
-// *{number}* **maxCount** The maximal number this attribute can occur. (needs to be >= minCount)  
+// *{number}* **maxCount** The maximal number this attribute can occur. (needs to be >= minCount, use `-1` for unlimited)
 // **Throws**:  
 // *{Error}* if one of the given paramenters is missing.  
 // **Returns**:  
@@ -107,9 +107,10 @@ VIE.prototype.Attribute = function (id, range, domain, minCount, maxCount) {
 // **Example usage**:  
 //
 //     console.log(person.max);
-//      // --> 1.7976931348623157e+308
-    maxCount = maxCount ? maxCount : Number.MAX_VALUE;
+//      // --> 1
+    maxCount = maxCount ? (maxCount === -1 ? Number.MAX_VALUE : maxCount) : 1;
     this.max = (maxCount >= this.min)? maxCount : this.min;
+
 // ### applies(range)
 // This method checks, whether the current attribute applies in the given range.
 // If ```range``` is a string and cannot be transformed into a ```VIE.Type```, 
@@ -187,8 +188,8 @@ VIE.prototype.Attributes = function (domain, attrs) {
 // ### add(id, range)
 // This method adds a ```VIE.Attribute``` to the attributes instance.
 // **Parameters**:  
-// *{string|VIE.Attribute}* **id** The string representation of an attribute, or a proper
-// instance of a ```VIE.Attribute```.  
+// *{string|VIE.Attribute|array}* **id** The string representation of an attribute, or a proper
+// instance of a ```VIE.Attribute``` or an array of string representations.  
 // *{string|array}* **range** An array representing the target range of the attribute.  
 // *{number}* **mmin** The minimal amount this attribute can appear.  
 // instance of a ```VIE.Attribute```.  
@@ -197,14 +198,21 @@ VIE.prototype.Attributes = function (domain, attrs) {
 // *{Error}* If an atribute with the given id is already registered.  
 // *{Error}* If the ```id``` parameter is not a string, nor a ```VIE.Type``` instance.  
 // **Returns**:  
-// *{VIE.Attribute}* : The generated or passed attribute.  
+// *{VIE.Attribute|array}* : The generated or passed attribute or array of attributes.  
 // **Example usage**:  
 //
 //     personAttrs.add("name", "Text", 0, 1);
+//     personAttrs.add(["name", "age"]);
     this.add = function (id, range, min, max) {
         if (this.domain.locked) {
             throw new Error("The type " + domain.id + " has been imported from an external ontology and must not " + 
                     "be altered! Please create a new type that inherits from the current type!");
+        }
+
+        if (_.isArray(id)) {
+          return _.map(id, function (attribute) {
+            return this.add(attribute);
+          }, this);
         }
         if (this.get(id)) {
             throw new Error("Attribute '" + id + "' already registered for domain " + this.domain.id + "!");
