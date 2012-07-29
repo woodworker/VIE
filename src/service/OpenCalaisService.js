@@ -33,7 +33,8 @@ VIE.prototype.OpenCalaisService = function(options) {
         	opencalaisc:  "http://s.opencalais.com/1/pred/",
         	opencalaiscr: "http://s.opencalais.com/1/type/er/",
         	opencalaiscm: "http://s.opencalais.com/1/type/em/e/",
-			opencalaiscs: "http://s.opencalais.com/1/type/sys/"
+			opencalaiscs: "http://s.opencalais.com/1/type/sys/",
+			opencalaiscl: "http://s.opencalais.com/1/linkeddata/pred/"
         },
         /* default rules that are shipped with this service */
         rules : [
@@ -288,7 +289,33 @@ VIE.prototype.OpenCalaisConnector.prototype = {
 			docRDFaccessible: "true"
             // for more options check http://developer.opencalais.com/docs/suggest/
         };
-    }
+    },
+	
+	/*loads opencalais linked data document by it's URL in order to get links to other ontologies like dbpedia and freebase. The callback parameter - function(resultedURIs) - a fuction, which operates the array of the entities, liked to the URL-corresponding entity*/
+	_loadDocument : function(url, service, callback) {
+		url.replace(/<|>/g, '');
+		url = (url.match('.html'))? url.replace('.html','.rdf'): (url.match('.rdf')? url: url+'.rdf');
+		var success = function(responseData){
+			var entities = 	VIE.Util.rdf2Entities(service, responseData, {skipAdding: true});
+			for(var e in entities){
+				var entity = entities[e];
+				if(entity.has('owl:sameAs')){
+					var linkedEntities = entity.get('owl:sameAs');
+					linkedEntities = jQuery.isArray(linkedEntities)? linkedEntities: [linkedEntities];
+					callback(linkedEntities);
+				}
+			}
+		}
+		var error = undefined;
+		jQuery.ajax({
+            success: function(responseData){
+            	success(responseData);
+            },
+            error: error,
+            type: "GET",
+            url: url
+        });
+	}
 };
 })();
 

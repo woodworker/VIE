@@ -180,12 +180,15 @@ VIE.Util = {
 // into VIE.Entities.  
 // **Parameters**:  
 // *{object}* **service** The service that retrieved the data.  
-// *{object}* **results** The data to be transformed.  
+// *{object}* **results** The data to be transformed.
+// *{object}* **options** The options passed to the transformation:
+//                        *{boolean}* **skipAdding** If ```true```, then the generated entities will not be added to the VIE. 
 // **Throws**:  
 // *nothing*  
 // **Returns**:  
 // *{[VIE.Entity]}* : An array, containing VIE.Entity instances which have been transformed from the given data.
-    rdf2Entities: function (service, results) {
+    rdf2Entities: function (service, results, options) {
+		options = options? options: {};
         if (typeof jQuery.rdf !== 'function') {
             /* fallback if no rdfQuery has been loaded */
             return VIE.Util._rdf2EntitiesNoRdfQuery(service, results);
@@ -268,7 +271,9 @@ VIE.Util = {
 	        var vieEntities = [];
 	        jQuery.each(entities, function() {
 	            var entityInstance = new service.vie.Entity(this);
-	            entityInstance = service.vie.entities.addOrUpdate(entityInstance);
+				if (!options.skipAdding){
+	                entityInstance = service.vie.entities.addOrUpdate(entityInstance);
+				}
 	            vieEntities.push(entityInstance);
 	        });
 	        return vieEntities;
